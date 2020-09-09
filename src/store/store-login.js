@@ -28,10 +28,18 @@ const actions = {
         console.log('ok')
         if (!response.data[0].id) { throw new Error('Credenciales incorrectas') }
         commit('setUser', response.data[0])
+        this.$router.push('/sinTabs')
       })
       .catch(error => {
         commit('loginStop', error) // .response.data.error
       })
+  },
+  desconectarLogin ({ commit }) {
+    // cerramos todos los tabs y redirigimos al login
+    this.dispatch('tabs/removeAllTabs', [], { root: true })
+    commit('loginStop', 'Introduzca credenciales')
+    commit('desconectar')
+    this.$router.push('/')
   }
 }
 

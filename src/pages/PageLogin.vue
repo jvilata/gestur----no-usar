@@ -1,22 +1,31 @@
 <template>
   <q-page padding class="row q-pa-xl justify-center" style="padding-top: 100px">
     <!-- definimos una pagina de LOGIN que tiene un logo arriba y un formulario de empresa, usuario y password abajo -->
-    <div class="row justify-center q-pa-lg">
-        <q-img src="~assets/camping.jpg" style="width: 50vh"/>
-    </div>
-    <q-card>
-        <div class="text-subtitle2 q-pt-md q-pl-md">Identificación de usuario</div>
-        <form class="q-pa-md" @submit.prevent="loginSubmit">
-            <q-input name="login" v-model="user.login" label="Usuario" type="text" style="font-size: 16px"/>
-            <q-input name="password" autocomplete="password" v-model="user.password" type="password" label="Password" style="font-size: 16px"/>
-            <div class="row justify-center q-pa-md">
-              <q-btn type="submit" rounded color="primary" class="full-width" label="Entrar"/>
-            </div>
-            <p v-if="loggingIn">Cargando...</p>
-            <p v-if="loginError">{{ loginError }}</p>
-            <p v-if="loginSuccessful">Login Successful</p>
-          </form>
+    <div class="gutter-xs">
+      <div class="row justify-center">
+          <q-img src="~assets/LOGO_CAMPING.png" style="width: 30vh"/>
+      </div>
+      <q-card>
+          <div class="q-pt-md q-pl-md q-pr-md">
+            <q-banner class="bg-grey-3">
+              <template v-slot:avatar>
+                <q-icon name="account_circle" color="grey" />
+              </template>
+              Identificación de usuario
+            </q-banner>
+          </div>
+          <form class="q-pa-md" @submit.prevent="loginSubmit">
+              <q-input name="login" v-model="user.login" label="Usuario" type="text" style="font-size: 16px"/>
+              <q-input name="password" autocomplete="password" v-model="user.password" type="password" label="Password" style="font-size: 16px"/>
+              <div class="row justify-center q-pa-md">
+                <q-btn type="submit" rounded color="primary" class="full-width" label="Entrar"/>
+              </div>
+              <p v-if="loggingIn">Cargando...</p>
+              <p v-if="loginError">{{ loginError }}</p>
+              <p v-if="loginSuccessful">Login Successful</p>
+            </form>
       </q-card>
+    </div>
   </q-page>
 </template>
 
