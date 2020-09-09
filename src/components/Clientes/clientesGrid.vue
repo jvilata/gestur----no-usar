@@ -60,10 +60,10 @@ export default {
       expanded: false,
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id' },
-        { name: 'nombre', align: 'left', label: 'Nombre', field: 'nombre', style: 'width: 230px; whiteSpace: normal' },
-        { name: 'telefono', label: 'Teléfono', align: 'left', field: 'telefono', style: 'width: 130px' },
-        { name: 'dni', label: 'DNI', align: 'left', field: 'dni', style: 'width: 100px' },
-        { name: 'nacionalidad', align: 'left', label: 'Nacionalidad', field: 'nacionalidad', style: 'width: 130px; whiteSpace: normal' },
+        { name: 'nombre', align: 'left', label: 'Nombre', field: 'nombre', style: 'width: 150px; whiteSpace: normal' },
+        { name: 'telefono', label: 'Teléfono', align: 'left', field: 'telefono', style: 'width: 100px' },
+        { name: 'dni', label: 'DNI', align: 'left', field: 'dni' },
+        { name: 'nacionalidad', align: 'left', label: 'Nacionalidad', field: 'nacionalidad' },
         { name: 'matricula', align: 'left', label: 'Matrícula', field: 'matricula' },
         { name: 'pendCobro', align: 'left', label: 'pendCobro', field: 'pendCobro' }
       ],

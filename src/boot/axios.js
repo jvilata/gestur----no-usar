@@ -12,7 +12,8 @@ const headerFormData = {
   }
 }
 
-const urlBase = 'https://vidawm.com/gestur/php/'
+const urlBase = 'http://localhost/gestur/php/' // test
+// const urlBase = 'https://vidawm.com/gestur/php/' // produccion
 
 const axiosInstance = axios.create({
   baseURL: urlBase,
