@@ -9,21 +9,26 @@
         <div class="q-gutter-sm q-pr-md row items-center no-wrap absolute-right">
           <q-btn round flat class="bg-red-9 text-weight-light">
             <q-avatar size="40px">
-              Hola
+              {{ user.login ? user.login.slice(0,2).toUpperCase() : '' }}
             </q-avatar>
-            <q-tooltip>Account</q-tooltip>
+            <q-tooltip>Cuenta</q-tooltip>
             <q-menu auto-close :offset="[110, 0]">
               <q-card>
                 <q-card-section>
                   <div class="row">
                     <div class="col-4">
                       <q-avatar round flat size="80px" class="bg-red-9 text-white text-weight-light">
-                        JV
+                        {{ user.login ? user.login.slice(0,2).toUpperCase() : 'MAL' }}
                       </q-avatar>
                     </div>
-                    <div class="col">
-                      <div class="text-weight-bold">Jose Vilata</div>
-                      <div>jvilata</div>
+                    <div class="col-1"> </div>
+                    <div class="col-7">
+                      <div class="text-weight-bold">
+                        {{ user.pers.nombre ? user.pers.nombre : 'MAL' }}
+                      </div>
+                      <div>
+                      {{ user.login ? user.login : 'MAL' }}
+                      </div>
                       <q-btn flat class="text-weight-light" color="primary" @click="desconectar">Desconectar</q-btn>
                     </div>
                   </div>
@@ -42,10 +47,11 @@
         @mouseout="miniState = true"
         :breakpoint="767"
         :width="220">
-      <q-scroll-area style="height: calc(100vh - 170px); margin-top: 90px; border-right: 1px solid #ddd">
+      <q-scroll-area style="height: calc(100vh - 170px); margin-top: 210px; border-right: 1px solid #ddd">
         <q-list>
           <div v-for="link in menuItems" :key="link.title">
             <q-item
+              v-if="link.title !== 'Otros'"
               clickable
               @click.native="openForm(link.link)"
               exact
@@ -59,10 +65,28 @@
                 <q-item-label v-ripple clickable v-if="link.title">{{ link.title  }}</q-item-label>
               </q-item-section>
             </q-item>
+            <q-expansion-item
+              class="text-grey-8"
+              v-else
+              icon="settings"
+              label="Otros" >
+              <div v-for="link in otros" :key="link.title">
+                <q-item clickable @click.native="openForm(link.link)" exact>
+                  <q-item-section><!--Títulos del DRAWER -->
+                    <q-item-label
+                      v-ripple
+                      clickable
+                      v-if="link.title" >
+                      {{ link.title  }}
+                    </q-item-label>
+                  </q-item-section>
+                </q-item>
+              </div>
+            </q-expansion-item>
           </div>
         </q-list>
       </q-scroll-area>
-
+      <q-img class="absolute-top max-height: 10px" src="~assets/LOGO_CAMPING1240.png" />
     </q-drawer>
     <q-footer>
     </q-footer>
@@ -73,7 +97,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'MainLayout',
   data () {
@@ -94,31 +118,79 @@ export default {
           title: 'Estancias/Reservas',
           icon: 'event_available',
           link: {
-            name: 'estanciasReservasMain',
+            name: 'estanciasMain',
             label: 'Estancias/Reservas'
           }
         },
         {
-          title: 'Administración',
-          icon: 'chat',
-          link: 'https://chat.quasar.dev'
+          title: 'Facturas',
+          icon: 'description',
+          link: {
+            name: 'facturasMain',
+            label: 'Facturas'
+          }
         },
         {
-          title: 'Auxiliares',
-          icon: 'record_voice_over',
-          link: 'https://forum.quasar.dev'
+          title: 'Gastos de Caja',
+          icon: 'chat',
+          link: {
+            name: 'gastosCajaMain',
+            label: 'Gastos de Caja'
+          }
+        },
+        {
+          title: 'Otros',
+          icon: 'chat',
+          link: {
+            name: 'otros',
+            label: 'Otros'
+          }
+        }
+      ],
+      otros: [
+        {
+          title: 'Gastos de Caja',
+          icon: 'chat',
+          link: {
+            name: 'gastosCajaMain',
+            label: 'Gastos de Caja'
+          }
+        },
+        {
+          title: 'Lista de Servicios',
+          icon: 'chat',
+          link: {
+            name: 'serviciosMain',
+            label: 'Lista de Servicios'
+          }
+        },
+        {
+          title: 'Tablas Auxiliares',
+          icon: 'chat',
+          link: {
+            name: 'tablasMain',
+            label: 'Tablas Auxiliares'
+          }
         }
       ]
     }
   },
   methods: {
+    ...mapActions('tablasAux', ['loadTablasAux']),
     ...mapActions('tabs', ['addTab']),
+    ...mapActions('login', ['desconectarLogin']),
     openForm (link) {
       this.addTab([link.name, link.label, {}, 1])
     },
     desconectar () {
       this.desconectarLogin()
     }
+  },
+  computed: {
+    ...mapState('login', ['user'])
+  },
+  mounted () {
+    this.loadTablasAux()
   }
 }
 </script>

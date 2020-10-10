@@ -26,9 +26,48 @@ const routes = [
             props: true
           },
           {
-            path: 'estanciasReservasMain',
-            name: 'estanciasReservasMain',
-            component: () => import('components/EstanciasReservas/estanciasReservasMain.vue'),
+            path: 'estanciasMain',
+            name: 'estanciasMain',
+            component: () => import('components/EstanciasReservas/estanciasMain.vue'),
+            props: true
+          },
+          {
+            path: 'estanciasFormMain/:id',
+            name: 'estanciasFormMain',
+            component: () => import('components/EstanciasReservas/estanciasFormMain.vue'),
+            props: true,
+            children: [
+              { path: 'estanciasForm', name: 'estanciasForm', component: () => import('components/EstanciasReservas/estanciasForm.vue'), props: true }
+            ]
+          },
+          {
+            path: 'facturasMain',
+            name: 'facturasMain',
+            component: () => import('components/Facturas/facturasMain.vue'),
+            props: true
+          },
+          {
+            path: 'gastosCajasMain',
+            name: 'gastosCajaMain',
+            component: () => import('components/GastosCaja/gastosCajaMain.vue'),
+            props: true
+          },
+          {
+            path: 'serviciosMain',
+            name: 'serviciosMain',
+            component: () => import('components/Servicios/serviciosMain.vue'),
+            props: true
+          },
+          {
+            path: 'tablasMain',
+            name: 'tablasMain',
+            component: () => import('components/TablasAuxiliar/tablasMain.vue'),
+            props: true
+          },
+          {
+            path: 'editCliente',
+            name: 'editCliente',
+            component: () => import('components/Clientes/editCliente.vue'),
             props: true
           }
         ]

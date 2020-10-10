@@ -2,6 +2,10 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import login from './store-login'
 import tabs from './store-tabs'
+import clientes from './store-clientes'
+import servicios from './store-servicios'
+import estancias from './store-estancias'
+import tablasAux from './store-tab-aux'
 // import example from './module-example'
 
 Vue.use(Vuex)
@@ -19,7 +23,11 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       login,
-      tabs
+      tabs,
+      clientes,
+      servicios,
+      estancias,
+      tablasAux
     },
 
     // enable strict mode (adds overhead!)

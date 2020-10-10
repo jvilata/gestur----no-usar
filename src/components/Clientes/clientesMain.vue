@@ -8,6 +8,9 @@
           <q-item-label class="text-h6 ">
             {{ nomFormulario }}
           </q-item-label>
+          <q-item-label>
+            <small>{{ Object.keys(filterRecord).length ? filterRecord : 'Pulse para definir filtro' }}</small>
+          </q-item-label>
         </q-item-section>
         <q-item-section side>
           <q-btn
@@ -18,13 +21,13 @@
         <!-- Componente de filtro -->
         <clientesFilter
             :value="filterRecord"
-            @input="(value) => Object.assign(filterRecord, value)"
-            @getRecords="getRecords"
+            @getRecords="(val) => getRecords(val)"
             @close="expanded = !expanded"
         />
         </q-dialog>
       <!-- Tabla de resultados de busqueda -->
       <clientesGrid
+        fromClientesMain=true
         v-model="registrosSeleccionados"
         />
     </div>
@@ -34,55 +37,45 @@
 import { mapActions } from 'vuex'
 
 export default {
-//   props: ['value', 'id', 'keyValue'],
+  props: ['value', 'id', 'keyValue'],
 
   data () {
     return {
       nomFormulario: 'Lista de Clientes',
       expanded: false,
       filterRecord: {},
-      registrosSeleccionados: [
-        { // Array de Objetos (Clientes)
-          id: '1',
-          nombre: 'Marta Vilata',
-          telefono: '+34 674078554',
-          dni: '21793010G',
-          nacionalidad: 'ES',
-          matricula: '1376GTJ',
-          pendCobro: '1/3/2020'
-        },
-        {
-          id: '2',
-          nombre: 'Ana Vilata',
-          telefono: '+34 639677128',
-          dni: '21793009A',
-          nacionalidad: 'ES',
-          matricula: '1376GTJ',
-          pendCobro: '1/5/2020'
-        }
-      ]
+      registrosSeleccionados: [] // Array de Objetos (Clientes)
     }
   },
   methods: {
     ...mapActions('login', ['desconectarLogin']),
+    ...mapActions('clientes', ['loadListaClientes']),
     getRecords (filterR) {
-      // hago la busqueda de registros segun condiciones del formulario Filter que ha lanzado el evento getRecords
       Object.assign(this.filterRecord, filterR) // no haría falta pero así obliga a refrescar el componente para que visulice el filtro
-      this.expanded = false
-      this.registrosSeleccionados = filterR
-    //   this.loadListaDetalleEmpleados(filterR)
-    //     .then(response => {
-    //       this.registrosSeleccionados = response.data.root
-    //       this.expanded = false
-    //     })
-    //     .catch(error => {
-    //       this.$q.dialog({ title: 'Error', message: error.response.statusText })
-    //       this.desconectarLogin()
-    //     })
+      // llamada al backend
+      this.loadListaClientes(filterR)
+        .then(response => {
+          this.registrosSeleccionados = response.data
+          this.expanded = false
+        })
+        .catch(error => {
+          this.registrosSeleccionados = {}
+          this.$q.dialog({ title: 'Error', message: error })
+          this.desconectarLogin()
+        })
     }
   },
   destroyed () {
     this.$emit('changeTab', { idTab: this.value.idTab, filterRecord: this.filterRecord })
+  },
+  mounted () {
+    if (this.value.filterRecord) { // FilterRecord tiene valores porque ya hemos hecho una búsqueda
+      this.expanded = false // Escondemos clientesFilter
+      this.getRecords(this.value.filterRecord) // refresco la lista por si se han hecho cambios
+    } else { // no esta inicializado
+      this.registrosSeleccionados = []
+      console.log('No se han filtrado clientes')
+    }
   },
   components: {
     clientesFilter: require('components/Clientes/clientesFilter.vue').default,

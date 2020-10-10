@@ -1,8 +1,8 @@
 <template>
-  <q-item class="row q-ma-xs q-pa-xs">
+  <q-item class="row">
     <!-- GRID. en row-key ponemos la columna del json que sea la id unica de la fila -->
     <q-table
-      class="personalGrid-header-table"
+      class="accionesGrid-header-table"
       virtual-scroll
       :pagination.sync="pagination"
       :rows-per-page-options="[0]"
@@ -16,64 +16,70 @@
       <template v-slot:header="props">
         <!-- CABECERA DE LA TABLA -->
         <q-tr :props="props">
-          <q-th>-</q-th>
+          <q-th>
+          </q-th>
+
           <q-th
             v-for="col in props.cols"
             :key="col.name"
             :props="props"
           >
-          <div :style="col.style">
             {{ col.label }}
-          </div>
           </q-th>
         </q-tr>
       </template>
 
       <template v-slot:body="props">
         <q-tr :props="props" :key="`m_${props.row.id}`" @mouseover="rowId=`m_${props.row.id}`">
-            <q-td>
+          <q-td>
               <div style="max-width: 35px" v-if="rowId === `m_${props.row.id}`">
-                <q-icon  name="edit" class="text-grey q-pr-md" style="font-size: 1.5rem;" @click="editRecord(props.row, props.row.id)"/>
                 <q-icon name="delete" class="text-red" style="font-size: 1.5rem;" @click="deleteRecord(props.row.id)"/>
               </div>
-            </q-td>
+          </q-td>
           <q-td
             v-for="col in props.cols"
             :key="col.name"
             :props="props"
           >
-          <div :style="col.style">
-              <div >{{ col.value }}</div>
-          </div>
-           </q-td>
+            <div :style="col.style">
+              {{ col.value }}
+            </div>
+            <q-popup-edit
+              v-if="['codTabla','codElemento', 'valor1'].includes(col.name)"
+              v-model="props.row[col.name]"
+              buttons
+              @save="updateRecord(props.row)">
+              <q-input type="text" v-model="props.row[col.name]" dense autofocus />
+            </q-popup-edit>
+          </q-td>
         </q-tr>
       </template>
-      <template v-slot:no-data>
+   <template v-slot:no-data>
         <div class="absolute-bottom text-center q-mb-sm">
           <q-btn
-            @click.stop="addRecord"
+            @click="expanded = !expanded"
             round
             dense
             color="indigo-5"
             size="20px"
             icon="add">
-            <q-tooltip>Añadir Cliente</q-tooltip>
+            <q-tooltip>Añadir Tabla Auxiliar</q-tooltip>
           </q-btn>
         </div>
         <div>
-          Pulse + para añadir nuevo cliente
+          Pulse + para añadir
         </div>
       </template>
       <template v-slot:bottom>
         <div class="absolute-bottom text-center q-mb-sm">
           <q-btn
-            @click.stop="addRecord"
+            @click="addRecord()"
             round
             dense
             color="indigo-5"
             size="20px"
             icon="add">
-            <q-tooltip>Añadir Cliente</q-tooltip>
+            <q-tooltip>Añadir Tabla Auxiliar</q-tooltip>
           </q-btn>
         </div>
         <div>
@@ -81,56 +87,46 @@
         </div>
       </template>
     </q-table>
+      <q-dialog v-model="expanded"  >
+        <!-- formulario con campos de filtro -->
+        <tablasNueva
+          @hide="(val) => { expanded = !expanded; value.push(val) }"
+        />
+      </q-dialog>
   </q-item>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import { date } from 'quasar'
-
 export default {
-  props: ['value', 'id', 'keyValue', 'fromClientesMain'], // en value tenemos los registrosSeleccionados
+  props: ['value', 'idActivo'], // en 'value' tenemos la tabla de datos del grid, en idActivo en caso de que vengamos de ActivosFormMain
   data () {
     return {
-      rowId: '',
       expanded: false,
+      rowId: '',
       columns: [
-        { name: 'id', align: 'left', label: 'ID', field: 'id' },
-        { name: 'nombre', align: 'left', label: 'Nombre', field: 'nombre', style: 'width: 150px; whiteSpace: normal' },
-        { name: 'telefono', label: 'Teléfono', align: 'left', field: 'telefono', style: 'width: 100px' },
-        { name: 'dni', label: 'DNI', align: 'left', field: 'dni' },
-        { name: 'nacionalidad', align: 'left', label: 'Nacionalidad', field: 'nacionalidad' },
-        { name: 'matricula', align: 'left', label: 'Matrícula', field: 'matricula' },
-        { name: 'pendCobro', align: 'left', label: 'pendCobro', field: 'pendCobro', format: val => ((val !== undefined) ? date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') : '') }
+        { name: 'id', align: 'left', label: 'id', field: 'id', sortable: true },
+        { name: 'codTabla', align: 'left', label: 'codTabla', field: 'codTabla', sortable: true },
+        { name: 'codElemento', align: 'left', label: 'codElemento', field: 'codElemento', sortable: true },
+        { name: 'valor1', align: 'left', label: 'valor', field: 'valor1', sortable: true }
       ],
       pagination: { rowsPerPage: 0 }
     }
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
-    ...mapActions('clientes', ['borrarCliente', 'guardarDatosCliente']),
+    ...mapActions('tablasAux', ['borrarTablaAux', 'addTablaAux']),
     addRecord () {
-      var record = {
-        id: 0,
-        nombre: 'Nuevo Cliente',
-        pais: 'ESP',
-        nacionalidad: 'ESP',
-        tipoDoc: 2
-      }
-      this.guardarDatosCliente(record)
-        .then(response => {
-          console.log(response.data.id)
-          record.id = response.data.id
-          this.editRecord(record, record.id)
+      this.expanded = !this.expanded
+    },
+    updateRecord (record) {
+      this.addTablaAux(record)
+        .then((response) => {
+          console.log(response.data)
         })
         .catch(error => {
-          this.$q.dialog({
-            message: error.message
-          })
+          this.$q.dialog({ title: 'Error', message: error })
         })
-    },
-    editRecord (rowChanges, id) {
-      this.addTab(['editCliente', 'Editar Datos Cliente', rowChanges, id]) // tercer elemento donde dejo rowChanges es VALUE en tab
     },
     deleteRecord (id) {
       this.$q.dialog({
@@ -140,11 +136,15 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
-        this.borrarCliente(id)
+        this.borrarTablaAux(id)
           .then(result => {
             this.$q.dialog({
-              message: 'Se ha borrado el cliente.'
+              message: 'Se ha borrado la Tabla Auxiliar.'
             })
+            var index = this.value.findIndex(function (record) { // busco elemento del array con este id
+              if (record.id === id) return true
+            })
+            this.value.splice(index, 1) // lo elimino del array
           })
           .catch(error => {
             this.$q.dialog({
@@ -152,13 +152,18 @@ export default {
             })
           })
       })
+    }, // param : id, codTabla, codElemento, valor1
+    mostrarDatosPieTabla () {
+      return this.value.length + ' Filas'
     }
+  },
+  components: {
+    tablasNueva: require('components/TablasAuxiliar/tablasNueva.vue').default
   }
 }
 </script>
-
 <style lang="sass">
-  .personalGrid-header-table
+  .accionesGrid-header-table
     .q-table__top,
     .q-table__bottom,
     thead tr:first-child th

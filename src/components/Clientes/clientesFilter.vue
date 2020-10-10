@@ -7,11 +7,13 @@
     <q-form @submit="getRecords" class="q-gutter-y-xs">
     <q-tab-panels v-model="tab">
       <q-tab-panel name="General">
-        <q-input outlined clearable label="Cliente" stack-label autofocus v-model="filterR.nombre" />
+        <q-input outlined autofocus clearable label="Cliente" stack-label v-model="filterR.nombre" />
         <q-input outlined clearable label="Teléfono" stack-label v-model="filterR.telefono" />
+        <q-input outlined clearable label="Email" stack-label v-model="filterR.email" />
         <q-input outlined clearable label="DNI/Pasaporte" stack-label v-model="filterR.dni" />
-        <!-- <q-input outlined clearable label="Servicios Periódicos" stack-label v-model="filterR.paisTrab" /> -->
-        <q-input outlined clearable label="Orden ID" stack-label v-model="filterR.id" />
+        <q-input outlined clearable label="Matrícula" stack-label v-model="filterR.matricula" />
+        <q-input outlined clearable label="Servicios Periódicos" stack-label v-model="filterR.servPeriodico" />
+        <q-input outlined clearable label="ID" stack-label v-model="filterR.id" />
       </q-tab-panel>
     </q-tab-panels>
       <q-card-actions align="right">
@@ -24,24 +26,28 @@
 
 <script>
 export default {
-  props: ['value'], // Prop Value pasada por el componente clienteFilter
+  props: ['value', 'id', 'keyValue'], // Prop Value pasada por el componente clienteFilter
   data () {
     return {
       tab: 'General',
-      filterR: {}
+      filterR: {
+        id: '',
+        nombre: '',
+        telefono: '',
+        dni: '',
+        email: '',
+        matricula: '',
+        servPeriodico: ''
+      }
     }
   },
   methods: {
     getRecords () {
-      this.$emit('getRecords', this.filterR) // lo captura accionesMain
+      this.$emit('getRecords', this.filterR) // lo captura clientesMain
     }
   },
   mounted () {
     this.filterR = this.value // asignamos valor del parametro por si viene de otro tab
-  },
-  destroyed () {
-    // guardamos valor en tabs por si despus queremos recuperarlo
-    this.$emit('input', this.filterR)
   }
 }
 </script>

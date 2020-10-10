@@ -4,7 +4,7 @@ const state = {
   loggingIn: false,
   loginError: null,
   loginSuccessful: false,
-  user: {}// { codEmpresa, nomEmpresa, user: {email, idPersonal }, pers: { id, codEmpresa, nombre, nombreAbreviado, email }}
+  user: {}// { id, nombre, login, password }
 }
 
 const mutations = {
@@ -16,6 +16,9 @@ const mutations = {
   },
   setUser: (state, updated) => {
     Object.assign(state.user, updated)
+  },
+  desconectar: (state) => {
+    state.user = {}
   }
 }
 
@@ -25,9 +28,11 @@ const actions = {
     commit('loginStart')
     axiosInstance.get('personal/bd_personal.php/login', { params: loginData }, { withCredentials: true })
       .then((response) => {
-        console.log('ok')
         if (!response.data[0].id) { throw new Error('Credenciales incorrectas') }
-        commit('setUser', response.data[0])
+        commit('setUser', { login: loginData.login, pers: response.data[0] })
+        // LocalStorage.set('email', loginData.email)
+        // LocalStorage.set('password', loginData.password)
+
         this.$router.push('/sinTabs')
       })
       .catch(error => {
@@ -36,9 +41,15 @@ const actions = {
   },
   desconectarLogin ({ commit }) {
     // cerramos todos los tabs y redirigimos al login
-    this.dispatch('tabs/removeAllTabs', [], { root: true })
-    commit('loginStop', 'Introduzca credenciales')
-    commit('desconectar')
+    axiosInstance.get('personal/bd_personal.php/logout', { }, { withCredentials: true })
+      .then((response) => {
+        this.dispatch('tabs/removeAllTabs', [], { root: true })
+        commit('loginStop', 'Introduzca credenciales')
+        commit('desconectar')
+      })
+      .catch(error => {
+        commit('loginStop', error) // .response.data.error
+      })
     this.$router.push('/')
   }
 }
