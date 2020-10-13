@@ -28,7 +28,7 @@ const actions = {
     commit('loginStart')
     axiosInstance.get('personal/bd_personal.php/login', { params: loginData }, { withCredentials: true })
       .then((response) => {
-        if (!response.data[0].id) { throw new Error('Credenciales incorrectas') }
+        if (response.data.length === 0) { throw new Error('Credenciales incorrectas') }
         commit('setUser', { login: loginData.login, pers: response.data[0] })
         // LocalStorage.set('email', loginData.email)
         // LocalStorage.set('password', loginData.password)

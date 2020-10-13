@@ -36,29 +36,6 @@
               <div style="max-width: 35px" v-if="rowId === `m_${props.row.id}`">
                 <q-icon name="delete" class="text-red" style="font-size: 1.5rem;" @click="deleteRecord(props.row.id)"/>
               </div>
-              <!-- <q-popup-edit
-                v-if="!['id','Numero'].includes(col.name)"
-                v-model="props.row[col.name]"
-                buttons
-                @save="updateRecord(props.row)">
-                <q-input
-                  v-if="['tipoIva', 'descripcionCorta', 'descripcionLarga'].includes(col.name)"
-                  type="text"
-                  v-model="props.row[col.name]"
-                  dense
-                  autofocus />
-                <q-select
-                  v-if="['tipoServicio'].includes(col.name)"
-                  outlined
-                  :value="col.value"
-                  @input="(value) => props.row[col.name]=value"
-                  :options="listaTipoServ"
-                  stack-label
-                  option-value="codElemento"
-                  option-label="valor1"
-                  emit-value
-                />
-            </q-popup-edit> -->
             </q-td>
           <q-td
             v-for="col in props.cols"
@@ -68,6 +45,28 @@
             <div :style="col.style">
                 <div >{{ col.value }}</div>
             </div>
+            <q-popup-edit
+              v-model="props.row[col.name]"
+              buttons
+              @save="updateRecord(props.row)">
+              <q-input
+                v-if="['descripcion', 'cantidad', 'factura'].includes(col.name)"
+                type="text"
+                v-model="props.row[col.name]"
+                dense
+                autofocus />
+              <!-- <q-select
+                v-if="['tipoServicio'].includes(col.name)"
+                outlined
+                :value="col.value"
+                @input="(value) => props.row[col.name]=value"
+                :options="listaTipoServ"
+                stack-label
+                option-value="codElemento"
+                option-label="valor1"
+                emit-value
+              /> -->
+            </q-popup-edit>
            </q-td>
            <q-td>
               <q-slide-transition>
@@ -120,16 +119,6 @@ export default {
   data () {
     return {
       rowId: '',
-      registrosSeleccionados: [
-        {
-          nombre: 'jose',
-          idCliente: '1',
-          idEstancia: '1',
-          fechaEntrada: '1/1/2020',
-          fechaSalida: '31/12/2020',
-          total: '500'
-        }
-      ],
       columns: [
         { name: 'fecha', align: 'left', label: 'Fecha', field: 'fecha', sortable: true, format: val => date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') },
         { name: 'descripcion', align: 'left', label: 'Descripción', field: 'descripcion', sortable: true },

@@ -6,7 +6,7 @@
 
     <q-form @submit="getRecords" class="q-gutter-y-xs">
       <q-input outlined clearable label="ID Estancia" stack-label v-model="filterR.id" />
-      <q-input outlined autofocus clearable label="Nombre" stack-label v-model="filterR.nombre" />
+      <q-input outlined clearable autofocus label="Nombre" stack-label v-model="filterR.nombre" />
       <q-input
         outlined
         clearable

@@ -9,11 +9,16 @@
           label="Cliente"
           stack-label
           v-model="recordToSubmit.idCliente"
-          :options="listaClientes"
+          :options="listaClientesFilter"
           map-options
           option-value="id"
           option-label="nombre"
           emit-value
+          @filter="filterClientes"
+          use-input
+          hide-selected
+          fill-input
+          input-debounce="0"
         />
           <q-select
             class="col-xs-6 col-sm-3"
@@ -87,6 +92,7 @@ export default {
   props: ['value'], // value es el objeto con los campos de filtro que le pasa accionesMain con v-model
   data () {
     return {
+      listaClientesFilter: this.listaCiientes,
       recordToSubmit: {},
       listaTiposEstancia: ['Camping', 'Caravana', 'Molino'],
       listaTarifas: ['Tarifa Alta', 'Tarifa Baja', 'Tarifa Media']
@@ -100,6 +106,12 @@ export default {
     wgDate: wgDate
   },
   methods: {
+    filterClientes (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.listaClientesFilter = this.listaClientes.filter(v => v.nombre.toLowerCase().indexOf(needle) > -1)
+      })
+    },
     formatDate (date1) {
       return date.formatDate(date1, 'DD/MM/YYYY')
     }

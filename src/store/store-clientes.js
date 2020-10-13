@@ -15,8 +15,20 @@ const actions = {
   loadListaClientes ({ commit }, objFilter) {
     return axiosInstance.get('clientes/bd_clientes.php/findFilter', { params: objFilter }, { withCredentials: true })
   },
-  comboListaClientes ({ commit }, objFilter) {
-    return axiosInstance.get('clientes/bd_clientes.php/findFilter', { params: objFilter }, { withCredentials: true })
+  comboListaClientes ({ commit }) {
+    axiosInstance.get('clientes/bd_clientes.php/comboListaClientes', {}, { withCredentials: true }) // tipo acciones
+      .then((response) => {
+        if (response.data.length === 0) {
+          this.dispatch('mensajeLog/addMensaje: No existen datos', { root: true })
+        } else {
+          commit('loadListaClientes', response.data)
+        }
+      })
+      .catch(error => {
+        this.dispatch('mensajeLog/addMensaje' + error, { root: true })
+      })
+  },
+  loadTablaAux ({ commit }, tabAux) { // tabAux: { codTabla: x, mutation: 'mutation' }
   },
   loadDetallecliente ({ commit }, id) {
     return axiosInstance.get('clientes/bd_clientes.php/findFilter', { params: { id: id } }, { withCredentials: true })
