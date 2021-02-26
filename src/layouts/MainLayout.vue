@@ -125,14 +125,6 @@ export default {
           }
         },
         {
-          title: 'Facturas',
-          icon: 'description',
-          link: {
-            name: 'facturasMain',
-            label: 'Facturas'
-          }
-        },
-        {
           title: 'Gastos de Caja',
           icon: 'euro',
           link: {

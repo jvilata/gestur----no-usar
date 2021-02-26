@@ -144,7 +144,7 @@ export default {
     wgDate: wgDate
   },
   methods: {
-    ...mapActions('estancias', 'generarFactura'),
+    ...mapActions('estancias', ['generarFactura', 'findEstancia']),
     filterClientes (val, update, abort) {
       update(() => {
         const needle = val.toLowerCase()
@@ -157,9 +157,16 @@ export default {
     rellenarDatosFact () {
       // solo hay que generar factura cuando nroFactura sea cero
       if (this.recordToSubmit.NroFactura === '0') {
-        this.generarFactura(this.value.id)
+        this.generarFactura(this.recordToSubmit)
           .then(response => {
-            // smth
+            // volvemos a leer la factura
+            this.findEstancia({ id: this.recordToSubmit.id })
+              .then(response => {
+                Object.assign(this.recordToSubmit, response.data[0])
+              })
+              .catch(error => {
+                this.$q.dialog({ title: 'Error', message: error })
+              })
           })
           .catch(error => {
             this.$q.dialog({ title: 'Error', message: error })
@@ -183,7 +190,7 @@ export default {
   watch: {
     recordToSubmit: { // detecta cambios en las propiedades de este objeto (tienen que estar inicializadas en data())
       handler (val) {
-        this.$emit('hasChanges', { hasChanges: true, colorBotonSave: 'red' })
+        this.$emit('hasChanges', { record: this.recordToSubmit, hasChanges: true, colorBotonSave: 'red' })
       },
       deep: true
     }

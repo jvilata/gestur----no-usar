@@ -101,8 +101,13 @@ export default {
         { name: 'fechaEntrada', align: 'left', label: 'Fecha Entrada', field: 'fechaEntrada', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
         { name: 'fechaSalida', align: 'left', label: 'Fecha Salida', field: 'fechaSalida', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
         { name: 'tipoEstancia', align: 'left', label: 'Tipo Estancia', field: 'tipoEstancia', sortable: true, format: val => { var res = this.listaTipoEstancia.find(row => row.codElemento === val); return (res === undefined ? '' : res.valor1) } },
-        { name: 'NroTiket', align: 'left', label: 'Nº.Ticket', field: 'NroTiket', sortable: true },
         { name: 'tipoTarifa', align: 'left', label: 'Tipo Tarifa', field: 'tipoTarifa', sortable: true, format: val => { var res = this.listaTipoTarifa.find(row => row.codElemento === val); return (res === undefined ? '' : res.valor1) } },
+        { name: 'NroFactura', align: 'left', label: 'Nro Factura', field: 'NroFactura', sortable: true },
+        { name: 'FechaFactura', align: 'left', label: 'Fecha fact', field: 'FechaFactura', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
+        { name: 'base', align: 'left', label: 'Base', field: 'base', sortable: true },
+        { name: 'totalIva', align: 'left', label: 'IVA', field: 'totalIva', sortable: true },
+        { name: 'total', align: 'left', label: 'Total', field: 'totalEstancia', sortable: true },
+        { name: 'cobrado', align: 'left', label: 'Cobrado', field: e => parseFloat(e.ACuenta) + parseFloat(e.PorDatafono) + parseFloat(e.PorBanco), sortable: true },
         { name: 'Fianza', align: 'left', label: 'Fianza', field: 'Fianza', sortable: true }
       ],
       pagination: { rowsPerPage: 0 }

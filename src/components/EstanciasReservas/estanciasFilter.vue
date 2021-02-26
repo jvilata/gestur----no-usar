@@ -7,6 +7,18 @@
     <q-form @submit="getRecords" class="q-gutter-y-xs">
       <q-input outlined clearable label="ID Estancia" stack-label v-model="filterR.id" />
       <q-input outlined clearable autofocus label="Nombre" stack-label v-model="filterR.nombre" />
+      <q-select
+            class="col-xs-6 col-sm-3"
+            outlined
+            label="Tipo Estancia"
+            stack-label
+            v-model="filterR.tipoEstancia"
+            :options="listaTipoEstancia"
+            option-value="codElemento"
+            option-label="valor1"
+            emit-value
+            map-options
+          />
       <q-input
         outlined
         clearable
@@ -43,6 +55,50 @@
             </q-icon>
         </template>
       </q-input>
+      <q-banner dense class="bg-grey-3">
+      <template v-slot:avatar>
+        <q-icon name="description" color="primary" />
+      </template>
+      Filtros de Factura
+      <q-checkbox v-model="val" @input="rellenarFechas" label="Las del año" />
+      <q-input
+        outlined
+        clearable
+        label="Fecha Factura Desde"
+        stack-label
+        :value="formatDate(filterR.fechaFacturaDesde)"
+        @input="(val) => filterR.fechaFacturaDesde=val"
+        class="q-mb-sm"
+      >
+        <template v-slot:append>
+            <q-icon name="event" class="cursos-pointer">
+              <q-popup-proxy ref="qProxy">
+                <wgDate
+                  v-model="filterR.fechaFacturaDesde"
+                  @input="$refs.qProxy.hide()"/>
+              </q-popup-proxy>
+            </q-icon>
+        </template>
+      </q-input>
+      <q-input
+        outlined
+        clearable
+        label="Fecha Factura Hasta"
+        stack-label
+        :value="formatDate(filterR.fechaFacturaHasta)"
+        @input="(val) => filterR.fechaFacturaHasta=val"
+      >
+        <template v-slot:append>
+            <q-icon name="event" class="cursos-pointer">
+              <q-popup-proxy ref="qProxy">
+                <wgDate
+                  v-model="filterR.fechaFacturaHasta"
+                  @input="$refs.qProxy.hide()"/>
+              </q-popup-proxy>
+            </q-icon>
+        </template>
+      </q-input>
+    </q-banner>
       <q-card-actions align="right">
         <q-btn flat type="submit" label="Buscar" color="primary"/>
         <q-btn flat label="Cancel" color="primary" @click="$emit('hide')"/><!-- lo captura accionesMain -->
@@ -52,16 +108,25 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { date } from 'quasar'
 import wgDate from 'components/General/wgDate.vue'
 export default {
   props: ['value'], // value es el objeto con los campos de filtro que le pasa accionesMain con v-model
   data () {
     return {
-      filterR: {}
+      filterR: {},
+      val: false
     }
   },
+  computed: {
+    ...mapState('tablasAux', ['listaTipoEstancia'])
+  },
   methods: {
+    rellenarFechas () {
+      this.filterR.fechaFacturaDesde = date.formatDate(new Date(), 'YYYY-01-01')
+      this.filterR.fechaFacturaHasta = date.formatDate(new Date(), 'YYYY-MM-DD')
+    },
     getRecords () {
       this.$emit('getRecords', this.filterR)
     },
