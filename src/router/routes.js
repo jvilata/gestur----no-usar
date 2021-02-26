@@ -41,9 +41,15 @@ const routes = [
             ]
           },
           {
-            path: 'gastosCajasMain',
+            path: 'gastosCajaMain',
             name: 'gastosCajaMain',
             component: () => import('components/GastosCaja/gastosCajaMain.vue'),
+            props: true
+          },
+          {
+            path: 'cuadreCajaMain',
+            name: 'cuadreCajaMain',
+            component: () => import('components/CuadreCaja/cuadreCajaMain.vue'),
             props: true
           },
           {

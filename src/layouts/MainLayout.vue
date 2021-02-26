@@ -133,6 +133,14 @@ export default {
           }
         },
         {
+          title: 'Cuadre de Caja',
+          icon: 'grading',
+          link: {
+            name: 'cuadreCajaMain',
+            label: 'Cuadre de Caja'
+          }
+        },
+        {
           title: 'Otros',
           icon: 'settings',
           link: {

@@ -49,21 +49,19 @@
            </q-td>
         </q-tr>
       </template>
-      <template v-slot:no-data>
-        <div class="absolute-bottom text-center q-mb-sm">
-          <q-btn
-            @click.stop="addRecord"
-            round
-            dense
-            color="indigo-5"
-            size="20px"
-            icon="add">
-            <q-tooltip>Añadir Estancia</q-tooltip>
-          </q-btn>
-        </div>
-        <div>
-          Pulse + para añadir estancias
-        </div>
+      <template v-slot:bottom-row>
+        <!-- BOTTOM-ROW DE LA TABLA -->
+        <q-tr >
+          <q-th
+            v-for="col in columns"
+            :key="col.name"
+            :align="col.align"
+          >
+            <div v-if="['base'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.base))) }}</div>
+            <div v-if="['total'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.totalEstancia))) }}</div>
+            <div v-if="['id'].includes(col.name)">ID DE LAS ESTANCIAS</div>
+          </q-th>
+        </q-tr>
       </template>
       <template v-slot:bottom>
         <div class="absolute-bottom text-center q-mb-sm">
@@ -79,6 +77,22 @@
         </div>
         <div>
           {{ registrosSeleccionados.length }} Filas
+        </div>
+      </template>
+      <template v-slot:no-data>
+        <div class="absolute-bottom text-center q-mb-sm">
+          <q-btn
+            @click.stop="addRecord"
+            round
+            dense
+            color="indigo-5"
+            size="20px"
+            icon="add">
+            <q-tooltip>Añadir Estancia</q-tooltip>
+          </q-btn>
+        </div>
+        <div>
+          Pulse + para añadir estancias
         </div>
       </template>
     </q-table>
