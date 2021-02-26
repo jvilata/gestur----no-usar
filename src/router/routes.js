@@ -59,6 +59,18 @@ const routes = [
             props: true
           },
           {
+            path: 'tarifasMain',
+            name: 'tarifasMain',
+            component: () => import('components/TarifasServicios/tarifasMain.vue'),
+            props: true
+          },
+          {
+            path: 'discoGCMain',
+            name: 'discoGCMain',
+            component: () => import('components/GuardiaCivil/discoGCMain.vue'),
+            props: true
+          },
+          {
             path: 'tablasMain',
             name: 'tablasMain',
             component: () => import('components/TablasAuxiliar/tablasMain.vue'),

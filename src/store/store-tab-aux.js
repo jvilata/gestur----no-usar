@@ -4,7 +4,9 @@ const state = {
   listaSINO: [{ id: '1', desc: 'SI' }, { id: '0', desc: 'NO' }],
   listaTipoDoc: [],
   listaTipoFact: [],
-  listaTipoServ: []
+  listaTipoServ: [],
+  listaTipoEstancia: [],
+  listaTipoTarifa: []
 }
 
 const mutations = {
@@ -16,6 +18,12 @@ const mutations = {
   },
   loadTipoServ (state, tiposServ) {
     state.listaTipoServ = tiposServ
+  },
+  loadTipoEstancia (state, tiposEst) {
+    state.listaTipoEstancia = tiposEst
+  },
+  loadTipoTarifa (state, tiposTarifa) {
+    state.listaTipoTarifa = tiposTarifa
   }
 }
 
@@ -24,6 +32,8 @@ const actions = {
     this.dispatch('tablasAux/loadTablaAux', { codTabla: 1, mutation: 'loadTipoDoc' })
     this.dispatch('tablasAux/loadTablaAux', { codTabla: 7, mutation: 'loadTipoFact' })
     this.dispatch('tablasAux/loadTablaAux', { codTabla: 4, mutation: 'loadTipoServ' })
+    this.dispatch('tablasAux/loadTablaAux', { codTabla: 2, mutation: 'loadTipoEstancia' })
+    this.dispatch('tablasAux/loadTablaAux', { codTabla: 3, mutation: 'loadTipoTarifa' })
   },
   loadTablaAux ({ commit }, tabAux) { // tabAux: { codTabla: x, mutation: 'mutation' }
     axiosInstance.get(`tablaAuxiliar/bd_tablaAuxiliar.php/findTablaAuxFilter?codTabla=${tabAux.codTabla}`, {}, { withCredentials: true }) // tipo acciones

@@ -8,7 +8,7 @@
       :rows-per-page-options="[0]"
       :virtual-scroll-sticky-size-start="48"
       row-key="id"
-      :data="value"
+      :data="registrosSeleccionados"
       :columns="columns"
       table-style="max-height: 70vh; max-width: 93vw"
     >
@@ -44,15 +44,9 @@
             :props="props"
           >
             <div :style="col.style">
-                <div v-if="col.name !=='fianzaEntregada'">{{ col.value }}</div>
-                <div v-else><q-checkbox v-model="col.value" color="indigo-5" /></div>
+                <div >{{ col.value }}</div>
             </div>
            </q-td>
-           <q-td>
-              <q-slide-transition>
-                <q-btn icon="cloud_download" style="font-size: 0.8rem;" color="indigo-3"/>
-              </q-slide-transition>
-            </q-td>
         </q-tr>
       </template>
       <template v-slot:no-data>
@@ -84,7 +78,7 @@
           </q-btn>
         </div>
         <div>
-          {{ `${value.length ? value.length + ' Filas' : 'No hay registros, pulse + para añadir clientes'}` }}
+          {{ registrosSeleccionados.length }} Filas
         </div>
       </template>
     </q-table>
@@ -99,33 +93,51 @@ export default {
   data () {
     return {
       rowId: '',
+      registrosSeleccionados: [],
       visible: false,
       columns: [
         { name: 'id', align: 'left', label: 'ID Estancia', field: 'id', sortable: true },
-        { name: 'nombre', align: 'left', label: 'Nombre', field: 'nombre', sortable: true },
-        { name: 'fechaEntrada', align: 'left', label: 'Fecha Entrada', field: 'fechaEntrada', sortable: true, format: val => date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') },
-        { name: 'fechaSalida', align: 'left', label: 'Fecha Salida', field: 'fechaSalida', sortable: true, format: val => date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') },
-        { name: 'tipoEstancia', align: 'left', label: 'Tipo Estancia', field: 'tipoEstancia', sortable: true },
-        { name: 'nroTicket', align: 'left', label: 'Nº.Ticket', field: 'nroTicket', sortable: true },
-        { name: 'tipoTarifa', align: 'left', label: 'Tipo Tarifa', field: 'tipoTarifa', sortable: true },
-        { name: 'fianzaEntregada', align: 'left', label: 'Fianza Entregada', field: 'fianzaEntregada', sortable: true }
+        { name: 'nombre', align: 'left', label: 'Nombre Completo', field: 'nombre', sortable: true },
+        { name: 'fechaEntrada', align: 'left', label: 'Fecha Entrada', field: 'fechaEntrada', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
+        { name: 'fechaSalida', align: 'left', label: 'Fecha Salida', field: 'fechaSalida', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
+        { name: 'tipoEstancia', align: 'left', label: 'Tipo Estancia', field: 'tipoEstancia', sortable: true, format: val => { var res = this.listaTipoEstancia.find(row => row.codElemento === val); return (res === undefined ? '' : res.valor1) } },
+        { name: 'NroTiket', align: 'left', label: 'Nº.Ticket', field: 'NroTiket', sortable: true },
+        { name: 'tipoTarifa', align: 'left', label: 'Tipo Tarifa', field: 'tipoTarifa', sortable: true, format: val => { var res = this.listaTipoTarifa.find(row => row.codElemento === val); return (res === undefined ? '' : res.valor1) } },
+        { name: 'Fianza', align: 'left', label: 'Fianza', field: 'Fianza', sortable: true }
       ],
       pagination: { rowsPerPage: 0 }
     }
   },
   computed: {
-    ...mapState('login', ['user'])
+    ...mapState('login', ['user']),
+    ...mapState('tablasAux', ['listaTipoEstancia', 'listaTipoTarifa'])
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
-    ...mapActions('estancias', ['addEstancia', 'borrarEstancia']),
-    addRecord () {
+    ...mapActions('estancias', ['findEstancia', 'addEstancia', 'borrarEstancia']),
+    getRecords () {
+      var objFilter = {}
+      if (this.fromEstanciasMain !== undefined) {
+        Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
+        // return this.$axios.get('estancias/bd_estancias.php/findEstanciasFilter', { params: objFilter })
+        this.findEstancia(objFilter)
+          .then(response => {
+            this.registrosSeleccionados = response.data
+            this.expanded = false
+          })
+          .catch(error => {
+            this.$q.dialog({ title: 'Error', message: error })
+          })
+      }
+    },
+    addRecord () { // llamada store vuex
       var record = {
-        fechaEntrada: date.formatDate(new Date(), 'YYYY-MM-DD HH:mm:ss')
+        tipoEstancia: 2,
+        fechaEntrada: date.formatDate(new Date(), 'YYYY-MM-DD'),
+        fechaSalida: date.addToDate(new Date(), { days: 1 })
       }
       this.addEstancia(record)
         .then(response => {
-          console.log(response.data.id)
           record.id = response.data.id
           this.editRecord(record, record.id)
         })
@@ -151,6 +163,7 @@ export default {
             this.$q.dialog({
               message: 'Se ha borrado la estancia.'
             })
+            this.getRecords()
           })
           .catch(error => {
             this.$q.dialog({
@@ -158,10 +171,10 @@ export default {
             })
           })
       })
-    },
-    mostrarDatosPieTabla () {
-      return this.registrosSeleccionados.length + ' Filas'
     }
+  },
+  mounted () {
+    this.getRecords()
   }
 }
 </script>

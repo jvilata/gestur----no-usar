@@ -6,6 +6,8 @@ import clientes from './store-clientes'
 import servicios from './store-servicios'
 import estancias from './store-estancias'
 import tablasAux from './store-tab-aux'
+import tarifas from './store-tarifas'
+import facturas from './store-facturas'
 // import example from './module-example'
 
 Vue.use(Vuex)
@@ -27,7 +29,9 @@ export default function (/* { ssrContext } */) {
       clientes,
       servicios,
       estancias,
-      tablasAux
+      tablasAux,
+      tarifas,
+      facturas
     },
 
     // enable strict mode (adds overhead!)
