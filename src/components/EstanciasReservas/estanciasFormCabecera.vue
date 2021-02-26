@@ -155,19 +155,30 @@ export default {
       return date.formatDate(date1, 'DD/MM/YYYY')
     },
     rellenarDatosFact () {
-      this.generarFactura(this.value.id)
-        .then(response => {
-          // smth
+      // solo hay que generar factura cuando nroFactura sea cero
+      if (this.recordToSubmit.NroFactura === '0') {
+        this.generarFactura(this.value.id)
+          .then(response => {
+            // smth
+          })
+          .catch(error => {
+            this.$q.dialog({ title: 'Error', message: error })
+          })
+      } else {
+        this.$q.dialog({
+          title: 'Aviso',
+          message: 'Ya se ha generado una factura para esta estancia',
+          ok: true,
+          persistent: true
+        }).onOk(() => {
+          this.$emit('close')
         })
-        .catch(error => {
-          this.$q.dialog({ title: 'Error', message: error })
-        })
+      }
     }
   },
   mounted () {
     this.listaClientesFilter = this.listaClientes
     this.recordToSubmit = Object.assign({}, this.value)
-    console.log(this.recordToSubmit)
   },
   watch: {
     recordToSubmit: { // detecta cambios en las propiedades de este objeto (tienen que estar inicializadas en data())
