@@ -4,7 +4,7 @@
         <q-item-section avatar>
           <q-icon name="search" size="md"/>
         </q-item-section>
-        <q-item-section class="text-center">
+        <q-item-section>
           <q-item-label class="text-h6 ">
             {{ nomFormulario }}
           </q-item-label>
@@ -74,7 +74,6 @@ export default {
       this.getRecords(this.value.filterRecord) // refresco la lista por si se han hecho cambios
     } else { // no esta inicializado
       this.registrosSeleccionados = []
-      console.log('No se han filtrado clientes')
     }
   },
   components: {

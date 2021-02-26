@@ -7,20 +7,20 @@
     <q-form @submit="getRecords" class="q-gutter-y-xs">
       <q-input outlined clearable label="ID Cliente" stack-label v-model="filterR.id" />
       <q-input outlined autofocus clearable label="Nombre" stack-label v-model="filterR.nombre" />
-      <q-input outlined clearable label="Fecha Entrada" stack-label :value="formatDate(filterR.fechaEntrada)" @input="val => filterR.fechainicial=val" >
+      <q-input outlined clearable label="Fecha Entrada" stack-label :value="formatDate(filterR.fechaInicio)" @input="val => filterR.fechaInicio=val" >
         <template v-slot:append>
             <q-icon name="event" class="cursos-pointer">
               <q-popup-proxy>
-                <wgDate v-model="filterR.fechainicial" />
+                <wgDate v-model="filterR.fechaInicio" />
               </q-popup-proxy>
             </q-icon>
         </template>
       </q-input>
-      <q-input outlined clearable label="Fecha Salida" stack-label :value="formatDate(filterR.fechaSalida)" @input="val => filterR.fechafinal=val" >
+      <q-input outlined clearable label="Fecha Salida" stack-label :value="formatDate(filterR.fechaFin)" @input="val => filterR.fechaFin=val" >
         <template v-slot:append>
             <q-icon name="event" class="cursos-pointer">
               <q-popup-proxy>
-                <wgDate v-model="filterR.fechafinal" />
+                <wgDate v-model="filterR.fechaFin" />
               </q-popup-proxy>
             </q-icon>
         </template>

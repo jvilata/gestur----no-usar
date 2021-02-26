@@ -56,11 +56,9 @@
               @click.native="openForm(link.link)"
               exact
               class="text-grey-8"  >
-               <!--Todos los campos son visibles por Los usuarios excepto el de APROBACION - mounted-->
               <q-item-section v-if="link.icon" avatar> <!--Iconos del DRAWER -->
                 <q-icon :name="link.icon"  v-if="link.title " />
               </q-item-section>
-
               <q-item-section><!--Títulos del DRAWER -->
                 <q-item-label v-ripple clickable v-if="link.title">{{ link.title  }}</q-item-label>
               </q-item-section>
@@ -72,6 +70,10 @@
               label="Otros" >
               <div v-for="link in otros" :key="link.title">
                 <q-item clickable @click.native="openForm(link.link)" exact>
+                  <!--ICONOS del DRAWER -->
+                  <!-- <q-item-section>
+                    <q-icon :name="link.icon"  v-if="link.title " />
+                  </q-item-section> -->
                   <q-item-section><!--Títulos del DRAWER -->
                     <q-item-label
                       v-ripple
@@ -132,7 +134,7 @@ export default {
         },
         {
           title: 'Gastos de Caja',
-          icon: 'chat',
+          icon: 'euro',
           link: {
             name: 'gastosCajaMain',
             label: 'Gastos de Caja'
@@ -140,7 +142,7 @@ export default {
         },
         {
           title: 'Otros',
-          icon: 'chat',
+          icon: 'settings',
           link: {
             name: 'otros',
             label: 'Otros'
@@ -149,11 +151,11 @@ export default {
       ],
       otros: [
         {
-          title: 'Gastos de Caja',
+          title: 'Tablas Auxiliares',
           icon: 'chat',
           link: {
-            name: 'gastosCajaMain',
-            label: 'Gastos de Caja'
+            name: 'tablasMain',
+            label: 'Tablas Auxiliares'
           }
         },
         {
@@ -165,11 +167,19 @@ export default {
           }
         },
         {
-          title: 'Tablas Auxiliares',
+          title: 'Tarifas de Servicios',
           icon: 'chat',
           link: {
-            name: 'tablasMain',
-            label: 'Tablas Auxiliares'
+            name: 'tarifasMain',
+            label: 'Tarifas de Servicios'
+          }
+        },
+        {
+          title: 'Disco Guardia Civil',
+          icon: 'shield',
+          link: {
+            name: 'discoGCMain',
+            label: 'Disco Guardia Civil'
           }
         }
       ]

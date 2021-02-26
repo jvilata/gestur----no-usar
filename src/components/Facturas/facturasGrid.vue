@@ -96,7 +96,7 @@
 import { mapState, mapActions } from 'vuex'
 import { date } from 'quasar'
 export default {
-  props: ['value', 'fromEstanciasMain'], // en 'value' tenemos la tabla de datos del grid
+  props: ['value', 'fromFacturasMain'], // en 'value' tenemos la tabla de datos del grid
   data () {
     return {
       rowId: '',
@@ -118,7 +118,7 @@ export default {
         { name: 'fechaSalida', align: 'left', label: 'Fecha Salida', field: 'fechaSalida', sortable: true, format: val => date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') },
         { name: 'nroFactura', align: 'left', label: 'Nº.Factura', field: 'nroFactura', sortable: true },
         { name: 'base', align: 'left', label: 'Base', field: 'base', sortable: true },
-        { name: 'iva', align: 'left', label: 'iva', field: 'iva', sortable: true },
+        { name: 'iva', align: 'left', label: 'IVA', field: 'iva', sortable: true },
         { name: 'total', align: 'left', label: 'Total', field: 'total', sortable: true },
         { name: 'faltaCob', align: 'left', label: 'Falta Cobrar', field: 'faltaCob', sortable: true },
         { name: 'efectivo', align: 'left', label: 'Efectivo', field: 'efectivo', sortable: true },
@@ -133,6 +133,21 @@ export default {
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
+    ...mapActions('facturas', ['addFactura', 'borrarFactura']),
+    getRecords () {
+      var objFilter = {}
+      if (this.fromFacturasMain !== undefined) {
+        Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
+        return this.$axios.get('facturas/bd_facturas.php/findFacturasFilter', { params: objFilter })
+          .then(response => {
+            this.registrosSeleccionados = response.data
+            this.expanded = false
+          })
+          .catch(error => {
+            this.$q.dialog({ title: 'Error', message: error })
+          })
+      }
+    },
     addRecord () {
       var record = {
         idCliente: 0,
@@ -143,23 +158,16 @@ export default {
         total: 0,
         base: 0
       }
-      this.editRecord(record, 1)
-      // return this.$axios.post('facturas/bd_facturas.php/findFacturasFilter/', record)
-      //   .then(response => {
-      //     record.id = response.data.id
-      //     return this.$axios.get(`facturas/bd_facturas.php/findFacturasFilter/${record.id}`)
-      //       .then(response => {
-      //         record = response.data[0]
-      //         this.registrosSeleccionados.push(record)
-      //         this.editRecord(record, record.id)
-      //       })
-      //       .catch(error => {
-      //         this.$q.dialog({ title: 'Error', message: error })
-      //       })
-      //   })
-      //   .catch(error => {
-      //     this.$q.dialog({ title: 'Error', message: error })
-      //   })
+      this.addFactura(record)
+        .then(response => {
+          record.id = response.data.id
+          this.editRecord(record, record.id)
+        })
+        .catch(error => {
+          this.$q.dialog({
+            message: error.message
+          })
+        })
     },
     editRecord (rowChanges, id) {
       this.addTab(['facturasFormMain', 'Factura-' + rowChanges.id, rowChanges, rowChanges.id])
@@ -172,21 +180,22 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
-        // return this.$axios.delete(`facturas/bd_facturas.php/findFacturasFilter/${id}`, JSON.stringify({ id: id }))
-        //   .then(response => {
-        //     var index = this.registrosSeleccionados.findIndex(function (record) { // busco elemento del array con este id
-        //       if (record.id === id) return true
-        //     })
-        //     this.registrosSeleccionados.splice(index, 1) // lo elimino del array
-        //   })
-        //   .catch(error => {
-        //     this.$q.dialog({ title: 'Error', message: error })
-        //   })
+        this.borrarFactura(id)
+          .then(result => {
+            this.$q.dialog({
+              message: 'Se ha borrado la estancia.'
+            })
+          })
+          .catch(error => {
+            this.$q.dialog({
+              message: error.message
+            })
+          })
       })
-    },
-    mostrarDatosPieTabla () {
-      return this.registrosSeleccionados.length + ' Filas'
     }
+  },
+  mounted () {
+    this.getRecords()
   }
 }
 </script>

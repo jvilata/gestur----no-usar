@@ -78,7 +78,7 @@
       <template v-slot:no-data>
         <div class="absolute-bottom text-center q-mb-sm">
           <q-btn
-            @click.stop="addRecord"
+            @click.stop="addRecord()"
             round
             dense
             color="indigo-5"
@@ -94,7 +94,7 @@
       <template v-slot:bottom>
         <div class="absolute-bottom text-center q-mb-sm">
           <q-btn
-            @click.stop="addRecord"
+            @click.stop="addRecord()"
             round
             dense
             color="indigo-5"

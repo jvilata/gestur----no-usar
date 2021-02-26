@@ -4,16 +4,16 @@
       <div class="row">
         <q-input class="col-xs-4 col-sm-1" readonly outlined label="ID Estancia" stack-label v-model="recordToSubmit.id" />
         <q-select
-          class="col-xs-8 col-sm-4"
+          class="col-xs-8 col-sm-5"
           outlined
           label="Cliente"
           stack-label
           v-model="recordToSubmit.idCliente"
           :options="listaClientesFilter"
-          map-options
           option-value="id"
           option-label="nombre"
           emit-value
+          map-options
           @filter="filterClientes"
           use-input
           hide-selected
@@ -26,15 +26,28 @@
             label="Tipo Estancia"
             stack-label
             v-model="recordToSubmit.tipoEstancia"
-            :options="listaTiposEstancia"
+            :options="listaTipoEstancia"
+            option-value="codElemento"
+            option-label="valor1"
+            emit-value
+            map-options
           />
-        <q-input class="col-xs-3 col-sm-1" outlined label="Nº. Ticket" stack-label v-model="recordToSubmit.nroTicket" />
-        <q-input class="col-xs-3 col-sm-3" outlined label="FianzaEntr." stack-label v-model="recordToSubmit.fianzaEntregada" />
+          <q-select
+          class="col-xs-6 col-sm-3"
+          outlined
+          label="Tipo Tarifa"
+          stack-label
+          v-model="recordToSubmit.tipoTarifa"
+          :options="listaTipoTarifa"
+          option-value="codElemento"
+          option-label="valor1"
+          map-options
+        />
       </div>
-      <div class="row q-mt-xs">
+      <div class="row">
           <q-input
-            label="Fecha Inicio"
-            class="col-xs-6 col-sm-2"
+            label="Fecha Entrada"
+            class="col-xs-6 col-sm-3"
             clearable
             outlined
             stack-label
@@ -52,8 +65,8 @@
             </template>
           </q-input>
           <q-input
-            label="Fecha Fin"
-            class="col-xs-6 col-sm-2"
+            label="Fecha Salida"
+            class="col-xs-6 col-sm-3"
             clearable
             outlined
             stack-label
@@ -70,21 +83,47 @@
               </q-icon>
           </template>
           </q-input>
-        <q-select
-          class="col-xs-5 col-sm-2"
-          outlined
-          label="Tarifa"
-          stack-label
-          v-model="recordToSubmit.tipoTarifa"
-          :options="listaTarifas"
-        />
-        <q-input class="col-xs-7 col-sm-6" autogrow outlined label="Observaciones" stack-label v-model="recordToSubmit.observaciones" />
+        <q-input class="col-xs-12 col-sm-6" autogrow outlined label="Observaciones" stack-label v-model="recordToSubmit.observaciones" />
+      </div>
+      <div class="row q-mt-lg">
+        <q-input class="col-xs-2 col-sm-1" outlined label="Fianza" stack-label v-model="recordToSubmit.Fianza" />
+        <q-input class="col-xs-3 col-sm-2" outlined readonly label="Base" stack-label v-model="recordToSubmit.base" />
+        <q-input class="col-xs-3 col-sm-1" outlined label="%Retención" stack-label v-model="recordToSubmit.porRetencion" @blur="$emit('calculaTotalesEst', recordToSubmit)"/>
+        <q-input class="col-xs-4 col-sm-1" outlined readonly label="Importe retención" stack-label v-model="recordToSubmit.Retencion"/>
+        <q-input class="col-xs-6 col-sm-2" outlined readonly label="Total IVA" stack-label v-model="recordToSubmit.totalIva"/>
+        <q-input class="col-xs-6 col-sm-2" outlined readonly label="Total Estancia" stack-label v-model="recordToSubmit.totalEstancia" />
+        <q-input class="col-xs-4 col-sm-1" outlined label="En efectivo" stack-label v-model="recordToSubmit.ACuenta" />
+        <q-input class="col-xs-4 col-sm-1" outlined label="Transferencia" stack-label v-model="recordToSubmit.PorBanco" />
+        <q-input class="col-xs-4 col-sm-1" outlined label="TPV" stack-label v-model="recordToSubmit.PorDatafono" />
+      </div>
+      <div class="row q-mt-sm">
+        <q-btn outline class="col-xs-12 col-sm-2" color="primary" label="Generar Factura" @click="rellenarDatosFact" />
+        <q-input
+            label="Fecha Factura"
+            class="col-xs-6 col-sm-2"
+            clearable
+            outlined
+            stack-label
+            :value="formatDate(recordToSubmit.fechaFactura)"
+            @input="(val) => recordToSubmit.fechaFactura=val"
+            >
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy ref="fechaFactura">
+                  <wgDate
+                      @input="$refs.fechaFactura.hide()"
+                      v-model="recordToSubmit.fechaFactura" />
+              </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+        <q-input class="col-xs-6 col-sm-2" outlined label="Número Factura" stack-label v-model="recordToSubmit.numeroFactura" />
       </div>
   </q-card>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { date } from 'quasar'
 import wgDate from 'components/General/wgDate.vue'
 
@@ -92,20 +131,20 @@ export default {
   props: ['value'], // value es el objeto con los campos de filtro que le pasa accionesMain con v-model
   data () {
     return {
-      listaClientesFilter: this.listaCiientes,
-      recordToSubmit: {},
-      listaTiposEstancia: ['Camping', 'Caravana', 'Molino'],
-      listaTarifas: ['Tarifa Alta', 'Tarifa Baja', 'Tarifa Media']
+      listaClientesFilter: this.listaClientes,
+      recordToSubmit: {}
     }
   },
   computed: {
     ...mapState('login', ['user']),
-    ...mapState('clientes', ['listaClientes'])
+    ...mapState('clientes', ['listaClientes']),
+    ...mapState('tablasAux', ['listaTipoEstancia', 'listaTipoTarifa'])
   },
   components: {
     wgDate: wgDate
   },
   methods: {
+    ...mapActions('estancias', 'generarFactura'),
     filterClientes (val, update, abort) {
       update(() => {
         const needle = val.toLowerCase()
@@ -114,10 +153,28 @@ export default {
     },
     formatDate (date1) {
       return date.formatDate(date1, 'DD/MM/YYYY')
+    },
+    rellenarDatosFact () {
+      this.generarFactura(this.value.id)
+        .then(response => {
+          // smth
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
     }
   },
   mounted () {
+    this.listaClientesFilter = this.listaClientes
     this.recordToSubmit = Object.assign({}, this.value)
+  },
+  watch: {
+    recordToSubmit: { // detecta cambios en las propiedades de este objeto (tienen que estar inicializadas en data())
+      handler (val) {
+        this.$emit('hasChanges', { hasChanges: true, colorBotonSave: 'red' })
+      },
+      deep: true
+    }
   },
   destroyed () {
     // guardamos valor en tabs por si despus queremos recuperarlo

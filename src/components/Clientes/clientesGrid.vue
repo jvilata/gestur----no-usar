@@ -86,7 +86,6 @@
 
 <script>
 import { mapActions } from 'vuex'
-import { date } from 'quasar'
 
 export default {
   props: ['value', 'id', 'keyValue', 'fromClientesMain'], // en value tenemos los registrosSeleccionados
@@ -96,12 +95,11 @@ export default {
       expanded: false,
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id' },
-        { name: 'nombre', align: 'left', label: 'Nombre', field: 'nombre', style: 'width: 150px; whiteSpace: normal' },
-        { name: 'telefono', label: 'Teléfono', align: 'left', field: 'telefono', style: 'width: 100px' },
-        { name: 'dni', label: 'DNI', align: 'left', field: 'dni' },
+        { name: 'nombreCompleto', align: 'left', label: 'Nombre Completo', field: 'nombreCompleto', style: 'width: 150px; whiteSpace: normal' },
+        { name: 'telefonos', label: 'Teléfono', align: 'left', field: 'telefonos', style: 'width: 100px' },
+        { name: 'nroDoc', label: 'DNI/Pas', align: 'left', field: 'nroDoc' },
         { name: 'nacionalidad', align: 'left', label: 'Nacionalidad', field: 'nacionalidad' },
-        { name: 'matricula', align: 'left', label: 'Matrícula', field: 'matricula' },
-        { name: 'pendCobro', align: 'left', label: 'pendCobro', field: 'pendCobro', format: val => ((val !== undefined) ? date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') : '') }
+        { name: 'matricula', align: 'left', label: 'Matrícula', field: 'matricula' }
       ],
       pagination: { rowsPerPage: 0 }
     }
@@ -130,7 +128,7 @@ export default {
         })
     },
     editRecord (rowChanges, id) {
-      this.addTab(['editCliente', 'Editar Datos Cliente', rowChanges, id]) // tercer elemento donde dejo rowChanges es VALUE en tab
+      this.addTab(['editCliente', 'Editar Datos Cliente - ' + id, rowChanges, id]) // tercer elemento donde dejo rowChanges es VALUE en tab
     },
     deleteRecord (id) {
       this.$q.dialog({

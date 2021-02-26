@@ -5,26 +5,29 @@
     </q-card-section>
 
     <q-form @submit="getRecords" class="q-gutter-y-xs">
-      <q-input outlined clearable label="ID Cliente" stack-label v-model="filterR.id" />
-      <q-input outlined autofocus clearable label="Nombre" stack-label v-model="filterR.nombre" />
-      <q-input outlined clearable label="Fecha Entrada" stack-label :value="formatDate(filterR.fechaEntrada)" @input="val => filterR.fechainicial=val" >
+      <q-input outlined clearable label="Desde - Fecha" stack-label :value="formatDate(filterR.fechaInicio)" @input="val => filterR.fechaInicio=val" >
         <template v-slot:append>
             <q-icon name="event" class="cursos-pointer">
-              <q-popup-proxy>
-                <wgDate v-model="filterR.fechainicial" />
+              <q-popup-proxy ref="qProxy1">
+                <wgDate
+                  v-model="filterR.fechaInicio"
+                  @input="$refs.qProxy1.hide()"/>
               </q-popup-proxy>
             </q-icon>
         </template>
       </q-input>
-      <q-input outlined clearable label="Fecha Salida" stack-label :value="formatDate(filterR.fechaSalida)" @input="val => filterR.fechafinal=val" >
+      <q-input outlined clearable label="Hasta - Fecha" stack-label :value="formatDate(filterR.fechaFin)" @input="val => filterR.fechaFin=val" >
         <template v-slot:append>
             <q-icon name="event" class="cursos-pointer">
-              <q-popup-proxy>
-                <wgDate v-model="filterR.fechafinal" />
+              <q-popup-proxy ref="qProxy1">
+                <wgDate
+                  v-model="filterR.fechaFin"
+                  @input="$refs.qProxy1.hide()"/>
               </q-popup-proxy>
             </q-icon>
         </template>
       </q-input>
+      <q-input outlined clearable label="Descripción" stack-label v-model="filterR.descripcion" />
       <q-card-actions align="right">
         <q-btn  flat type="submit" label="Buscar" color="primary"/>
         <q-btn  flat label="Cancel" color="primary" @click="$emit('hide')"/><!-- lo captura accionesMain -->
@@ -41,17 +44,16 @@ export default {
   data () {
     return {
       filterR: {
-        id: '',
-        nombre: '',
-        fechaEntrada: '',
-        fechaSalida: ''
+        fecha: '',
+        descripcion: '',
+        cantidad: '',
+        factura: ''
       },
       filterAux: {
-        nombre: 'jose',
-        idCliente: '1',
-        idEstancia: '1',
-        fechaEntrada: '1/1/2020',
-        fechaSalida: '31/12/2020',
+        fecha: '1/1/2020',
+        factura: '6615339X',
+        descripcion: 'Primera factura',
+        cantidad: 1,
         total: '500'
       }
     }

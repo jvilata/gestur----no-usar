@@ -4,7 +4,7 @@
       <q-item clickable v-ripple @click="expanded = !expanded" class="q-ma-md q-pa-xs bg-blue-grey-1 text-grey-8">
         <!-- cabecera de formulario. Botón de busqueda y cierre de tab -->
         <q-item-section avatar>
-          <q-icon name="fas fa-filter" />
+          <q-icon name="create" />
         </q-item-section>
         <q-item-section>
           <q-item-label class="text-h6">

@@ -3,7 +3,7 @@
       <q-item clickable v-ripple @click="expanded = !expanded" class="q-ma-md q-pa-xs bg-blue-grey-1 text-grey-8">
         <!-- cabecera de formulario. Botón de busqueda y cierre de tab -->
         <q-item-section avatar>
-          <q-icon name="fas fa-filter" />
+          <q-icon name="event_available" />
         </q-item-section>
         <q-item-section>
           <q-item-label class="text-h6">
@@ -36,8 +36,9 @@
 
       <!-- formulario tabla de resultados de busqueda -->
       <estanciasGrid
+        :value="filterRecord"
         fromEstanciasMain=true
-        v-model="registrosSeleccionados"
+        :key="refreshKey"
         />
     </div>
 </template>
@@ -49,6 +50,7 @@ export default {
   data () {
     return {
       expanded: false,
+      refreshKey: 0,
       visible: '',
       filterRecord: {},
       nomFormulario: 'Estancias y Reservas',
@@ -62,21 +64,12 @@ export default {
     getRecords (filter) {
       // hago la busqueda de registros segun condiciones del formulario Filter que ha lanzado el evento getRecords
       Object.assign(this.filterRecord, filter)
-      var objFilter = Object.assign({}, this.filterRecord)
-      return this.$axios.get('estancias/bd_estancias.php/findEstanciasFilter', { params: objFilter })
-        .then(response => {
-          this.registrosSeleccionados = response.data
-          this.expanded = false
-        })
-        .catch(error => {
-          this.$q.dialog({ title: 'Error', message: error })
-        })
+      this.refreshKey++
+      this.expanded = false
     }
   },
   mounted () {
     if (this.value.filterRecord) { // si ya hemos cargado previamente los recargo al volver a este tab
-      this.expanded = false
-      Object.assign(this.filterRecord, this.value.filterRecord)
       this.getRecords(this.filterRecord)
     } else { // es la primera vez que entro, cargo valores po defecto
       this.filterRecord = {}
