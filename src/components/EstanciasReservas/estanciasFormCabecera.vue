@@ -104,20 +104,20 @@
             clearable
             outlined
             stack-label
-            :value="formatDate(recordToSubmit.fechaFactura)"
-            @input="(val) => recordToSubmit.fechaFactura=val"
+            :value="formatDate(recordToSubmit.FechaFactura)"
+            @input="(val) => recordToSubmit.FechaFactura=val"
             >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy ref="fechaFactura">
+              <q-popup-proxy ref="FechaFactura">
                   <wgDate
-                      @input="$refs.fechaFactura.hide()"
-                      v-model="recordToSubmit.fechaFactura" />
+                      @input="$refs.FechaFactura.hide()"
+                      v-model="recordToSubmit.FechaFactura" />
               </q-popup-proxy>
               </q-icon>
             </template>
           </q-input>
-        <q-input class="col-xs-6 col-sm-2" outlined label="Número Factura" stack-label v-model="recordToSubmit.numeroFactura" />
+        <q-input class="col-xs-6 col-sm-2" outlined label="Número Factura" stack-label v-model="recordToSubmit.NroFactura" />
       </div>
   </q-card>
 </template>
@@ -167,6 +167,7 @@ export default {
   mounted () {
     this.listaClientesFilter = this.listaClientes
     this.recordToSubmit = Object.assign({}, this.value)
+    console.log(this.recordToSubmit)
   },
   watch: {
     recordToSubmit: { // detecta cambios en las propiedades de este objeto (tienen que estar inicializadas en data())
