@@ -100,6 +100,7 @@ export default {
     cambiaDatos (record) {
       this.hasChanges = record.hasChanges
       this.colorBotonSave = record.colorBotonSave
+      Object.assign(this.recordToSubmit, record.record)
     },
     getRecord () {
       var record = {
@@ -176,7 +177,7 @@ export default {
         for (var key in paramRecord) {
           formData.append(key, paramRecord[key])
         }
-        this.$axios.post('facturas/pdf_invoice.php/', formData, { responseType: (aDisco === 0 ? 'blob' : '') })
+        this.$axios.post('estancias/pdf_invoice.php/', formData, { responseType: (aDisco === 0 ? 'blob' : '') })
           .then(function (response) {
             if (aDisco === 2) resolve(response)
             else {

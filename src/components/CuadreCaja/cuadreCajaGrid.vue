@@ -7,8 +7,8 @@
       :pagination.sync="pagination"
       :rows-per-page-options="[0]"
       :virtual-scroll-sticky-size-start="48"
-      row-key="name"
-      :data="data"
+      row-key="id"
+      :data="registrosSeleccionados"
       :columns="columns"
       table-style="max-height: 70vh; max-width: 93vw"
     >
@@ -45,7 +45,6 @@
             <div :style="col.style">
                 <div >{{ col.value }}</div>
             </div>
-            <q-btn v-if="['calcular'].includes(col.name)" label="CALCULAR" style="font-size: 0.8rem;" color="indigo-3"/>
             <q-popup-edit
               v-model="props.row[col.name]"
               buttons
@@ -56,12 +55,12 @@
                 v-model="props.row[col.name]"
                 dense
                 autofocus />
-                <wgDate v-if="['fecha'].includes(col.name)"
-                  v-model="props.row[col.name]" />
             </q-popup-edit>
            </q-td>
            <q-td>
-              <q-btn outline label="comp" style="font-size: 0.8rem;" color="indigo-3"/>
+              <q-slide-transition>
+                <q-btn icon="cloud_download" style="font-size: 0.8rem;" color="indigo-3" @click="editRecord(props.row.id)"/>
+              </q-slide-transition>
             </q-td>
         </q-tr>
       </template>
@@ -104,22 +103,20 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { date } from 'quasar'
-import wgDate from 'components/General/wgDate.vue'
 export default {
-  props: ['value'], // en 'value' tenemos la tabla de datos del grid
+  props: ['value', 'fromEstanciasMain'], // en 'value' tenemos la tabla de datos del grid
   data () {
     return {
       rowId: '',
       columns: [
-        { name: 'fecha', align: 'left', label: 'Fecha', field: 'fecha', sortable: true, format: val => date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') },
-        { name: 'descripcion', align: 'left', label: 'Descripción', field: 'descripcion', sortable: true },
-        { name: 'calcular', align: 'left', sortable: true },
-        { name: 'cantidad', align: 'left', label: 'Cantidad', field: 'cantidad', sortable: true },
-        { name: 'factura', align: 'left', label: 'Factura', field: 'factura', sortable: true }
-      ],
-      data: [
-        { fecha: '01-01-2021', descripcion: 'Muy Caro', cantidad: 5000, factura: 'emitida' },
-        { fecha: '01-01-2021', descripcion: 'Barato', cantidad: 10, factura: 'emitida' }
+        { name: 'fechaInicial', align: 'left', label: 'Fecha Inicial', field: 'fechaInicial', sortable: true, format: val => date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') },
+        { name: 'fechaFinal', align: 'left', label: 'Fecha Final', field: 'fechaFinal', sortable: true },
+        { name: 'facturacionPeriodo', align: 'left', label: 'Facturacion Periodo', field: 'facturacionPeriodo', sortable: true },
+        { name: 'recaudacionCaja', align: 'left', label: 'recaudacionCaja', field: 'recaudacionCaja', sortable: true },
+        { name: 'gastosCaja', align: 'left', label: 'gastosCaja', field: 'gastosCaja', sortable: true },
+        { name: 'cajaAIngresar', align: 'left', label: 'cajaAIngresar', field: 'cajaAIngresar', sortable: true },
+        { name: 'descuadre', align: 'left', label: 'descuadre', field: 'descuadre', sortable: true },
+        { name: 'observaciones', align: 'left', label: 'observaciones', field: 'observaciones', sortable: true }
       ],
       pagination: { rowsPerPage: 0 }
     }
@@ -127,16 +124,15 @@ export default {
   computed: {
     ...mapState('login', ['user'])
   },
-  components: {
-    wgDate: wgDate
-  },
   methods: {
     ...mapActions('tabs', ['addTab']),
     addRecord () {
-      // añadir fila nueva
+      var record = { }
+      this.editRecord(record, 1)
+      // añadir una fila nueva
     },
-    updateRecord () {
-      // a implementar
+    editRecord (rowChanges, id) { // no lo uso aqui pero lod ejo como demo
+      // this.addTab(['facturasFormMain', 'Factura-' + rowChanges.id, rowChanges, rowChanges.id])
     },
     deleteRecord (id) {
       this.$q.dialog({
@@ -146,8 +142,11 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
-        // a implementar
+
       })
+    },
+    mostrarDatosPieTabla () {
+      return this.registrosSeleccionados.length + ' Filas'
     }
   }
 }

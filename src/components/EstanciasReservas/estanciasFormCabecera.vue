@@ -104,20 +104,20 @@
             clearable
             outlined
             stack-label
-            :value="formatDate(recordToSubmit.fechaFactura)"
-            @input="(val) => recordToSubmit.fechaFactura=val"
+            :value="formatDate(recordToSubmit.FechaFactura)"
+            @input="(val) => recordToSubmit.FechaFactura=val"
             >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy ref="fechaFactura">
+              <q-popup-proxy ref="FechaFactura">
                   <wgDate
-                      @input="$refs.fechaFactura.hide()"
-                      v-model="recordToSubmit.fechaFactura" />
+                      @input="$refs.FechaFactura.hide()"
+                      v-model="recordToSubmit.FechaFactura" />
               </q-popup-proxy>
               </q-icon>
             </template>
           </q-input>
-        <q-input class="col-xs-6 col-sm-2" outlined label="Número Factura" stack-label v-model="recordToSubmit.numeroFactura" />
+        <q-input class="col-xs-6 col-sm-2" outlined label="Número Factura" stack-label v-model="recordToSubmit.NroFactura" />
       </div>
   </q-card>
 </template>
@@ -144,7 +144,7 @@ export default {
     wgDate: wgDate
   },
   methods: {
-    ...mapActions('estancias', 'generarFactura'),
+    ...mapActions('estancias', ['generarFactura', 'findEstancia']),
     filterClientes (val, update, abort) {
       update(() => {
         const needle = val.toLowerCase()
@@ -155,13 +155,32 @@ export default {
       return date.formatDate(date1, 'DD/MM/YYYY')
     },
     rellenarDatosFact () {
-      this.generarFactura(this.value.id)
-        .then(response => {
-          // smth
+      // solo hay que generar factura cuando nroFactura sea cero
+      if (this.recordToSubmit.NroFactura === '0') {
+        this.generarFactura(this.recordToSubmit)
+          .then(response => {
+            // volvemos a leer la factura
+            this.findEstancia({ id: this.recordToSubmit.id })
+              .then(response => {
+                Object.assign(this.recordToSubmit, response.data[0])
+              })
+              .catch(error => {
+                this.$q.dialog({ title: 'Error', message: error })
+              })
+          })
+          .catch(error => {
+            this.$q.dialog({ title: 'Error', message: error })
+          })
+      } else {
+        this.$q.dialog({
+          title: 'Aviso',
+          message: 'Ya se ha generado una factura para esta estancia',
+          ok: true,
+          persistent: true
+        }).onOk(() => {
+          this.$emit('close')
         })
-        .catch(error => {
-          this.$q.dialog({ title: 'Error', message: error })
-        })
+      }
     }
   },
   mounted () {
@@ -171,7 +190,7 @@ export default {
   watch: {
     recordToSubmit: { // detecta cambios en las propiedades de este objeto (tienen que estar inicializadas en data())
       handler (val) {
-        this.$emit('hasChanges', { hasChanges: true, colorBotonSave: 'red' })
+        this.$emit('hasChanges', { record: this.recordToSubmit, hasChanges: true, colorBotonSave: 'red' })
       },
       deep: true
     }

@@ -19,9 +19,8 @@ const actions = {
   borrarEstancia ({ commit }, id) {
     return axiosInstance.get('estancias/bd_estancias.php/deleteBD', { params: { id: id } }, { withCredentials: true })
   },
-  generarFactura ({ commit }, id) {
-    // cambiar esta llamada!!!
-    return axiosInstance.get('estancias/bd_estancias.php/deleteBD', { params: { id: id } }, { withCredentials: true })
+  generarFactura ({ commit }, est) {
+    return axiosInstance.get('estancias/bd_estancias.php/generarFactura', { params: est }, { withCredentials: true })
   },
   // reservas
   addReserva ({ commit }, record) {
