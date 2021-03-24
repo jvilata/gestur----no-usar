@@ -92,6 +92,9 @@ export default {
   methods: {
     formatDate (date1) {
       return date.formatDate(date1, 'DD/MM/YYYY')
+    },
+    rellenarDatosFact () {
+      console.log('metodo por implementar')
     }
   },
   destroyed () {
