@@ -31,8 +31,7 @@ import { mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
-      ltab: '',
-      done: false
+      ltab: ''
     }
   },
   computed: {

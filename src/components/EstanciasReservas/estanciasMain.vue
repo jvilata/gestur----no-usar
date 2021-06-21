@@ -28,8 +28,7 @@
         <!-- formulario con campos de filtro -->
         <estanciasFilter
           :value="filterRecord"
-          @input="(value) => Object.assign(filterRecord, value)"
-          @getRecords="getRecords"
+          @getRecords="(val) => getRecords(val)"
           @hide="expanded = !expanded"
         />
       </q-dialog>
@@ -71,9 +70,9 @@ export default {
   },
   mounted () {
     if (this.value.filterRecord) { // si ya hemos cargado previamente los recargo al volver a este tab
-      Object.assign(this.filterRecord, this.value.filterRecord)
+      this.getRecords(this.value.filterRecord)
     } else { // es la primera vez que entro, cargo valores po defecto
-      this.filterRecord = { fechaEntrada: date.formatDate(new Date(), 'YYYY-MM-01') }
+      this.registrosSeleccionados = []
     }
     this.getRecords(this.filterRecord)
   },
