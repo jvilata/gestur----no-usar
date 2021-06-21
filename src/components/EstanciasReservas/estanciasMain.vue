@@ -44,6 +44,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { date } from 'quasar'
 export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
   data () {
@@ -73,6 +74,7 @@ export default {
     } else { // es la primera vez que entro, cargo valores po defecto
       this.registrosSeleccionados = []
     }
+    this.getRecords(this.filterRecord)
   },
   destroyed () {
     this.$emit('changeTab', { idTab: this.value.idTab, filterRecord: Object.assign({}, this.filterRecord), registrosSeleccionados: Object.assign({}, this.registrosSeleccionados) })
