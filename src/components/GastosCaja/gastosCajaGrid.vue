@@ -8,7 +8,7 @@
       :rows-per-page-options="[0]"
       :virtual-scroll-sticky-size-start="48"
       row-key="name"
-      :data="data"
+      :data="registrosSeleccionados"
       :columns="columns"
       table-style="max-height: 70vh; max-width: 93vw"
     >
@@ -45,8 +45,8 @@
             <div :style="col.style">
                 <div >{{ col.value }}</div>
             </div>
-            <q-btn v-if="['calcular'].includes(col.name)" label="CALCULAR" style="font-size: 0.8rem;" color="indigo-3"/>
             <q-popup-edit
+              v-if="['descripcion', 'cantidad', 'factura', 'fecha'].includes(col.name)"
               v-model="props.row[col.name]"
               buttons
               @save="updateRecord(props.row)">
@@ -60,9 +60,6 @@
                   v-model="props.row[col.name]" />
             </q-popup-edit>
            </q-td>
-           <q-td>
-              <q-btn outline label="comp" style="font-size: 0.8rem;" color="indigo-3"/>
-            </q-td>
         </q-tr>
       </template>
       <template v-slot:no-data>
@@ -110,16 +107,14 @@ export default {
   data () {
     return {
       rowId: '',
+      registrosSeleccionados: [],
       columns: [
         { name: 'fecha', align: 'left', label: 'Fecha', field: 'fecha', sortable: true, format: val => date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') },
         { name: 'descripcion', align: 'left', label: 'Descripción', field: 'descripcion', sortable: true },
-        { name: 'calcular', align: 'left', sortable: true },
         { name: 'cantidad', align: 'left', label: 'Cantidad', field: 'cantidad', sortable: true },
-        { name: 'factura', align: 'left', label: 'Factura', field: 'factura', sortable: true }
-      ],
-      data: [
-        { fecha: '01-01-2021', descripcion: 'Muy Caro', cantidad: 5000, factura: 'emitida' },
-        { fecha: '01-01-2021', descripcion: 'Barato', cantidad: 10, factura: 'emitida' }
+        { name: 'factura', align: 'left', label: 'Factura', field: 'factura', sortable: true },
+        { name: 'id', align: 'left', label: 'id', field: 'id', sortable: true },
+        { name: 'tipoGasto', align: 'left', label: 'Tipo Gasto', field: 'tipoGasto', sortable: true }
       ],
       pagination: { rowsPerPage: 0 }
     }
@@ -130,13 +125,52 @@ export default {
   components: {
     wgDate: wgDate
   },
+  mounted () {
+    if (this.value.fechaInicio !== undefined || this.value.fechaFin !== undefined) {
+      this.getRecords()
+    }
+  },
   methods: {
     ...mapActions('tabs', ['addTab']),
-    addRecord () {
-      // añadir fila nueva
+    ...mapActions('gastos', ['findGastos', 'addGastos', 'borrarGastos']),
+    getRecords () {
+      var objFilter = {}
+      Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
+      // return this.$axios.get('estancias/bd_estancias.php/findEstanciasFilter', { params: objFilter })
+      this.findGastos(objFilter)
+        .then(response => {
+          this.registrosSeleccionados = response.data
+          this.expanded = false
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
     },
-    updateRecord () {
-      // a implementar
+    addRecord () {
+      var record = {
+        fecha: date.formatDate(new Date(), 'YYYY-MM-DD 00:00:00'),
+        descripcion: '',
+        cantidad: 0.0,
+        factura: '',
+        tipoGasto: 'C'
+      }
+      this.addGastos(record)
+        .then((response) => {
+          record.id = response.data.id
+          this.registrosSeleccionados.push(record)
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
+    },
+    updateRecord (record) {
+      this.addGastos(record)
+        .then((response) => {
+          console.log(response.data)
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
     },
     deleteRecord (id) {
       this.$q.dialog({
@@ -146,7 +180,21 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
-        // a implementar
+        this.borrarGastos(id)
+          .then(result => {
+            this.$q.dialog({
+              message: 'Se ha borrado el gasto.'
+            })
+            var index = this.registrosSeleccionados.findIndex(function (record) { // busco elemento del array con este id
+              if (record.id === id) return true
+            })
+            this.registrosSeleccionados.splice(index, 1) // lo elimino del array
+          })
+          .catch(error => {
+            this.$q.dialog({
+              message: error.message
+            })
+          })
       })
     }
   }

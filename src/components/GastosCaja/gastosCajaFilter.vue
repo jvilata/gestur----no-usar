@@ -44,23 +44,15 @@ export default {
   data () {
     return {
       filterR: {
-        fecha: '',
-        descripcion: '',
-        cantidad: '',
-        factura: ''
-      },
-      filterAux: {
-        fecha: '1/1/2020',
-        factura: '6615339X',
-        descripcion: 'Primera factura',
-        cantidad: 1,
-        total: '500'
+        fechaInicio: '',
+        fechaFin: '',
+        descripcion: ''
       }
     }
   },
   methods: {
     getRecords () {
-      this.$emit('getRecords', this.filterAux) // lo captura accionesMain
+      this.$emit('getRecords', this.filterR)
     },
     formatDate (pdate) {
       return date.formatDate(pdate, 'DD-MM-YYYY')

@@ -57,11 +57,11 @@
                 autofocus />
             </q-popup-edit>
            </q-td>
-           <q-td>
+           <!-- <q-td>
               <q-slide-transition>
                 <q-btn icon="cloud_download" style="font-size: 0.8rem;" color="indigo-3" @click="editRecord(props.row.id)"/>
               </q-slide-transition>
-            </q-td>
+            </q-td> -->
         </q-tr>
       </template>
       <template v-slot:no-data>
@@ -108,13 +108,14 @@ export default {
   data () {
     return {
       rowId: '',
+      registrosSeleccionados: [],
       columns: [
         { name: 'fechaInicial', align: 'left', label: 'Fecha Inicial', field: 'fechaInicial', sortable: true, format: val => date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') },
-        { name: 'fechaFinal', align: 'left', label: 'Fecha Final', field: 'fechaFinal', sortable: true },
+        { name: 'fechaCierre', align: 'left', label: 'Fecha Final', field: 'fechaCierre', sortable: true, format: val => date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') },
         { name: 'facturacionPeriodo', align: 'left', label: 'Facturacion Periodo', field: 'facturacionPeriodo', sortable: true },
         { name: 'recaudacionCaja', align: 'left', label: 'recaudacionCaja', field: 'recaudacionCaja', sortable: true },
-        { name: 'gastosCaja', align: 'left', label: 'gastosCaja', field: 'gastosCaja', sortable: true },
-        { name: 'cajaAIngresar', align: 'left', label: 'cajaAIngresar', field: 'cajaAIngresar', sortable: true },
+        { name: 'gastosCajaPeriodo', align: 'left', label: 'gastosCaja', field: 'gastosCajaPeriodo', sortable: true },
+        { name: 'cajaPendiente', align: 'left', label: 'cajaAIngresar', field: 'cajaPendiente', sortable: true },
         { name: 'descuadre', align: 'left', label: 'descuadre', field: 'descuadre', sortable: true },
         { name: 'observaciones', align: 'left', label: 'observaciones', field: 'observaciones', sortable: true }
       ],
@@ -124,8 +125,14 @@ export default {
   computed: {
     ...mapState('login', ['user'])
   },
+  mounted () {
+    // if (this.value.fechaInicio !== undefined || this.value.fechaFin !== undefined) {
+    this.getRecords()
+    // }
+  },
   methods: {
     ...mapActions('tabs', ['addTab']),
+    ...mapActions('cuadrecaja', ['findCuadreCaja']),
     addRecord () {
       var record = { }
       this.editRecord(record, 1)
@@ -133,6 +140,18 @@ export default {
     },
     editRecord (rowChanges, id) { // no lo uso aqui pero lod ejo como demo
       // this.addTab(['facturasFormMain', 'Factura-' + rowChanges.id, rowChanges, rowChanges.id])
+    },
+    getRecords () {
+      var objFilter = {}
+      Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
+      this.findCuadreCaja(objFilter)
+        .then(response => {
+          this.registrosSeleccionados = response.data
+          this.expanded = false
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
     },
     deleteRecord (id) {
       this.$q.dialog({

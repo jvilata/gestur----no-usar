@@ -6,11 +6,6 @@
         <q-item-section avatar>
           <q-icon name="shield" />
         </q-item-section>
-        <q-item-section avatar>
-          <div class="row">
-            <q-btn label="GENERAR" style="font-size: 0.8rem;" color="brown-3" text-color="grey-9"/>
-          </div>
-        </q-item-section>
         <q-item-section>
           <q-item-label class="text-h6">
             {{ title }}
@@ -24,7 +19,48 @@
             dense
             icon="close"/>
         </q-item-section>
-    </q-item>
+      </q-item>
+        <div class="row q-ma-md">
+        <q-input
+            label="Fecha Inicial"
+            class="col-xs-6 col-sm-4"
+            clearable
+            outlined
+            stack-label
+            :value="formatDate(recordToSubmit.FechaInicialEntrada)"
+            @input="(val) => recordToSubmit.FechaInicialEntrada=val"
+            >
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy ref="FechaInicialEntrada">
+                  <wgDate
+                      @input="$refs.FechaInicialEntrada.hide()"
+                      v-model="recordToSubmit.FechaInicialEntrada" />
+              </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+          <q-input
+            label="Fecha Final"
+            class="col-xs-6 col-sm-4"
+            clearable
+            outlined
+            stack-label
+            :value="formatDate(recordToSubmit.FechaFinalEntrada)"
+            @input="(val) => recordToSubmit.FechaFinalEntrada=val"
+            >
+            <template v-slot:append>
+              <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy ref="FechaFinalEntrada">
+                  <wgDate
+                      @input="$refs.FechaFinalEntrada.hide()"
+                      v-model="recordToSubmit.FechaFinalEntrada" />
+              </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+          <q-btn outline class="col-xs-12 col-sm-4" color="primary" label="Generar" @click="rellenarDatosFact" />
+      </div>
     <q-card flat class="q-pb-xl">
       <q-list bordered>
         <q-expansion-item
@@ -55,15 +91,17 @@
 
 <script>
 import { mapState } from 'vuex'
+import { date } from 'quasar'
 // import { openBlobFile } from 'components/General/cordova.js'
 // import { openURL } from 'quasar'
+import wgDate from 'components/General/wgDate.vue'
 
 export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
   data () {
     return {
-      generado: false,
       recordToSubmit: {},
+      generado: false,
       title: 'DISCO GUARDIA CIVIL',
       refresh: 0,
       hasChanges: false,
@@ -78,9 +116,15 @@ export default {
     ...mapState('login', ['user']) // importo state.user desde store-login
   },
   methods: {
+    formatDate (date1) {
+      return date.formatDate(date1, 'DD/MM/YYYY')
+    },
     generarGC () {
       // a implementar
       this.generado = true
+    },
+    rellenarDatosFact () {
+      console.log('metodo por implementar')
     },
     cambiaDatos (record) {
       // ??
@@ -126,6 +170,7 @@ export default {
     this.getRecord()
   },
   components: {
+    wgDate: wgDate,
     guardiaCivilFormCabecera: require('components/GuardiaCivil/guardiaCivilFormCabecera.vue').default,
     guardiaCivilFormLineas: require('components/GuardiaCivil/guardiaCivilFormLineas.vue').default
   }

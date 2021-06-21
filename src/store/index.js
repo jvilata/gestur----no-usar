@@ -8,6 +8,8 @@ import estancias from './store-estancias'
 import tablasAux from './store-tab-aux'
 import tarifas from './store-tarifas'
 import facturas from './store-facturas'
+import gastos from './store-gastos'
+import cuadrecaja from './store-cuadrecaja'
 // import example from './module-example'
 
 Vue.use(Vuex)
@@ -31,7 +33,9 @@ export default function (/* { ssrContext } */) {
       estancias,
       tablasAux,
       tarifas,
-      facturas
+      facturas,
+      gastos,
+      cuadrecaja
     },
 
     // enable strict mode (adds overhead!)

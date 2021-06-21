@@ -32,14 +32,20 @@ const routes = [
             props: true
           },
           {
-            path: 'estanciasFormMain/:id',
-            name: 'estanciasFormMain',
-            component: () => import('components/EstanciasReservas/estanciasFormMain.vue'),
-            props: true,
-            children: [
-              { path: 'estanciasForm', name: 'estanciasForm', component: () => import('components/EstanciasReservas/estanciasForm.vue'), props: true }
-            ]
+            path: 'estanciasForm/:id',
+            name: 'estanciasForm',
+            component: () => import('components/EstanciasReservas/estanciasForm.vue'),
+            props: true
           },
+          // {
+          //   path: 'estanciasFormMain/:id',
+          //   name: 'estanciasFormMain',
+          //   component: () => import('components/EstanciasReservas/estanciasFormMain.vue'),
+          //   props: true,
+          //   children: [
+          //     { path: 'estanciasForm', name: 'estanciasForm', component: () => import('components/EstanciasReservas/estanciasForm.vue'), props: true }
+          //   ]
+          // },
           {
             path: 'gastosCajaMain',
             name: 'gastosCajaMain',

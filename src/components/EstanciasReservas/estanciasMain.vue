@@ -52,7 +52,7 @@ export default {
       refreshKey: 0,
       visible: '',
       filterRecord: {},
-      nomFormulario: 'Estancias y Reservas',
+      nomFormulario: 'Estancias y Facturas',
       registrosSeleccionados: []
     }
   },

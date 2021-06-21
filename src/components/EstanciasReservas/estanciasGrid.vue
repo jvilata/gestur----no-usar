@@ -169,7 +169,7 @@ export default {
         })
     },
     editRecord (rowChanges, id) {
-      this.addTab(['estanciasFormMain', 'Estancia-' + rowChanges.id, rowChanges, rowChanges.id])
+      this.addTab(['estanciasForm', 'Estancia-' + rowChanges.id, rowChanges, rowChanges.id])
     },
     deleteRecord (id) {
       this.$q.dialog({

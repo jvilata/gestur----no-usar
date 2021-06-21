@@ -35,13 +35,16 @@
 
       <!-- formulario tabla de resultados de busqueda -->
       <gastosCajaGrid
-        v-model="registrosSeleccionados"
-        />
+        :value="filterRecord"
+        :key="refreshKey"
+      />
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import { date } from 'quasar'
+
 export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
   data () {
@@ -59,11 +62,9 @@ export default {
   },
   methods: {
     getRecords (filterR) {
-      if (filterR.nombre === 'jose') {
-        Object.assign(this.registrosSeleccionados, this.filterAux)
-        this.refreshKey++
-        this.expanded = false
-      }
+      Object.assign(this.filterRecord, filterR)
+      this.refreshKey++
+      this.expanded = false
     }
   },
   mounted () {
@@ -71,7 +72,8 @@ export default {
       this.getRecords(this.value.filterRecord) // refresco la lista por si se han hecho cambios
     } else { // es la primera vez que entro, cargo valores po defecto
       // Object.assign(this.filterRecord, { codEmpresa: this.user.codEmpresa, estadoFactura: 'PENDIENTE' })
-      this.getRecords({ idEstancia: '1' })
+      this.filterRecord.fechaInicio = date.formatDate(date.subtractFromDate(new Date(), { days: 30 }), 'YYYY-MM-DD')
+      this.getRecords(this.filterRecord)
     }
   },
   destroyed () {

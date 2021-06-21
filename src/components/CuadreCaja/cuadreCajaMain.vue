@@ -21,7 +21,8 @@
       </q-item>
       <!-- formulario tabla de resultados de busqueda -->
       <cuadreCajaGrid
-        v-model="registrosSeleccionados"
+        :value="filterRecord"
+        :key="refreshKey"
         />
     </div>
 </template>
@@ -57,7 +58,6 @@ export default {
       this.getRecords(this.value.filterRecord) // refresco la lista por si se han hecho cambios
     } else { // es la primera vez que entro, cargo valores po defecto
       // Object.assign(this.filterRecord, { codEmpresa: this.user.codEmpresa, estadoFactura: 'PENDIENTE' })
-      this.getRecords({ idEstancia: '1' })
     }
   },
   destroyed () {
