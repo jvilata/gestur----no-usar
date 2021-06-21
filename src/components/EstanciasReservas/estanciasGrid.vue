@@ -52,14 +52,16 @@
       <template v-slot:bottom-row>
         <!-- BOTTOM-ROW DE LA TABLA -->
         <q-tr >
+          <q-th>
+             <div style="max-width: 35px"></div>
+          </q-th>
           <q-th
             v-for="col in columns"
             :key="col.name"
             :align="col.align"
           >
-            <div v-if="['base'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.base))) }}</div>
-            <div v-if="['total'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.totalEstancia))) }}</div>
-            <div v-if="['id'].includes(col.name)">ID DE LAS ESTANCIAS</div>
+            <div v-if="['base'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.base)), 0) }}</div>
+            <div v-if="['total'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.totalEstancia)), 0) }}</div>
           </q-th>
         </q-tr>
       </template>
@@ -136,7 +138,7 @@ export default {
     ...mapActions('estancias', ['findEstancia', 'addEstancia', 'borrarEstancia']),
     getRecords () {
       var objFilter = {}
-      if (this.fromEstanciasMain !== undefined) {
+      if (this.fromEstanciasMain !== undefined && this.value.fechaEntrada !== undefined) {
         Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
         // return this.$axios.get('estancias/bd_estancias.php/findEstanciasFilter', { params: objFilter })
         this.findEstancia(objFilter)
