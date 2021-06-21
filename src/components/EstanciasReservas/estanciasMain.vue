@@ -44,7 +44,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { date } from 'quasar'
 export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
   data () {

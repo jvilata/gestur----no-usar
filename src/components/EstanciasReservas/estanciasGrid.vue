@@ -138,7 +138,7 @@ export default {
     ...mapActions('estancias', ['findEstancia', 'addEstancia', 'borrarEstancia']),
     getRecords () {
       var objFilter = {}
-      if (this.fromEstanciasMain !== undefined && this.value.fechaEntrada !== undefined) {
+      if (this.fromEstanciasMain !== undefined) {
         Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
         // return this.$axios.get('estancias/bd_estancias.php/findEstanciasFilter', { params: objFilter })
         this.findEstancia(objFilter)
