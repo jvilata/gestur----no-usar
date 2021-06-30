@@ -34,6 +34,7 @@
         <q-tr :props="props" :key="`m_${props.row.id}`" @mouseover="rowId=`m_${props.row.id}`">
             <q-td>
               <div style="max-width: 35px" v-if="rowId === `m_${props.row.id}`">
+                <q-icon  name="edit" class="text-grey q-pr-md" style="font-size: 1.5rem;" @click="editRecord(props.row, props.row.id)"/>
                 <q-icon name="delete" class="text-red" style="font-size: 1.5rem;" @click="deleteRecord(props.row.id)"/>
               </div>
             </q-td>
@@ -93,10 +94,16 @@
           </q-btn>
         </div>
         <div>
-          {{ `${value.length ? value.length + ' Filas' : 'No hay registros, pulse + para añadir clientes'}` }}
+          {{ `${registrosSeleccionados.length ? registrosSeleccionados.length + ' Filas' : 'No hay registros, pulse + para añadir clientes'}` }}
         </div>
       </template>
     </q-table>
+    <q-dialog v-model="mostrarDialog">
+      <editCuadreCaja @close="mostrarDialog=false"
+        v-model="registroEditado"
+        :cabecera="value"
+        @saveRecord="saveRecord"/>
+    </q-dialog>
   </q-item>
 </template>
 
@@ -119,11 +126,16 @@ export default {
         { name: 'descuadre', align: 'left', label: 'descuadre', field: 'descuadre', sortable: true },
         { name: 'observaciones', align: 'left', label: 'observaciones', field: 'observaciones', sortable: true }
       ],
-      pagination: { rowsPerPage: 0 }
+      pagination: { rowsPerPage: 0 },
+      mostrarDialog: false,
+      registroEditado: {}
     }
   },
   computed: {
     ...mapState('login', ['user'])
+  },
+  components: {
+    editCuadreCaja: require('components/CuadreCaja/editCuadreCaja.vue').default
   },
   mounted () {
     // if (this.value.fechaInicio !== undefined || this.value.fechaFin !== undefined) {
@@ -133,14 +145,6 @@ export default {
   methods: {
     ...mapActions('tabs', ['addTab']),
     ...mapActions('cuadrecaja', ['findCuadreCaja']),
-    addRecord () {
-      var record = { }
-      this.editRecord(record, 1)
-      // añadir una fila nueva
-    },
-    editRecord (rowChanges, id) { // no lo uso aqui pero lod ejo como demo
-      // this.addTab(['facturasFormMain', 'Factura-' + rowChanges.id, rowChanges, rowChanges.id])
-    },
     getRecords () {
       var objFilter = {}
       Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
@@ -153,6 +157,15 @@ export default {
           this.$q.dialog({ title: 'Error', message: error })
         })
     },
+    saveRecord (record) {
+      this.mostrarDialog = false
+      var index = this.registrosSeleccionados.findIndex(function (sel) {
+        // busco elemento del array con este id
+        if (sel.id === record.id) return true
+      })
+      Object.assign(this.registrosSeleccionados[index], record)
+      this.updateRecord(record)
+    },
     deleteRecord (id) {
       this.$q.dialog({
         title: 'Confirmar',
@@ -164,8 +177,35 @@ export default {
 
       })
     },
-    mostrarDatosPieTabla () {
-      return this.registrosSeleccionados.length + ' Filas'
+    addRecord () {
+      var record = {
+        idServicio: 0,
+        Numero: 0,
+        dudoso: '0',
+        cantidad: 1,
+        tarifa: 0,
+        idEstancia: this.value.id,
+        noches: 1,
+        fechaInicio: this.value.fechaEntrada,
+
+        fechaFin: this.value.fechaSalida,
+        tipoIva: 10,
+        dto: 0,
+        comentarios: ''
+      }
+      this.addReserva(record)
+        .then(response => {
+          record.id = response.data.id
+          this.registrosSeleccionados.push(record)
+          this.editRecord(record)
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
+    },
+    editRecord (rowChanges) {
+      Object.assign(this.registroEditado, rowChanges)
+      this.mostrarDialog = true
     }
   }
 }

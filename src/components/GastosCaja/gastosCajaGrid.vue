@@ -91,7 +91,7 @@
           </q-btn>
         </div>
         <div>
-          {{ `${value.length ? value.length + ' Filas' : 'No hay registros, pulse + para añadir clientes'}` }}
+          {{ `${registrosSeleccionados.length ? registrosSeleccionados.length + ' Filas' : 'No hay registros, pulse + para añadir clientes'}` }}
         </div>
       </template>
     </q-table>
