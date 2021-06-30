@@ -9,6 +9,9 @@
           <q-item-label class="text-h6">
             {{ nomFormulario }}
           </q-item-label>
+          <q-item-label>
+            <small>{{ Object.keys(filterRecord).length ? filterRecord : 'Pulse para definir filtro' }}</small>
+          </q-item-label>
         </q-item-section>
         <q-item-section side>
           <q-btn
@@ -19,6 +22,14 @@
             icon="close"/>
         </q-item-section>
       </q-item>
+      <q-dialog v-model="expanded"  >
+        <!-- Componente de filtro -->
+        <cuadreCajaFilter
+            :value="filterRecord"
+            @getRecords="(val) => getRecords(val)"
+            @close="expanded = !expanded"
+        />
+      </q-dialog>
       <!-- formulario tabla de resultados de busqueda -->
       <cuadreCajaGrid
         :value="filterRecord"
@@ -28,7 +39,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
   data () {
@@ -45,25 +56,35 @@ export default {
     ...mapState('login', ['user']) // importo state.user desde store-login
   },
   methods: {
+    ...mapActions('cuadrecaja', ['findCuadreCaja', 'addGastos', 'borrarGastos']),
     getRecords (filterR) {
-      if (filterR.nombre === 'jose') {
-        Object.assign(this.registrosSeleccionados, this.filterAux)
-        this.refreshKey++
-        this.expanded = false
-      }
+      Object.assign(this.filterRecord, filterR) // no haría falta pero así obliga a refrescar el componente para que visulice el filtro
+      // llamada al backend
+      this.findCuadreCaja(filterR)
+        .then(response => {
+          this.registrosSeleccionados = response.data
+          this.expanded = false
+        })
+        .catch(error => {
+          this.registrosSeleccionados = {}
+          this.$q.dialog({ title: 'Error', message: error })
+          this.desconectarLogin()
+        })
     }
   },
   mounted () {
-    if (this.value.filterRecord) { // si ya hemos cargado previamente los recargo al volver a este tab
+    if (this.value.filterRecord) { // FilterRecord tiene valores porque ya hemos hecho una búsqueda
+      this.expanded = false // Escondemos clientesFilter
       this.getRecords(this.value.filterRecord) // refresco la lista por si se han hecho cambios
-    } else { // es la primera vez que entro, cargo valores po defecto
-      // Object.assign(this.filterRecord, { codEmpresa: this.user.codEmpresa, estadoFactura: 'PENDIENTE' })
+    } else { // no esta inicializado
+      this.registrosSeleccionados = []
     }
   },
   destroyed () {
     this.$emit('changeTab', { idTab: this.value.idTab, filterRecord: Object.assign({}, this.filterRecord), registrosSeleccionados: Object.assign({}, this.registrosSeleccionados) })
   },
   components: {
+    cuadreCajaFilter: require('components/CuadreCaja/cuadreCajaFilter.vue').default,
     cuadreCajaGrid: require('components/CuadreCaja/cuadreCajaGrid.vue').default
   }
 }

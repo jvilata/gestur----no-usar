@@ -120,11 +120,11 @@ export default {
         { name: 'fechaInicial', align: 'left', label: 'Fecha Inicial', field: 'fechaInicial', sortable: true, format: val => date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') },
         { name: 'fechaCierre', align: 'left', label: 'Fecha Final', field: 'fechaCierre', sortable: true, format: val => date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY') },
         { name: 'facturacionPeriodo', align: 'left', label: 'Facturacion Periodo', field: 'facturacionPeriodo', sortable: true },
-        { name: 'recaudacionCaja', align: 'left', label: 'recaudacionCaja', field: 'recaudacionCaja', sortable: true },
-        { name: 'gastosCajaPeriodo', align: 'left', label: 'gastosCaja', field: 'gastosCajaPeriodo', sortable: true },
-        { name: 'cajaPendiente', align: 'left', label: 'cajaAIngresar', field: 'cajaPendiente', sortable: true },
-        { name: 'descuadre', align: 'left', label: 'descuadre', field: 'descuadre', sortable: true },
-        { name: 'observaciones', align: 'left', label: 'observaciones', field: 'observaciones', sortable: true }
+        { name: 'recaudacionCaja', align: 'left', label: 'Recaudacion Caja', field: 'recaudacionCaja', sortable: true },
+        { name: 'gastosCajaPeriodo', align: 'left', label: 'Gastos Caja', field: 'gastosCajaPeriodo', sortable: true },
+        { name: 'cajaPendiente', align: 'left', label: 'Caja a Ingresar', field: 'cajaPendiente', sortable: true },
+        { name: 'descuadre', align: 'left', label: 'Descuadre', field: 'descuadre', sortable: true },
+        { name: 'observaciones', align: 'left', label: 'Observaciones', field: 'observaciones', sortable: true }
       ],
       pagination: { rowsPerPage: 0 },
       mostrarDialog: false,
@@ -144,9 +144,10 @@ export default {
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
-    ...mapActions('cuadrecaja', ['findCuadreCaja']),
+    ...mapActions('cuadrecaja', ['findCuadreCaja', 'addGastos', 'borrarGastos']),
     getRecords () {
       var objFilter = {}
+      console.log(this.value)
       Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
       this.findCuadreCaja(objFilter)
         .then(response => {
@@ -166,6 +167,16 @@ export default {
       Object.assign(this.registrosSeleccionados[index], record)
       this.updateRecord(record)
     },
+    updateRecord (recordToSubmit) {
+      // Object.assign(recordToSubmit, { user: this.user.pers.login, ts: date.formatDate(new Date(), 'YYYY-MM-DD HH:mm:ss') })
+      this.addGastos(recordToSubmit)
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
+    },
     deleteRecord (id) {
       this.$q.dialog({
         title: 'Confirmar',
@@ -174,26 +185,16 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
-
+        this.borrarGastos(id)
       })
     },
     addRecord () {
       var record = {
-        idServicio: 0,
-        Numero: 0,
-        dudoso: '0',
-        cantidad: 1,
-        tarifa: 0,
-        idEstancia: this.value.id,
-        noches: 1,
-        fechaInicio: this.value.fechaEntrada,
-
-        fechaFin: this.value.fechaSalida,
-        tipoIva: 10,
-        dto: 0,
-        comentarios: ''
+        fechaInicio: date.formatDate(new Date(), 'YYYY-MM-DD 00:00:00'),
+        cajaPendiente: 0,
+        observaciones: ''
       }
-      this.addReserva(record)
+      this.addGastos(record)
         .then(response => {
           record.id = response.data.id
           this.registrosSeleccionados.push(record)
