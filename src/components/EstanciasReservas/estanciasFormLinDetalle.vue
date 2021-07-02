@@ -158,10 +158,10 @@ export default {
         })
     },
     calcularTotal () {
-      const tarifa = Math.round(this.recordToSubmit.tarifa / (1 + (this.recordToSubmit.tipoIva / 100))) // tarifa sin IVA
-      this.totalBruto = Math.round(this.recordToSubmit.cantidad * this.recordToSubmit.noches * tarifa)
-      this.totalNeto = Math.round(this.totalBruto * (1 - this.recordToSubmit.dto / 100))
-      this.recordToSubmit.total = Math.round(this.totalNeto * (1 + this.recordToSubmit.tipoIva / 100))
+      const tarifa = (this.recordToSubmit.tarifa) / (1 + (this.recordToSubmit.tipoIva / 100)) // tarifa sin IVA
+      this.totalBruto = Math.round(this.recordToSubmit.cantidad * this.recordToSubmit.noches * tarifa * 100) / 100
+      this.totalNeto = Math.round(this.totalBruto * 100 * (1 - this.recordToSubmit.dto / 100)) / 100
+      this.recordToSubmit.total = Math.round(this.totalNeto * 100 * (1 + this.recordToSubmit.tipoIva / 100)) / 100
     },
     calcularDatosLinea () {
       var obj = {

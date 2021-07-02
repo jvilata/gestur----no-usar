@@ -8,7 +8,7 @@
       </q-card-section>
       <q-card-section>
         <div class="row">
-          <q-input label="Fecha Inicio" class="col-xs-12 col-sm-5" clearable outlined stack-label :value="formatDate(recordToSubmit.fechaInicial)">
+          <q-input label="Fecha Inicio" class="col-xs-12 col-sm-5" clearable outlined stack-label :value="formatDate(recordToSubmit.fechaInicial)"  @input="(val) => recordToSubmit.fechaInicial=val">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaInicial">
@@ -19,7 +19,7 @@
               </q-icon>
           </template>
           </q-input>
-          <q-input label="Fecha Fin" class="col-xs-12 col-sm-5" clearable outlined stack-label :value="formatDate(recordToSubmit.fechaCierre)">
+          <q-input label="Fecha Fin" class="col-xs-12 col-sm-5" clearable outlined stack-label :value="formatDate(recordToSubmit.fechaCierre)"  @input="(val) => recordToSubmit.fechaCierre=val">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaCierre">
@@ -30,7 +30,7 @@
               </q-icon>
           </template>
           </q-input>
-          <q-btn outline class="col-xs-4 col-sm-2" color="primary" label="Calcular" @click="calcular" />
+          <q-btn outline class="col-xs-4 col-sm-2" color="primary" label="Calcular" @click="calcular" :disabled="recordToSubmit.fechaInicial == null || recordToSubmit.fechaCierre == null ? !disabledCalc : disabledCalc" />
         </div>
         <div class="row q-mt-md q-mb-md">
           <q-input class="col-xs-6 col-sm-4" outlined readonly stack-label v-model="recordToSubmit.facturacionPeriodo" label="Facturación Periodo"/>
@@ -43,7 +43,7 @@
         </div>
       </q-card-section>
       <q-card-actions align=right>
-        <q-btn type="submit" label="Save" color="primary"/>
+        <q-btn type="submit" label="Save" color="primary" :disabled="disabledSave"/>
         <q-btn @click="$emit('close')" label="Cancel" color="negative"/>
       </q-card-actions>
     </q-form>
@@ -52,19 +52,32 @@
 
 <script>
 import { date } from 'quasar'
+import { mapActions } from 'vuex'
 import wgDate from 'components/General/wgDate.vue'
 export default {
   props: ['value', 'cabecera'], // value es el objeto con los campos de filtro que le pasa accionesMain con v-model
   data () {
     return {
       title: 'Cuadre Caja línea',
-      recordToSubmit: { }
+      recordToSubmit: {
+        fechaInicial: '',
+        fechaCierre: '',
+        cajaPendiente: '',
+        facturacionPeriodo: '',
+        recaudacionCaja: '',
+        gastosCajaPeriodo: '',
+        observaciones: ''
+      },
+      disabledCalc: false,
+      disabledSave: true,
+      refreshKey: 0
     }
   },
-  computed: {
-    // añadir
+  mounted () {
+    Object.assign(this.recordToSubmit, this.value)
   },
   methods: {
+    ...mapActions('cuadrecaja', ['calcularCierre']),
     saveForm () {
       this.$emit('saveRecord', this.recordToSubmit) // lo captura estanciasFormLineas
     },
@@ -72,37 +85,17 @@ export default {
       return date.formatDate(date1, 'DD/MM/YYYY')
     },
     calcular () {
-      // a implementar
-    },
-    rellenarDatosServicio () {
-      const servicio = this.listaServicios.find(serv => serv.id === this.recordToSubmit.idServicio)
-      this.recordToSubmit.tipoIva = servicio.tipoIva
-      this.recordToSubmit.Numero = servicio.Numero
-      var record = {
-        idServicio: servicio.id,
-        tipoServ: servicio.tipoServicio,
-        tipoTarifa: this.cabecera.tipoTarifa
-      }
-      // return this.$axios.get('servicios/bd_servicios.php/calcularTarifaServicio', { params: record })
-      this.calcularTarifa(record)
+      this.calcularCierre(this.recordToSubmit)
         .then(response => {
-          this.recordToSubmit.tarifa = response.data[0].tarifa
-          this.calcularTotal()
+          this.recordToSubmit.facturacionPeriodo = response.data[0].totFactura
+          this.recordToSubmit.recaudacionCaja = response.data[0].totalCaja
+          this.recordToSubmit.gastosCajaPeriodo = response.data[0].gastosCaja
+          this.disabledSave = false
+          this.refreshKey++
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
         })
-    },
-    calcularDatosLinea () {
-      var obj = {
-        unidades: parseFloat(this.recordToSubmit.unidades),
-        precio: parseFloat(this.recordToSubmit.precio),
-        piva: parseFloat(this.recordToSubmit.piva)
-      }
-      obj.neto = Math.round((obj.unidades * obj.precio - obj.descuento) * 100.0) / 100 // base de iva
-      obj.totalIva = Math.round((obj.neto * obj.piva / 100.0) * 100.0) / 100
-      obj.totalLinea = Math.round((obj.neto + obj.totalIva) * 100.0) / 100
-      Object.assign(this.recordToSubmit, obj)
     }
   },
   components: {

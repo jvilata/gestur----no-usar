@@ -123,7 +123,7 @@ export default {
         { name: 'base', align: 'left', label: 'Base', field: 'base', sortable: true },
         { name: 'totalIva', align: 'left', label: 'IVA', field: 'totalIva', sortable: true },
         { name: 'total', align: 'left', label: 'Total', field: 'totalEstancia', sortable: true },
-        { name: 'cobrado', align: 'left', label: 'Cobrado', field: e => parseFloat(e.ACuenta) + parseFloat(e.PorDatafono) + parseFloat(e.PorBanco), sortable: true },
+        { name: 'cobrado', align: 'left', label: 'Cobrado', field: e => this.parseaFloat(e.ACuenta) + this.parseaFloat(e.PorDatafono) + this.parseaFloat(e.PorBanco), sortable: true },
         { name: 'Fianza', align: 'left', label: 'Fianza', field: 'Fianza', sortable: true }
       ],
       pagination: { rowsPerPage: 0 }
@@ -136,6 +136,10 @@ export default {
   methods: {
     ...mapActions('tabs', ['addTab']),
     ...mapActions('estancias', ['findEstancia', 'addEstancia', 'borrarEstancia']),
+    parseaFloat (f) {
+      if (f === null) return 0
+      else return parseFloat(f)
+    },
     getRecords () {
       var objFilter = {}
       if (this.fromEstanciasMain !== undefined) {

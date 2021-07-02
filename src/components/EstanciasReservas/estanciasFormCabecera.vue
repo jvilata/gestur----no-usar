@@ -156,7 +156,7 @@ export default {
     },
     rellenarDatosFact () {
       // solo hay que generar factura cuando nroFactura sea cero
-      if (this.recordToSubmit.NroFactura === '0') {
+      if (this.recordToSubmit.NroFactura === null || this.recordToSubmit.NroFactura === 0) {
         this.generarFactura(this.recordToSubmit)
           .then(response => {
             // volvemos a leer la factura

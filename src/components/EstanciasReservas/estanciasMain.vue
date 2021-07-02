@@ -11,7 +11,7 @@
           </q-item-label>
           <q-item-label>
             <!-- poner un campo de fiterRecord que exista en este filtro -->
-            <small>{{ Object.keys(filterRecord).length > 1 ? filterRecord : 'Pulse para definir filtro' }}</small>
+            <small>{{ Object.keys(filterRecord).length > 0 ? filterRecord : 'Pulse para definir filtro' }}</small>
           </q-item-label>
         </q-item-section>
         <q-item-section side>
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { date } from 'quasar'
 import { mapState } from 'vuex'
 export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
@@ -72,6 +73,7 @@ export default {
       this.getRecords(this.value.filterRecord)
     } else { // es la primera vez que entro, cargo valores po defecto
       this.registrosSeleccionados = []
+      this.filterRecord.fechaEntrada = date.formatDate(date.subtractFromDate(new Date(), { days: 30 }), 'YYYY-MM-DD')
     }
     this.getRecords(this.filterRecord)
   },

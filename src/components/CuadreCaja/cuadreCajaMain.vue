@@ -59,11 +59,11 @@ export default {
     ...mapActions('cuadrecaja', ['findCuadreCaja', 'addGastos', 'borrarGastos']),
     getRecords (filterR) {
       Object.assign(this.filterRecord, filterR) // no haría falta pero así obliga a refrescar el componente para que visulice el filtro
-      // llamada al backend
       this.findCuadreCaja(filterR)
         .then(response => {
           this.registrosSeleccionados = response.data
           this.expanded = false
+          this.refreshKey++
         })
         .catch(error => {
           this.registrosSeleccionados = {}

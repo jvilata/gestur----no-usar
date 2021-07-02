@@ -13,6 +13,9 @@ const actions = {
   },
   findCuadreCaja ({ commit }, record) {
     return axiosInstance.get('caja/bd_caja.php/findCajaFilter', { params: record }, { withCredentials: true })
+  },
+  calcularCierre ({ commit }, record) {
+    return axiosInstance.get('caja/bd_caja.php/cuadreCajaCierre', { params: record }, { withCredentials: true })
   }
 }
 

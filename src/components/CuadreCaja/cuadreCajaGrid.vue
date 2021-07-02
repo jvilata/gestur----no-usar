@@ -33,7 +33,7 @@
       <template v-slot:body="props">
         <q-tr :props="props" :key="`m_${props.row.id}`" @mouseover="rowId=`m_${props.row.id}`">
             <q-td>
-              <div style="max-width: 35px" v-if="rowId === `m_${props.row.id}`">
+              <div style="max-width: 40px" v-if="rowId === `m_${props.row.id}`">
                 <q-icon  name="edit" class="text-grey q-pr-md" style="font-size: 1.5rem;" @click="editRecord(props.row, props.row.id)"/>
                 <q-icon name="delete" class="text-red" style="font-size: 1.5rem;" @click="deleteRecord(props.row.id)"/>
               </div>
@@ -65,21 +65,21 @@
             </q-td> -->
         </q-tr>
       </template>
-      <template v-slot:no-data>
-        <div class="absolute-bottom text-center q-mb-sm">
-          <q-btn
-            @click.stop="addRecord()"
-            round
-            dense
-            color="indigo-5"
-            size="20px"
-            icon="add">
-            <q-tooltip>Añadir</q-tooltip>
-          </q-btn>
-        </div>
-        <div>
-          Pulse + para añadir
-        </div>
+      <template v-slot:bottom-row>
+        <!-- BOTTOM-ROW DE LA TABLA -->
+        <q-tr >
+          <q-th>
+             <div style="max-width: 35px"></div>
+          </q-th>
+          <q-th
+            v-for="col in columns"
+            :key="col.name"
+            :align="col.align"
+          >
+            <div v-if="['base'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.base)), 0) }}</div>
+            <div v-if="['total'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.totalEstancia)), 0) }}</div>
+          </q-th>
+        </q-tr>
       </template>
       <template v-slot:bottom>
         <div class="absolute-bottom text-center q-mb-sm">
@@ -95,6 +95,22 @@
         </div>
         <div>
           {{ `${registrosSeleccionados.length ? registrosSeleccionados.length + ' Filas' : 'No hay registros, pulse + para añadir clientes'}` }}
+        </div>
+      </template>
+      <template v-slot:no-data>
+        <div class="absolute-bottom text-center q-mb-sm">
+          <q-btn
+            @click.stop="addRecord()"
+            round
+            dense
+            color="indigo-5"
+            size="20px"
+            icon="add">
+            <q-tooltip>Añadir</q-tooltip>
+          </q-btn>
+        </div>
+        <div>
+          Pulse + para añadir
         </div>
       </template>
     </q-table>
@@ -128,7 +144,8 @@ export default {
       ],
       pagination: { rowsPerPage: 0 },
       mostrarDialog: false,
-      registroEditado: {}
+      registroEditado: {},
+      refreshKey: 0
     }
   },
   computed: {
@@ -147,7 +164,6 @@ export default {
     ...mapActions('cuadrecaja', ['findCuadreCaja', 'addGastos', 'borrarGastos']),
     getRecords () {
       var objFilter = {}
-      console.log(this.value)
       Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
       this.findCuadreCaja(objFilter)
         .then(response => {
@@ -165,6 +181,7 @@ export default {
         if (sel.id === record.id) return true
       })
       Object.assign(this.registrosSeleccionados[index], record)
+      this.refreshKey++
       this.updateRecord(record)
     },
     updateRecord (recordToSubmit) {
@@ -186,13 +203,26 @@ export default {
         persistent: true
       }).onOk(() => {
         this.borrarGastos(id)
+          .then(response => {
+            var index = this.registrosSeleccionados.findIndex(function (record) { // busco elemento del array con este id
+              if (record.id === id) return true
+            })
+            this.registrosSeleccionados.splice(index, 1) // lo elimino del array
+          })
+          .catch(error => {
+            this.$q.dialog({ title: 'Error', message: error })
+          })
       })
     },
     addRecord () {
       var record = {
-        fechaInicio: date.formatDate(new Date(), 'YYYY-MM-DD 00:00:00'),
+        fechaInicial: date.formatDate(new Date(), 'YYYY-MM-DD 00:00:00'),
+        fechaCierre: date.formatDate(new Date(), 'YYYY-MM-DD 00:00:00'),
         cajaPendiente: 0,
-        observaciones: ''
+        observaciones: '',
+        facturacionPeriodo: 0,
+        recaudacionCaja: 0,
+        gastosCajaPeriodo: 0
       }
       this.addGastos(record)
         .then(response => {
