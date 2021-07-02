@@ -6,7 +6,8 @@ const state = {
   listaTipoFact: [],
   listaTipoServ: [],
   listaTipoEstancia: [],
-  listaTipoTarifa: []
+  listaTipoTarifa: [],
+  datosEstablecimiento: []
 }
 
 const mutations = {
@@ -24,6 +25,15 @@ const mutations = {
   },
   loadTipoTarifa (state, tiposTarifa) {
     state.listaTipoTarifa = tiposTarifa
+  },
+  loadDatosEstablecimiento (state, datos) {
+    datos.forEach(element => {
+      if (element.codElemento === '1') { state.datosEstablecimiento.path = element.valor1 }
+      if (element.codElemento === '2') { state.datosEstablecimiento.contador = element.valor1 } // nº archivo
+      if (element.codElemento === '3') { state.datosEstablecimiento.codEstablecimiento = element.valor1 }
+      if (element.codElemento === '4') { state.datosEstablecimiento.nomEstablecimiento = element.valor1 }
+    })
+    state.datosEstablecimiento.nomArchivo = state.datosEstablecimiento.path + state.datosEstablecimiento.codEstablecimiento + state.datosEstablecimiento.contador
   }
 }
 
@@ -34,6 +44,7 @@ const actions = {
     this.dispatch('tablasAux/loadTablaAux', { codTabla: 4, mutation: 'loadTipoServ' })
     this.dispatch('tablasAux/loadTablaAux', { codTabla: 2, mutation: 'loadTipoEstancia' })
     this.dispatch('tablasAux/loadTablaAux', { codTabla: 3, mutation: 'loadTipoTarifa' })
+    this.dispatch('tablasAux/loadTablaAux', { codTabla: 5, mutation: 'loadDatosEstablecimiento' })
   },
   loadTablaAux ({ commit }, tabAux) { // tabAux: { codTabla: x, mutation: 'mutation' }
     axiosInstance.get(`tablaAuxiliar/bd_tablaAuxiliar.php/findTablaAuxFilter?codTabla=${tabAux.codTabla}`, {}, { withCredentials: true }) // tipo acciones

@@ -1,4 +1,5 @@
 <template>
+  <div class="q-ma-sm">
   <q-item class="row q-ma-xs q-pa-xs">
     <!-- GRID. en row-key ponemos la columna del json que sea la id unica de la fila -->
     <q-table
@@ -121,13 +122,18 @@
         @saveRecord="saveRecord"/>
     </q-dialog>
   </q-item>
+  <div class="row q-ma-sm">
+  <q-input class="col-xs-6 col-sm-4" v-model="comprobarC" outlined readonly stack-label/>
+  <q-btn outline class="col-xs-4 col-sm-2" color="primary" label="Comprobar Caja" @click="comprobarCaja"/>
+  </div>
+  </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
 import { date } from 'quasar'
 export default {
-  props: ['value', 'fromEstanciasMain'], // en 'value' tenemos la tabla de datos del grid
+  props: ['value'], // en 'value' tenemos la tabla de datos del grid
   data () {
     return {
       rowId: '',
@@ -145,7 +151,8 @@ export default {
       pagination: { rowsPerPage: 0 },
       mostrarDialog: false,
       registroEditado: {},
-      refreshKey: 0
+      refreshKey: 0,
+      comprobarC: ''
     }
   },
   computed: {
@@ -161,7 +168,17 @@ export default {
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
-    ...mapActions('cuadrecaja', ['findCuadreCaja', 'addGastos', 'borrarGastos']),
+    ...mapActions('cuadrecaja', ['findCuadreCaja', 'addGastos', 'borrarGastos', 'comprobarCajaTot']),
+    comprobarCaja () {
+      this.comprobarCajaTot(this.value)
+        .then(response => {
+          this.comprobarC = response.data[0].cuadreTotalCaja
+          this.refreshKey++
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
+    },
     getRecords () {
       var objFilter = {}
       Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
