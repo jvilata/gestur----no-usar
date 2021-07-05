@@ -142,7 +142,6 @@ export default {
     ...mapActions('estancias', ['findLinEstancias', 'borrarReserva', 'addReserva']),
     getRecords () {
       var objFilter = { idEstancia: this.value.id }
-      // return this.$axios.get('estancias/bd_estancias.php/findLinEstanciasFilter', { params: objFilter })
       this.findLinEstancias(objFilter)
         .then(response => {
           this.registrosSeleccionados = response.data

@@ -56,9 +56,6 @@ export default {
     }
   },
   mounted () {
-    if (this.regTipo1.fechaEnvio === undefined || this.regTipo1.fechaEnvio === '') {
-      this.regTipo1.fechaEnvio = this.formatDate(Date.now())
-    }
     Object.assign(this.regTipo1, this.value)
   },
   destroyed () {

@@ -61,6 +61,7 @@
       </template>
       Filtros de Factura
       <q-checkbox v-model="val" @input="rellenarFechas" label="Las del año" />
+      <q-checkbox v-model="noFact" @input="noFacturadas" label="No facturadas" />
       <q-input
         outlined
         clearable
@@ -116,7 +117,8 @@ export default {
   data () {
     return {
       filterR: {},
-      val: false
+      val: false,
+      noFact: false
     }
   },
   computed: {
@@ -126,6 +128,9 @@ export default {
     rellenarFechas () {
       this.filterR.fechaFacturaDesde = date.formatDate(new Date(), 'YYYY-01-01')
       this.filterR.fechaFacturaHasta = date.formatDate(new Date(), 'YYYY-MM-DD')
+    },
+    noFacturadas () {
+      this.filterR.noFacturadas = !this.filterR.noFacturadas
     },
     getRecords () {
       this.$emit('getRecords', this.filterR)

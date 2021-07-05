@@ -35,7 +35,6 @@
           <q-td>
             <!-- columna de acciones: editar, borrar, etc -->
             <div style="max-width: 30px" class="q-mr-lg">
-              <q-icon name="edit" class="text-grey q-pr-md" style="font-size: 1.5rem;" @click="editRecord(props.row, props.row.id)"/>
               <q-icon name="delete" class="text-red" style="font-size: 1.5rem;" @click="deleteRecord(props.row.id)"/>
             </div>
           </q-td>
@@ -48,6 +47,20 @@
             <div :style="col.style">
               {{ col.value }}
             </div>
+            <q-popup-edit
+              v-if="!['id'].includes(col.name)"
+              v-model="props.row[col.name]"
+              buttons
+              @save="updateRecord(props.row)">
+              <q-input
+                v-if="['descripcion', 'cantidad', 'factura'].includes(col.name)"
+                type="text"
+                v-model="props.row[col.name]"
+                dense
+                autofocus />
+                <wgDate v-if="['fecha'].includes(col.name)"
+                  v-model="props.row[col.name]" />
+            </q-popup-edit>
           </q-td>
         </q-tr>
       </template>
@@ -129,9 +142,8 @@ export default {
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
+    ...mapActions('guardiaC', ['borrarTipo2']),
     addRecord () {
-      var record = {}
-      this.editRecord(record)
       /* var record = {}
       this.addReserva(record)
         .then(response => {
@@ -151,12 +163,12 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
-        this.borrarReserva(id)
+        this.borrarTipo2(id)
           .then(response => {
-            var index = this.registrosSeleccionados.findIndex(function (record) { // busco elemento del array con este id
+            var index = this.listaRegTipo2.findIndex(function (record) { // busco elemento del array con este id
               if (record.id === id) return true
             })
-            this.registrosSeleccionados.splice(index, 1) // lo elimino del array
+            this.listaRegTipo2.splice(index, 1) // lo elimino del array
           })
           .catch(error => {
             this.$q.dialog({ title: 'Error', message: error })
@@ -175,12 +187,12 @@ export default {
     },
     saveRecord (record) {
       this.mostrarDialog = false
-      var index = this.registrosSeleccionados.findIndex(function (sel) {
+      /* var index = this.registrosSeleccionados.findIndex(function (sel) {
         // busco elemento del array con este id
         if (sel.id === record.id) return true
       })
       Object.assign(this.registrosSeleccionados[index], record)
-      this.updateRecord(record)
+      this.updateRecord(record) */
     },
     editRecord (rowChanges) {
       Object.assign(this.registroEditado, rowChanges)
@@ -191,7 +203,7 @@ export default {
     guardiaCivilFormLinDetalle: require('components/GuardiaCivil/guardiaCivilFormLinDetalle.vue').default
   },
   mounted () {
-    Object.assign(this.listaRegTipo2, this.value)
+    this.listaRegTipo2 = this.value
   }
 }
 </script>

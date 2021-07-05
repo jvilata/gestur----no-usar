@@ -59,7 +59,7 @@
               </q-icon>
             </template>
           </q-input>
-          <q-btn outline class="col-xs-12 col-sm-4" color="primary" label="Generar" @click="generarGC"/>
+          <q-btn outline class="col-xs-12 col-sm-4" color="primary" label="Generar" @click="generarListaGC"/>
       </div>
     <q-card flat class="q-pb-xl">
       <q-list bordered>
@@ -92,8 +92,6 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { date } from 'quasar'
-// import { openBlobFile } from 'components/General/cordova.js'
-// import { openURL } from 'quasar'
 import wgDate from 'components/General/wgDate.vue'
 
 export default {
@@ -127,6 +125,7 @@ export default {
       this.findTipo1({})
         .then(response => {
           Object.assign(this.regTipo1, response.data[0])
+          this.refresh++
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
@@ -137,33 +136,23 @@ export default {
       this.findTipo2([])
         .then(response => {
           Object.assign(this.listaRegTipo2, response.data)
+          this.refresh++
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
         })
     },
-    generarGC () {
+    generarListaGC () {
       // a implementar
       this.generado = true
       this.generarGC()
         .then(response => {
-          // console.log('generarGC desde MAIN con exito, response.data es:', response.data)
+          this.getRecordsTipo1()
+          this.getRecordsTipo2()
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
         })
-    },
-    rellenarDatosFact () {
-      console.log('metodo por implementar')
-    },
-    cambiaDatos (record) {
-      // ??
-    },
-    updateRecord () {
-      // ?
-    },
-    calculaTotalesEst () {
-      // a impleentar
     },
     confirmarCierre () {
       if (!this.generado) {
