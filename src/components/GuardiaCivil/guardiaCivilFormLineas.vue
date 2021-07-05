@@ -9,7 +9,7 @@
       :rows-per-page-options="[0]"
       :virtual-scroll-sticky-size-start="48"
       row-key="id"
-      :data="registrosSeleccionados"
+      :data="listaRegTipo2"
       :columns="columns"
       table-style="max-height: 70vh; max-width: 93vw"
     >
@@ -84,7 +84,8 @@
     </q-table>
 
     <q-dialog v-model="mostrarDialog">
-      <estanciasFormLinDetalle @close="mostrarDialog=false"
+      <guardiaCivilFormLinDetalle
+        @close="mostrarDialog=false"
         v-model="registroEditado"
         :cabecera="value"
         @saveRecord="saveRecord"/>
@@ -106,19 +107,21 @@ export default {
       registrosSeleccionados: [],
       registroEditado: {},
       columns: [
-        { name: 'dni', label: 'DNI', align: 'center', field: 'dni', sortable: true },
-        { name: 'pasaporte', align: 'left', label: 'pasaporte', field: 'pasaporte', sortable: true },
-        { name: 'tipoDoc', align: 'left', label: 'tipoDoc', field: 'tipoDoc', sortable: true },
-        { name: 'fechaExp', align: 'left', label: 'Fecha Exp.', field: 'fechaExp', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
-        { name: 'primerApellido', align: 'left', label: 'Primer Apellido', field: 'primerApellido', sortable: true },
-        { name: 'segundoApellido', align: 'left', label: 'Segundo Apellido', field: 'segundoApellido', sortable: true },
-        { name: 'nombre', align: 'left', label: 'nombre', field: 'nombre', sortable: true },
+        { name: 'id', label: 'ID', align: 'center', field: 'id', sortable: true },
+        { name: 'Nombre', align: 'left', label: 'nombre', field: 'Nombre', sortable: true },
+        { name: 'PrimerApellido', align: 'left', label: 'Primer Apellido', field: 'PrimerApellido', sortable: true },
+        { name: 'SegundoApellido', align: 'left', label: 'Segundo Apellido', field: 'SegundoApellido', sortable: true },
         { name: 'sexo', align: 'left', label: 'sexo', field: 'sexo', sortable: true },
-        { name: 'fechaNac', align: 'left', label: 'Fecha Nac.', field: 'fechaNac', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
-        { name: 'paisNac', align: 'left', label: 'paisNac', field: 'paisNac', sortable: true },
-        { name: 'fechaEnt', align: 'left', label: 'Fecha Entrada', field: 'fechaEnt', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } }
+        { name: 'TipoDoc', align: 'left', label: 'Tipo Doc.', field: 'TipoDoc', sortable: true },
+        { name: 'dni', label: 'DNI', align: 'center', field: 'dni', sortable: true },
+        { name: 'pasaporte', align: 'left', label: 'Pasaporte', field: 'pasaporte', sortable: true },
+        { name: 'FechaEntrada', align: 'left', label: 'Fecha Entrada', field: 'FechaEntrada', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
+        { name: 'FechaExp', align: 'left', label: 'Fecha Exp.', field: 'FechaExp', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
+        { name: 'FechaNac', align: 'left', label: 'Fecha Nac.', field: 'FechaNac', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
+        { name: 'PaisNac', align: 'left', label: 'paisNac', field: 'PaisNac', sortable: true }
       ],
-      pagination: { rowsPerPage: 0 }
+      pagination: { rowsPerPage: 0 },
+      listaRegTipo2: []
     }
   },
   computed: {
@@ -126,34 +129,10 @@ export default {
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
-    getRecords () {
-      var objFilter = { idEstancia: this.value.id }
-      // return this.$axios.get('estancias/bd_estancias.php/findLinEstanciasFilter', { params: objFilter })
-      this.findLinEstancias(objFilter)
-        .then(response => {
-          this.registrosSeleccionados = response.data
-        })
-        .catch(error => {
-          this.$q.dialog({ title: 'Error', message: error })
-        })
-    },
     addRecord () {
-      var record = {
-        idServicio: 0,
-        Numero: 0,
-        dudoso: '0',
-        cantidad: 1,
-        tarifa: 0,
-        idEstancia: this.value.id,
-        noches: 1,
-        fechaInicio: this.value.fechaEntrada,
-
-        fechaFin: this.value.fechaSalida,
-        tipoIva: 10,
-        dto: 0,
-        comentarios: ''
-      }
-      // return this.$axios.get('estancias/bd_estancias.php/guardarReservasBD/', { params: record })
+      var record = {}
+      this.editRecord(record)
+      /* var record = {}
       this.addReserva(record)
         .then(response => {
           record.id = response.data.id
@@ -162,7 +141,7 @@ export default {
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
-        })
+        }) */
     },
     deleteRecord (id) {
       this.$q.dialog({
@@ -178,7 +157,6 @@ export default {
               if (record.id === id) return true
             })
             this.registrosSeleccionados.splice(index, 1) // lo elimino del array
-            this.calcularTotalesLineas()
           })
           .catch(error => {
             this.$q.dialog({ title: 'Error', message: error })
@@ -187,20 +165,13 @@ export default {
     },
     updateRecord (recordToSubmit) {
       Object.assign(recordToSubmit, { user: this.user.pers.login, ts: date.formatDate(new Date(), 'YYYY-MM-DD HH:mm:ss') })
-      // return this.$axios.get('estancias/bd_estancias.php/guardarReservasBD/', { params: recordToSubmit })
-      this.addReserva(recordToSubmit)
+      /* this.addReserva(recordToSubmit)
         .then(response => {
           this.calcularTotalesLineas()
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
-        })
-    },
-    calcularTotalesLineas () {
-      // calcula totales y pasalos a estanciasForm
-      var obj = { base: 0, totalIva: 0 }
-      this.registrosSeleccionados.forEach(row => { var base = parseFloat(row.total) / (1 + parseFloat(row.tipoIva) / 100); obj.base += base; obj.totalIva += parseFloat(row.total) - base })
-      this.$emit('calculaTotalesEst', obj)
+        }) */
     },
     saveRecord (record) {
       this.mostrarDialog = false
@@ -216,11 +187,11 @@ export default {
       this.mostrarDialog = true
     }
   },
-  mounted () {
-    this.getRecords()
-  },
   components: {
-    estanciasFormLinDetalle: require('components/EstanciasReservas/estanciasFormLinDetalle.vue').default
+    guardiaCivilFormLinDetalle: require('components/GuardiaCivil/guardiaCivilFormLinDetalle.vue').default
+  },
+  mounted () {
+    Object.assign(this.listaRegTipo2, this.value)
   }
 }
 </script>

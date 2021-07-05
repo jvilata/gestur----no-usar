@@ -59,7 +59,7 @@
               </q-icon>
             </template>
           </q-input>
-          <q-btn outline class="col-xs-12 col-sm-4" color="primary" label="Generar" @click="rellenarDatosFact" />
+          <q-btn outline class="col-xs-12 col-sm-4" color="primary" label="Generar" @click="generarGC"/>
       </div>
     <q-card flat class="q-pb-xl">
       <q-list bordered>
@@ -71,7 +71,7 @@
           default-opened
           header-class="bg-brown-1 text-grey-8"
         >
-        <guardiaCivilFormCabecera :value="recordToSubmit" :key="refresh" @hasChanges="value=>cambiaDatos(value)" @calculaTotalesEst="calculaTotalesEst"/>
+        <guardiaCivilFormCabecera :value="regTipo1" :key="refresh"/>
         </q-expansion-item>
         <q-separator />
         <q-expansion-item
@@ -82,7 +82,7 @@
           default-opened
           header-class="bg-brown-1 text-grey-8"
         >
-          <guardiaCivilFormLineas :key="refresh" :value="recordToSubmit" @calculaTotalesEst="calculaTotalesEst"/>
+          <guardiaCivilFormLineas :key="refresh" :value="listaRegTipo2"/>
         </q-expansion-item>
       </q-list>
     </q-card>
@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { date } from 'quasar'
 // import { openBlobFile } from 'components/General/cordova.js'
 // import { openURL } from 'quasar'
@@ -109,39 +109,55 @@ export default {
       primeraVez: true,
       listaOpciones: [
         { name: 'generar', title: 'Generar Archivo GC', icon: 'print', function: 'generarGC' }
-      ]
+      ],
+      regTipo1: {},
+      listaRegTipo2: []
     }
   },
   computed: {
     ...mapState('login', ['user']) // importo state.user desde store-login
   },
   methods: {
+    ...mapActions('guardiaC', ['findTipo1', 'findTipo2', 'generarGC']),
     formatDate (date1) {
       return date.formatDate(date1, 'DD/MM/YYYY')
+    },
+    getRecordsTipo1 () {
+      // cabecera
+      this.findTipo1({})
+        .then(response => {
+          Object.assign(this.regTipo1, response.data[0])
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
+    },
+    getRecordsTipo2 () {
+      // lineas
+      this.findTipo2([])
+        .then(response => {
+          Object.assign(this.listaRegTipo2, response.data)
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
     },
     generarGC () {
       // a implementar
       this.generado = true
+      this.generarGC()
+        .then(response => {
+          // console.log('generarGC desde MAIN con exito, response.data es:', response.data)
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
     },
     rellenarDatosFact () {
       console.log('metodo por implementar')
     },
     cambiaDatos (record) {
       // ??
-    },
-    getRecord () {
-      var record = {
-        id: this.value.id
-      }
-      this.findEstancia(record)
-        .then(response => {
-          Object.assign(this.recordToSubmit, response.data[0])
-          setTimeout(() => { this.primeraVez = false; this.colorBotonSave = 'primary'; this.hasChanges = false }, 100) // dejo pasar un poco porque en el render se modifica el registro
-          this.refresh++ // refresca datos cabecera
-        })
-        .catch(error => {
-          this.$q.dialog({ title: 'Error', message: error })
-        })
     },
     updateRecord () {
       // ?
@@ -158,7 +174,7 @@ export default {
           cancel: true,
           persistent: true
         }).onOk(() => {
-          // generar
+          // generar --> LLAMADA AL BACKEND
           this.$emit('close')
         }).onCancel(() => {
           this.$emit('close')
@@ -167,7 +183,8 @@ export default {
     }
   },
   mounted () {
-    this.getRecord()
+    this.getRecordsTipo1()
+    this.getRecordsTipo2()
   },
   components: {
     wgDate: wgDate,
