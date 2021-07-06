@@ -160,7 +160,6 @@ export default {
         idEstancia: this.value.id,
         noches: 1,
         fechaInicio: this.value.fechaEntrada,
-
         fechaFin: this.value.fechaSalida,
         tipoIva: 10,
         dto: 0,

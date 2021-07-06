@@ -53,13 +53,31 @@
               buttons
               @save="updateRecord(props.row)">
               <q-input
-                v-if="['descripcion', 'cantidad', 'factura'].includes(col.name)"
+                v-if="['Nombre', 'PrimerApellido', 'SegundoApellido', 'dni', 'pasaporte', 'PaisNac'].includes(col.name)"
                 type="text"
                 v-model="props.row[col.name]"
                 dense
                 autofocus />
-                <wgDate v-if="['fecha'].includes(col.name)"
-                  v-model="props.row[col.name]" />
+              <wgDate v-if="['FechaEntrada', 'FechaExp', 'FechaNac'].includes(col.name)"
+                v-model="props.row[col.name]" />
+              <q-select
+                v-if="['sexo'].includes(col.name)"
+                outlined
+                :value="col.value"
+                @input="(value) => props.row[col.name]=value"
+                :options="sexoList"
+                stack-label
+                emit-value
+              />
+              <q-select
+                v-if="['TipoDoc'].includes(col.name)"
+                outlined
+                :value="col.value"
+                @input="(value) => props.row[col.name]=value"
+                :options="tipoDocList"
+                stack-label
+                emit-value
+              />
             </q-popup-edit>
           </q-td>
         </q-tr>
@@ -95,20 +113,13 @@
         </div>
       </template>
     </q-table>
-
-    <q-dialog v-model="mostrarDialog">
-      <guardiaCivilFormLinDetalle
-        @close="mostrarDialog=false"
-        v-model="registroEditado"
-        :cabecera="value"
-        @saveRecord="saveRecord"/>
-    </q-dialog>
   </q-item>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
 import { date } from 'quasar'
+import wgDate from 'components/General/wgDate.vue'
 
 export default {
   props: ['value'], // en 'value' tenemos la tabla de datos del grid
@@ -116,7 +127,6 @@ export default {
     return {
       rowId: '',
       recordToSubmit: {},
-      mostrarDialog: false,
       registrosSeleccionados: [],
       registroEditado: {},
       columns: [
@@ -134,7 +144,13 @@ export default {
         { name: 'PaisNac', align: 'left', label: 'paisNac', field: 'PaisNac', sortable: true }
       ],
       pagination: { rowsPerPage: 0 },
-      listaRegTipo2: []
+      listaRegTipo2: [],
+      sexoList: [
+        'M', 'H'
+      ],
+      tipoDocList: [
+        'D', 'P'
+      ]
     }
   },
   computed: {
@@ -142,18 +158,20 @@ export default {
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
-    ...mapActions('guardiaC', ['borrarTipo2']),
+    ...mapActions('guardiaC', ['borrarTipo2', 'addTipo2']),
     addRecord () {
-      /* var record = {}
-      this.addReserva(record)
+      var record = {
+        FechaEntrada: date.formatDate(new Date(), 'YYYY-MM-DD 00:00:00'),
+        PaisNac: 'ESP'
+      }
+      this.addTipo2(record)
         .then(response => {
           record.id = response.data.id
-          this.registrosSeleccionados.push(record)
-          this.editRecord(record)
+          this.value.push(record)
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
-        }) */
+        })
     },
     deleteRecord (id) {
       this.$q.dialog({
@@ -175,32 +193,19 @@ export default {
           })
       })
     },
-    updateRecord (recordToSubmit) {
-      Object.assign(recordToSubmit, { user: this.user.pers.login, ts: date.formatDate(new Date(), 'YYYY-MM-DD HH:mm:ss') })
-      /* this.addReserva(recordToSubmit)
+    updateRecord (record) { // Volvemos a llamar a addServicios con el contenido de props.row
+      this.addTipo2(record)
         .then(response => {
-          this.calcularTotalesLineas()
+          this.refresh++
+          console.log(response)
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
-        }) */
-    },
-    saveRecord (record) {
-      this.mostrarDialog = false
-      /* var index = this.registrosSeleccionados.findIndex(function (sel) {
-        // busco elemento del array con este id
-        if (sel.id === record.id) return true
-      })
-      Object.assign(this.registrosSeleccionados[index], record)
-      this.updateRecord(record) */
-    },
-    editRecord (rowChanges) {
-      Object.assign(this.registroEditado, rowChanges)
-      this.mostrarDialog = true
+        })
     }
   },
   components: {
-    guardiaCivilFormLinDetalle: require('components/GuardiaCivil/guardiaCivilFormLinDetalle.vue').default
+    wgDate: wgDate
   },
   mounted () {
     this.listaRegTipo2 = this.value

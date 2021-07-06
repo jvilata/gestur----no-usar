@@ -13,7 +13,7 @@
         </q-item-section>
         <q-item-section side>
             <q-btn
-            @click="confirmarCierre"
+            @click="$emit('close')"
             flat
             round
             dense
@@ -98,7 +98,10 @@ export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
   data () {
     return {
-      recordToSubmit: {},
+      recordToSubmit: {
+        FechaInicialEntrada: '',
+        FechaFinalEntrada: ''
+      },
       generado: false,
       title: 'DISCO GUARDIA CIVIL',
       refresh: 0,
@@ -153,27 +156,20 @@ export default {
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
         })
-    },
-    confirmarCierre () {
-      if (!this.generado) {
-        this.$q.dialog({
-          title: 'Aviso',
-          message: '¿Desea salir sin generar el documento?',
-          ok: true,
-          cancel: true,
-          persistent: true
-        }).onOk(() => {
-          // generar --> LLAMADA AL BACKEND
-          this.$emit('close')
-        }).onCancel(() => {
-          this.$emit('close')
-        })
-      } else { this.$emit('close') }
     }
   },
   mounted () {
     this.getRecordsTipo1()
     this.getRecordsTipo2()
+    if (this.recordToSubmit.FechaInicialEntrada === '') {
+      this.recordToSubmit.FechaInicialEntrada = date.formatDate(new Date(), 'YYYY-MM-DD 00:00:00')
+    }
+    if (this.recordToSubmit.FechaFinalEntrada === '') {
+      this.recordToSubmit.FechaFinalEntrada = date.formatDate(new Date(), 'YYYY-MM-DD 00:00:00')
+    }
+  },
+  destroyed () {
+    this.$emit('changeTab', { idTab: this.value.idTab, filterRecord: Object.assign({}, this.filterRecord), registrosSeleccionados: Object.assign({}, this.registrosSeleccionados) })
   },
   components: {
     wgDate: wgDate,
