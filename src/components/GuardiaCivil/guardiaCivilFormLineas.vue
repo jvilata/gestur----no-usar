@@ -51,13 +51,15 @@
               v-if="!['id'].includes(col.name)"
               v-model="props.row[col.name]"
               buttons
-              @save="updateRecord(props.row)">
+              label-set="Ok"
+              label-cancel="Cancelar">
               <q-input
                 v-if="['Nombre', 'PrimerApellido', 'SegundoApellido', 'dni', 'pasaporte', 'PaisNac'].includes(col.name)"
                 type="text"
                 v-model="props.row[col.name]"
                 dense
-                autofocus />
+                autofocus
+                @change="updateRecord(props.row)"/>
               <wgDate v-if="['FechaEntrada', 'FechaExp', 'FechaNac'].includes(col.name)"
                 v-model="props.row[col.name]" />
               <q-select
@@ -128,6 +130,7 @@ export default {
       rowId: '',
       recordToSubmit: {},
       registrosSeleccionados: [],
+      response: 0,
       registroEditado: {},
       columns: [
         { name: 'id', label: 'ID', align: 'center', field: 'id', sortable: true },
@@ -146,11 +149,12 @@ export default {
       pagination: { rowsPerPage: 0 },
       listaRegTipo2: [],
       sexoList: [
-        'M', 'H'
+        'M', 'F'
       ],
       tipoDocList: [
-        'D', 'P'
-      ]
+        'D', 'P', 'C'
+      ],
+      refresh: 0
     }
   },
   computed: {
@@ -197,7 +201,7 @@ export default {
       this.addTipo2(record)
         .then(response => {
           this.refresh++
-          console.log(response)
+          console.log('llamada update', response)
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
