@@ -61,7 +61,8 @@
                 autofocus
                 @change="updateRecord(props.row)"/>
               <wgDate v-if="['FechaEntrada', 'FechaExp', 'FechaNac'].includes(col.name)"
-                v-model="props.row[col.name]" />
+                v-model="props.row[col.name]"
+                @change="updateRecord(props.row)" />
               <q-select
                 v-if="['sexo'].includes(col.name)"
                 outlined
@@ -70,6 +71,7 @@
                 :options="sexoList"
                 stack-label
                 emit-value
+                @change="updateRecord(props.row)"
               />
               <q-select
                 v-if="['TipoDoc'].includes(col.name)"
@@ -79,6 +81,7 @@
                 :options="tipoDocList"
                 stack-label
                 emit-value
+                @change="updateRecord(props.row)"
               />
             </q-popup-edit>
           </q-td>
@@ -111,7 +114,7 @@
             icon="add"/>
         </div>
         <div>
-          {{ registrosSeleccionados.length }} Filas
+          {{ listaRegTipo2.length }} Filas
         </div>
       </template>
     </q-table>
@@ -201,7 +204,6 @@ export default {
       this.addTipo2(record)
         .then(response => {
           this.refresh++
-          console.log('llamada update', response)
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
