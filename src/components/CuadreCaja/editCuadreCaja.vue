@@ -43,7 +43,7 @@
         </div>
       </q-card-section>
       <q-card-actions align=right>
-        <q-btn type="submit" label="Save" color="primary" :disabled="disabledSave"/>
+        <q-btn type="submit" label="Save" color="primary"/>
         <q-btn @click="$emit('close')" label="Cancel" color="negative"/>
       </q-card-actions>
     </q-form>
@@ -69,7 +69,6 @@ export default {
         observaciones: ''
       },
       disabledCalc: false,
-      disabledSave: true,
       refreshKey: 0
     }
   },
@@ -90,7 +89,6 @@ export default {
           this.recordToSubmit.facturacionPeriodo = response.data[0].totFactura
           this.recordToSubmit.recaudacionCaja = response.data[0].totalCaja
           this.recordToSubmit.gastosCajaPeriodo = response.data[0].gastosCaja
-          this.disabledSave = false
           this.refreshKey++
         })
         .catch(error => {
