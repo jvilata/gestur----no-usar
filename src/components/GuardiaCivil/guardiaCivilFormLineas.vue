@@ -51,18 +51,15 @@
               v-if="!['id'].includes(col.name)"
               v-model="props.row[col.name]"
               buttons
-              label-set="Ok"
-              label-cancel="Cancelar">
+              @save="updateRecord(props.row)" >
               <q-input
                 v-if="['Nombre', 'PrimerApellido', 'SegundoApellido', 'dni', 'pasaporte', 'PaisNac'].includes(col.name)"
                 type="text"
                 v-model="props.row[col.name]"
                 dense
-                autofocus
-                @change="updateRecord(props.row)"/>
+                autofocus/>
               <wgDate v-if="['FechaEntrada', 'FechaExp', 'FechaNac'].includes(col.name)"
-                v-model="props.row[col.name]"
-                @change="updateRecord(props.row)" />
+                v-model="props.row[col.name]"/>
               <q-select
                 v-if="['sexo'].includes(col.name)"
                 outlined
@@ -71,7 +68,6 @@
                 :options="sexoList"
                 stack-label
                 emit-value
-                @change="updateRecord(props.row)"
               />
               <q-select
                 v-if="['TipoDoc'].includes(col.name)"
@@ -81,7 +77,6 @@
                 :options="tipoDocList"
                 stack-label
                 emit-value
-                @change="updateRecord(props.row)"
               />
             </q-popup-edit>
           </q-td>
@@ -144,9 +139,9 @@ export default {
         { name: 'TipoDoc', align: 'left', label: 'Tipo Doc.', field: 'TipoDoc', sortable: true },
         { name: 'dni', label: 'DNI', align: 'center', field: 'dni', sortable: true },
         { name: 'pasaporte', align: 'left', label: 'Pasaporte', field: 'pasaporte', sortable: true },
-        { name: 'FechaEntrada', align: 'left', label: 'Fecha Entrada', field: 'FechaEntrada', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
-        { name: 'FechaExp', align: 'left', label: 'Fecha Exp.', field: 'FechaExp', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
-        { name: 'FechaNac', align: 'left', label: 'Fecha Nac.', field: 'FechaNac', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '31-12-1899' ? '' : res) } },
+        { name: 'FechaEntrada', align: 'left', label: 'Fecha Entrada', field: 'FechaEntrada', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '30-11-1899' ? '' : res) } },
+        { name: 'FechaExp', align: 'left', label: 'Fecha Exp.', field: 'FechaExp', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '30-11-1899' ? '' : res) } },
+        { name: 'FechaNac', align: 'left', label: 'Fecha Nac.', field: 'FechaNac', sortable: true, format: val => { var res = date.formatDate(date.extractDate(val, 'YYYY-MM-DD HH:mm:ss'), 'DD-MM-YYYY'); return (res === '30-11-1899' ? '' : res) } },
         { name: 'PaisNac', align: 'left', label: 'paisNac', field: 'PaisNac', sortable: true }
       ],
       pagination: { rowsPerPage: 0 },
@@ -174,7 +169,7 @@ export default {
       this.addTipo2(record)
         .then(response => {
           record.id = response.data.id
-          this.value.push(record)
+          this.listaRegTipo2.push(record)
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
@@ -214,7 +209,7 @@ export default {
     wgDate: wgDate
   },
   mounted () {
-    this.listaRegTipo2 = this.value
+    this.listaRegTipo2 = [...this.value]
   }
 }
 </script>

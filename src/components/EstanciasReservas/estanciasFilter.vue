@@ -73,10 +73,10 @@
       >
         <template v-slot:append>
             <q-icon name="event" class="cursos-pointer">
-              <q-popup-proxy ref="qProxy">
+              <q-popup-proxy ref="fechaFacturaDesde">
                 <wgDate
                   v-model="filterR.fechaFacturaDesde"
-                  @input="$refs.qProxy.hide()"/>
+                  @input="$refs.fechaFacturaDesde.hide()"/>
               </q-popup-proxy>
             </q-icon>
         </template>
@@ -91,10 +91,10 @@
       >
         <template v-slot:append>
             <q-icon name="event" class="cursos-pointer">
-              <q-popup-proxy ref="qProxy">
+              <q-popup-proxy ref="fechaFacturaHasta">
                 <wgDate
                   v-model="filterR.fechaFacturaHasta"
-                  @input="$refs.qProxy.hide()"/>
+                  @input="$refs.fechaFacturaHasta.hide()"/>
               </q-popup-proxy>
             </q-icon>
         </template>

@@ -159,8 +159,9 @@ export default {
     },
     calcularTotal () {
       const tarifa = (this.recordToSubmit.tarifa) / (1 + (this.recordToSubmit.tipoIva / 100)) // tarifa sin IVA
-      this.totalBruto = Math.round(this.recordToSubmit.cantidad * this.recordToSubmit.noches * tarifa * 100) / 100
-      this.totalNeto = Math.round(this.totalBruto * 100 * (1 - this.recordToSubmit.dto / 100)) / 100
+      this.totalBruto = Math.round(this.recordToSubmit.cantidad * this.recordToSubmit.noches * tarifa * 1000) / 1000
+      this.totalNeto = Math.round(this.totalBruto * 1000 * (1 - this.recordToSubmit.dto / 100)) / 1000
+      this.recordToSubmit.base = this.totalNeto
       this.recordToSubmit.total = Math.round(this.totalNeto * 100 * (1 + this.recordToSubmit.tipoIva / 100)) / 100
     },
     calcularDatosLinea () {
@@ -169,7 +170,7 @@ export default {
         precio: parseFloat(this.recordToSubmit.precio),
         piva: parseFloat(this.recordToSubmit.piva)
       }
-      obj.neto = Math.round((obj.unidades * obj.precio - obj.descuento) * 100.0) / 100 // base de iva
+      obj.neto = Math.round((obj.unidades * obj.precio - obj.descuento) * 1000.0) / 1000 // base de iva
       obj.totalIva = Math.round((obj.neto * obj.piva / 100.0) * 100.0) / 100
       obj.totalLinea = Math.round((obj.neto + obj.totalIva) * 100.0) / 100
       Object.assign(this.recordToSubmit, obj)
