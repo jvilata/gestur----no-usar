@@ -59,9 +59,14 @@
       <template v-slot:avatar>
         <q-icon name="description" color="primary" />
       </template>
+      <div class="row">
       Filtros de Factura
+      </div>
+      <div class="row">
       <q-checkbox v-model="val" @input="rellenarFechas" label="Las del año" />
       <q-checkbox v-model="noFact" @input="noFacturadas" label="No facturadas" />
+      </div>
+      <q-input outlined clearable autofocus label="Nº. Factura" stack-label v-model="filterR.NroFactura" />
       <q-input
         outlined
         clearable
