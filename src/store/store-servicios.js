@@ -19,12 +19,6 @@ const actions = {
   },
   loadListaServicios ({ commit }, objFilter) {
     return axiosInstance.get('servicios/bd_servicios.php/findServiciosFilter', { params: objFilter }, { withCredentials: true })
-    // .then(response => {
-    //   commit('loadListaServicios', response.data)
-    // })
-    // .catch(error => {
-    //   this.dispatch('mensajeLog/addMensaje', 'loadListaServicios' + error, { root: true })
-    // })
   },
   calcularTarifa ({ commit }, record) {
     return axiosInstance.get('servicios/bd_servicios.php/calcularTarifaServicio', { params: record }, { withCredentials: true })

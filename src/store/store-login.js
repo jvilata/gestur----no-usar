@@ -58,8 +58,8 @@ const actions = {
   borrarUsuario ({ commit }, id) {
     return axiosInstance.get('personal/bd_personal.php/deleteBD', { params: { id: id } }, { withCredentials: true })
   },
-  loadListaUsuarios ({ commit }) {
-    return axiosInstance.get('personal/bd_personal.php/findUsuariosFilter', { }, { withCredentials: true })
+  loadListaUsuarios ({ commit }, user) {
+    return axiosInstance.get('personal/bd_personal.php/findUsuariosFilter', { params: user }, { withCredentials: true })
   }
 }
 
