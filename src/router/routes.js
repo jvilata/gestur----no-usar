@@ -77,6 +77,12 @@ const routes = [
             props: true
           },
           {
+            path: 'usuariosMain',
+            name: 'usuariosMain',
+            component: () => import('components/Usuarios/usuariosMain.vue'),
+            props: true
+          },
+          {
             path: 'tablasMain',
             name: 'tablasMain',
             component: () => import('components/TablasAuxiliar/tablasMain.vue'),

@@ -17,14 +17,14 @@ const actions = {
   borrarServicio ({ commit }, id) {
     return axiosInstance.get('servicios/bd_servicios.php/deleteBD', { params: { id: id } }, { withCredentials: true })
   },
-  loadListaServicios ({ commit }) {
-    return axiosInstance.get('servicios/bd_servicios.php/findServiciosFilter', { }, { withCredentials: true })
-      .then(response => {
-        commit('loadListaServicios', response.data)
-      })
-      .catch(error => {
-        this.dispatch('mensajeLog/addMensaje', 'loadListaServicios' + error, { root: true })
-      })
+  loadListaServicios ({ commit }, objFilter) {
+    return axiosInstance.get('servicios/bd_servicios.php/findServiciosFilter', { params: objFilter }, { withCredentials: true })
+    // .then(response => {
+    //   commit('loadListaServicios', response.data)
+    // })
+    // .catch(error => {
+    //   this.dispatch('mensajeLog/addMensaje', 'loadListaServicios' + error, { root: true })
+    // })
   },
   calcularTarifa ({ commit }, record) {
     return axiosInstance.get('servicios/bd_servicios.php/calcularTarifaServicio', { params: record }, { withCredentials: true })

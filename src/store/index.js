@@ -11,6 +11,7 @@ import facturas from './store-facturas'
 import gastos from './store-gastos'
 import cuadrecaja from './store-cuadrecaja'
 import guardiaC from './store-guardiaC'
+import usuarios from './store-usuarios'
 // import example from './module-example'
 
 Vue.use(Vuex)
@@ -37,7 +38,8 @@ export default function (/* { ssrContext } */) {
       facturas,
       gastos,
       cuadrecaja,
-      guardiaC
+      guardiaC,
+      usuarios
     },
 
     // enable strict mode (adds overhead!)

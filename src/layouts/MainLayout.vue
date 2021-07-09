@@ -181,6 +181,14 @@ export default {
             name: 'discoGCMain',
             label: 'Disco Guardia Civil'
           }
+        },
+        {
+          title: 'Usuarios',
+          icon: 'shield',
+          link: {
+            name: 'usuariosMain',
+            label: 'Usuarios'
+          }
         }
       ]
     }

@@ -4,7 +4,7 @@ const state = {
   loggingIn: false,
   loginError: null,
   loginSuccessful: false,
-  user: {}// { id, nombre, login, password }
+  user: {} // { id, nombre, login, password }
 }
 
 const mutations = {
@@ -51,6 +51,15 @@ const actions = {
         commit('loginStop', error) // .response.data.error
       })
     this.$router.push('/')
+  },
+  addUsuario ({ commit }, usuario) {
+    return axiosInstance.get('personal/bd_personal.php/guardarBD', { params: usuario }, { withCredentials: true })
+  },
+  borrarUsuario ({ commit }, id) {
+    return axiosInstance.get('personal/bd_personal.php/deleteBD', { params: { id: id } }, { withCredentials: true })
+  },
+  loadListaUsuarios ({ commit }) {
+    return axiosInstance.get('personal/bd_personal.php/findUsuariosFilter', { }, { withCredentials: true })
   }
 }
 

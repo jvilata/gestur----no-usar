@@ -1,5 +1,4 @@
-<!-- componente principal de definicion de formularios. Se apoya en otros 2 componentes: Filter y Grid -->
-  <template>
+ <template>
     <div style="height: 100vh">
       <q-item clickable v-ripple @click="expanded = !expanded" class="q-ma-md q-pa-xs bg-blue-grey-1 text-grey-8">
         <!-- cabecera de formulario. Botón de busqueda y cierre de tab -->
@@ -27,25 +26,24 @@
 
       <q-dialog v-model="expanded"  >
         <!-- formulario con campos de filtro -->
-        <serviciosFilter
+        <usuariosFilter
           :value="filterRecord"
-          @input="(value) => Object.assign(filterRecord, value)"
-          @getRecords="getRecords"
+          @getRecords="(val) => getRecords(val)"
           @hide="expanded = !expanded"
         />
       </q-dialog>
 
       <!-- formulario tabla de resultados de busqueda -->
-      <serviciosGrid
+      <usuariosGrid
         v-model="registrosSeleccionados"
-        />
+      />
     </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import serviciosFilter from 'components/Servicios/serviciosFilter.vue'
-import serviciosGrid from 'components/Servicios/serviciosGrid.vue'
+import usuariosFilter from 'components/Usuarios/usuariosFilter.vue'
+import usuariosGrid from 'components/Usuarios/usuariosGrid.vue'
 export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
   data () {
@@ -53,7 +51,7 @@ export default {
       expanded: false,
       visible: '',
       filterRecord: {},
-      nomFormulario: 'Servicios',
+      nomFormulario: 'Usuarios',
       registrosSeleccionados: []
     }
   },
@@ -61,16 +59,14 @@ export default {
     ...mapState('login', ['user']) // importo state.user desde store-login
   },
   methods: {
-    ...mapActions('servicios', ['loadListaServicios']),
+    ...mapActions('login', ['loadListaUsuarios']),
     getRecords (filter) {
       // hago la busqueda de registros segun condiciones del formulario Filter que ha lanzado el evento getRecords
       var objFilter = Object.assign({}, filter)
-      this.loadListaServicios(objFilter)
-      // return this.$axios.get('servicios/bd_servicios.php/findServiciosFilter', { params: objFilter })
+      this.loadListaUsuarios(objFilter)
         .then(response => {
           this.registrosSeleccionados = response.data
           this.expanded = false
-          // this.$emit('contadorAcciones', response.data.length) // lo captura MainTabs y se lo pasa a MainLayout
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
@@ -88,8 +84,8 @@ export default {
     }
   },
   components: {
-    serviciosFilter: serviciosFilter,
-    serviciosGrid: serviciosGrid
+    usuariosFilter: usuariosFilter,
+    usuariosGrid: usuariosGrid
   }
 }
 </script>

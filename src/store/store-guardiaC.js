@@ -23,8 +23,8 @@ const actions = {
   generarArchivoGC ({ commit }) {
     return axiosInstance.get('guardiac/bd_guardiac.php/generarArchivoGC', { }, { withCredentials: true })
   },
-  generarGC ({ commit }) {
-    return axiosInstance.get('guardiac/bd_guardiac.php/generarArchivoGC', { }, { withCredentials: true })
+  generarGC ({ commit }, record) {
+    return axiosInstance.get('guardiac/bd_guardiac.php/generarListaGC', { params: record }, { withCredentials: true })
   }
 }
 
