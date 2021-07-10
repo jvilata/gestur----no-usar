@@ -158,13 +158,26 @@ export default {
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
-    ...mapActions('guardiaC', ['borrarTipo2', 'addTipo2']),
+    ...mapActions('viajeros', ['findViajerosFilter', 'addViajero', 'borrarViajero']),
+    getRecords () {
+      var objFilter = { idEstancia: this.value.id }
+      this.findViajerosFilter(objFilter)
+        .then(response => {
+          this.listaRegTipo2 = response.data
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
+    },
     addRecord () {
       var record = {
-        FechaEntrada: date.formatDate(new Date(), 'YYYY-MM-DD 00:00:00'),
-        PaisNac: 'ESP'
+        FechaEntrada: this.value.fechaEntrada,
+        PaisNac: 'ESP',
+        idEstancia: this.value.id,
+        sexo: 'M',
+        TipoDoc: 'D'
       }
-      this.addTipo2(record)
+      this.addViajero(record)
         .then(response => {
           record.id = response.data.id
           this.listaRegTipo2.push(record)
@@ -181,7 +194,7 @@ export default {
         cancel: true,
         persistent: true
       }).onOk(() => {
-        this.borrarTipo2(id)
+        this.borrarViajero(id)
           .then(response => {
             var index = this.listaRegTipo2.findIndex(function (record) { // busco elemento del array con este id
               if (record.id === id) return true
@@ -194,7 +207,7 @@ export default {
       })
     },
     updateRecord (record) { // Volvemos a llamar a addServicios con el contenido de props.row
-      this.addTipo2(record)
+      this.addViajero(record)
         .then(response => {
           this.refresh++
         })
@@ -207,7 +220,7 @@ export default {
     wgDate: wgDate
   },
   mounted () {
-    this.listaRegTipo2 = [...this.value]
+    this.getRecords()
   }
 }
 </script>

@@ -16,12 +16,17 @@
             label="Tipo Servicio"
             stack-label
             v-model="recordToSubmit.idServicio"
-            :options="listaServicios"
+            :options="listaServiciosFilter"
             option-value="id"
             option-label="descripcionCorta"
             emit-value
             map-options
+            @filter="filterServicios"
             @blur="rellenarDatosServicio"
+            use-input
+            hide-selected
+            fill-input
+            input-debounce="0"
           >
           <template v-slot:option="{ itemProps, itemEvents, opt }">
           <q-item
@@ -92,8 +97,8 @@
         </div>
       </q-card-section>
       <q-card-actions align=right>
-        <q-btn type="submit" label="Save" color="primary"/>
-        <q-btn @click="$emit('close')" label="Cancel" color="negative"/>
+        <q-btn type="submit" label="Guardar" color="primary"/>
+        <q-btn @click="$emit('close')" label="Cancelar" color="negative"/>
       </q-card-actions>
     </q-form>
   </q-card>
@@ -111,7 +116,8 @@ export default {
       totalBruto: 0,
       totalNeto: 0,
       recordToSubmit: { },
-      listaActivosFilter: []
+      listaActivosFilter: [],
+      listaServiciosFilter: this.listaServicios
     }
   },
   computed: {
@@ -120,6 +126,12 @@ export default {
   },
   methods: {
     ...mapActions('servicios', ['loadListaServiciosMut', 'calcularTarifa']),
+    filterServicios (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.listaServiciosFilter = this.listaServicios.filter(v => v.descripcionCorta !== null && v.descripcionCorta.toLowerCase().indexOf(needle) > -1)
+      })
+    },
     saveForm () {
       this.$emit('saveRecord', this.recordToSubmit) // lo captura estanciasFormLineas
     },
@@ -185,6 +197,7 @@ export default {
     }
     this.recordToSubmit = Object.assign({}, this.value) // asignamos valor del parametro por si viene de otro tab
     this.calcularTotal()
+    this.listaServiciosFilter = this.listaServicios
   }
 }
 </script>

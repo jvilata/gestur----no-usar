@@ -67,6 +67,16 @@
         >
           <estanciasFormLineas :key="refresh" :value="recordToSubmit" @calculaTotalesEst="calculaTotalesEst"/>
         </q-expansion-item>
+        <q-expansion-item
+          class="q-pt-xs q-pl-xs q-pr-xs"
+          group="somegroup1"
+          dense
+          label="Viajeros"
+          default-opened
+          header-class="bg-brown-1 text-grey-8"
+        >
+          <estanciasFormViajeros :key="refresh" :value="recordToSubmit"/>
+        </q-expansion-item>
       </q-list>
     </q-card>
     </div>
@@ -206,7 +216,8 @@ export default {
   },
   components: {
     estanciasFormCabecera: require('components/EstanciasReservas/estanciasFormCabecera.vue').default,
-    estanciasFormLineas: require('components/EstanciasReservas/estanciasFormLineas.vue').default
+    estanciasFormLineas: require('components/EstanciasReservas/estanciasFormLineas.vue').default,
+    estanciasFormViajeros: require('components/EstanciasReservas/estanciasFormViajeros.vue').default
   }
 }
 </script>

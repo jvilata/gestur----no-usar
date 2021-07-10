@@ -23,29 +23,30 @@
     <q-card flat>
       <q-card-section  class="q-pt-none q-pl-xs q-pr-xs">
         <div class="row q-mb-sm">
-          <q-input autogrow outlined label="Nombre" v-model="cliente.nombre" class="col-xs-4 col-sm-4" @blur="cambiaDatos"/>
-          <q-input autogrow outlined label="Primer Apellido" v-model="cliente.apellido1" class="col-xs-4 col-sm-4" @blur="cambiaDatos"/>
-          <q-input autogrow outlined label="Segundo Apellido" v-model="cliente.apellido2" class="col-xs-4 col-sm-4" @blur="cambiaDatos"/>
+          <q-input autogrow outlined clearable label="Nombre" v-model="cliente.nombre" class="col-xs-4 col-sm-4" @blur="cambiaDatos"/>
+          <q-input autogrow outlined clearable label="Primer Apellido" v-model="cliente.apellido1" class="col-xs-4 col-sm-4" @blur="cambiaDatos"/>
+          <q-input autogrow outlined clearable label="Segundo Apellido" v-model="cliente.apellido2" class="col-xs-4 col-sm-4" @blur="cambiaDatos"/>
         </div>
         <div class="row q-mb-sm">
-          <q-input outlined autogrow label="Email" v-model="cliente.email" class="col-xs-7 col-sm-7" @blur="cambiaDatos" />
-          <q-input outlined autogrow label="Matrícula" v-model="cliente.matricula" class="col-xs-5 col-sm-5" @blur="cambiaDatos"/>
+          <q-input outlined autogrow clearable label="Email" v-model="cliente.email" class="col-xs-7 col-sm-7" @blur="cambiaDatos" />
+          <q-input outlined autogrow clearable label="Matrícula" v-model="cliente.matricula" class="col-xs-5 col-sm-5" @blur="cambiaDatos"/>
         </div>
         <div class="row q-mb-sm">
-          <q-input outlined autogrow label="Dirección" v-model="cliente.direccion" class="col-xs-12 col-sm-8" @blur="cambiaDatos"/>
-          <q-input outlined autogrow label="Población" v-model="cliente.poblacion" class="col-xs-8 col-sm-4" @blur="cambiaDatos"/>
-          <q-input outlined autogrow label="C.Postal" v-model="cliente.cpostal" class="col-xs-4 col-sm-2" @blur="cambiaDatos"/>
-          <q-input outlined autogrow label="Provincia" v-model="cliente.provincia" class="col-xs-8 col-sm-6" @blur="cambiaDatos"/>
-          <q-input outlined autogrow label="País" v-model="cliente.pais" class="col-xs-4 col-sm-4" @blur="cambiaDatos"/>
+          <q-input outlined autogrow clearable label="Dirección" v-model="cliente.direccion" class="col-xs-12 col-sm-8" @blur="cambiaDatos"/>
+          <q-input outlined autogrow clearable label="Población" v-model="cliente.poblacion" class="col-xs-8 col-sm-4" @blur="cambiaDatos"/>
+          <q-input outlined autogrow clearable label="C.Postal" v-model="cliente.cpostal" class="col-xs-4 col-sm-2" @blur="cambiaDatos"/>
+          <q-input outlined autogrow clearable label="Provincia" v-model="cliente.provincia" class="col-xs-8 col-sm-6" @blur="cambiaDatos"/>
+          <q-input outlined autogrow clearable label="País" v-model="cliente.pais" class="col-xs-4 col-sm-4" @blur="cambiaDatos"/>
         </div>
         <div class="row q-mb-sm">
-          <q-input outlined label="Teléfonos" v-model="cliente.telefonos" class="col-xs-12 col-sm-12" @blur="cambiaDatos"/>
+          <q-input outlined clearable label="Teléfonos" v-model="cliente.telefonos" class="col-xs-12 col-sm-12" @blur="cambiaDatos"/>
         </div>
         <div class="row q-mb-sm">
           <q-select
           class="col-xs-5 col-sm-2"
           label="Tipo Doc."
           stack-label
+          clearable
           outlined
           v-model="cliente.tipoDoc"
           :options="listaTipoDoc"
@@ -55,7 +56,7 @@
           emit-value
           @blur="cambiaDatos"
         />
-          <q-input outlined label="DNI/Pasaporte" v-model="cliente.nroDoc" class="col-xs-7 col-sm-4" @blur="cambiaDatos"/>
+          <q-input outlined clearable label="DNI/Pasaporte" v-model="cliente.nroDoc" class="col-xs-7 col-sm-4" @blur="cambiaDatos"/>
           <q-input label="Fecha Nacimiento" class="col-xs-7 col-sm-3" clearable outlined stack-label :value="formatDate(cliente.fechaNacimiento)" @blur="cambiaDatos">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -67,7 +68,7 @@
               </q-icon>
           </template>
           </q-input>
-          <q-input outlined label="Nacionalidad" v-model="cliente.nacionalidad" class="col-xs-5 col-sm-3" />
+          <q-input outlined clearable label="Nacionalidad" v-model="cliente.nacionalidad" class="col-xs-5 col-sm-3" />
         </div>
         <div class="row q-mb-sm">
           <q-input label="Fecha Expedición" class="col-xs-6 col-sm-6" clearable outlined stack-label :value="formatDate(cliente.fechaExpedicion)" @blur="cambiaDatos">
@@ -96,6 +97,7 @@
         <div class="row q-mb-sm">
           <q-expansion-item
             expand-separator
+            clearable
             icon="home"
             label="Cliente con Servicio Periódico"
             caption="Más info"
@@ -107,6 +109,7 @@
                 <div class="row q-mb-sm">
                   <q-select
                     outlined
+                    clearable
                     label="Tipo Servicio Periódico"
                     v-model="cliente.tipoServicioPeriodico"
                     stack-label

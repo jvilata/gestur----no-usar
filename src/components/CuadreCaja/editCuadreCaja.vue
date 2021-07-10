@@ -43,8 +43,8 @@
         </div>
       </q-card-section>
       <q-card-actions align=right>
-        <q-btn type="submit" label="Save" color="primary"/>
-        <q-btn @click="$emit('close')" label="Cancel" color="negative"/>
+        <q-btn type="submit" label="Guardar" color="primary"/>
+        <q-btn @click="$emit('close')" label="Cancelar" color="negative"/>
       </q-card-actions>
     </q-form>
   </q-card>

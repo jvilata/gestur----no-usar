@@ -31,6 +31,10 @@
             option-label="valor1"
             emit-value
             map-options
+            use-input
+            hide-selected
+            fill-input
+            input-debounce="0"
           />
           <q-select
           class="col-xs-6 col-sm-3"
@@ -43,6 +47,10 @@
           option-label="valor1"
           emit-value
           map-options
+          use-input
+          hide-selected
+          fill-input
+          input-debounce="0"
         />
       </div>
       <div class="row">
