@@ -63,8 +63,21 @@
       Filtros de Factura
       </div>
       <div class="row">
-      <q-checkbox v-model="val" @input="rellenarFechas" label="Las del año" />
-      <q-checkbox v-model="noFact" @input="noFacturadas" label="No facturadas" />
+      <q-checkbox class="col-xs-6 col-sm-6" v-model="val" @input="rellenarFechas" label="Las del año" />
+      <q-select
+        class="col-xs-6 col-sm-6"
+        label="Facturadas"
+        stack-label
+        outlined
+        clearable
+        v-model="filterR.facturadas"
+        :options="listaSINO"
+        option-value="id"
+        option-label="desc"
+        emit-value
+        map-options
+      />
+      <!--q-checkbox v-model="noFact" @input="noFacturadas" label="No facturadas" /-->
       </div>
       <q-input outlined clearable autofocus label="Nº. Factura" stack-label v-model="filterR.NroFactura" />
       <q-input
@@ -127,16 +140,16 @@ export default {
     }
   },
   computed: {
-    ...mapState('tablasAux', ['listaTipoEstancia'])
+    ...mapState('tablasAux', ['listaTipoEstancia', 'listaSINO'])
   },
   methods: {
     rellenarFechas () {
       this.filterR.fechaFacturaDesde = date.formatDate(new Date(), 'YYYY-01-01')
       this.filterR.fechaFacturaHasta = date.formatDate(new Date(), 'YYYY-MM-DD')
     },
-    noFacturadas () {
+    /* noFacturadas () {
       this.filterR.noFacturadas = !this.filterR.noFacturadas
-    },
+    }, */
     getRecords () {
       this.$emit('getRecords', this.filterR)
     },
