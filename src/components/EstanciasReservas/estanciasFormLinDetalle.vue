@@ -139,6 +139,7 @@ export default {
       this.calcularTotal()
     },
     rellenarDatosServicio () {
+      console.log(this.recordToSubmit, this.listaServicios)
       const servicio = this.listaServicios.find(serv => serv.id === this.recordToSubmit.idServicio)
       this.recordToSubmit.tipoIva = servicio.tipoIva
       this.recordToSubmit.Numero = servicio.Numero

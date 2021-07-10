@@ -59,7 +59,7 @@
               </q-icon>
             </template>
           </q-input>
-          <q-btn outline class="col-xs-12 col-sm-4" color="primary" label="Generar" @click="generarListaGC"/>
+          <q-btn outline class="col-xs-12 col-sm-4" color="primary" label="Generar Lista" @click="generarListaGC"/>
       </div>
     <q-card flat class="q-pb-xl">
       <q-list bordered>
@@ -71,7 +71,7 @@
           default-opened
           header-class="bg-brown-1 text-grey-8"
         >
-        <guardiaCivilFormCabecera :value="regTipo1" :key="refresh"/>
+        <guardiaCivilFormCabecera :value="regTipo1" :key="refresh" />
         </q-expansion-item>
         <q-separator />
         <q-expansion-item
@@ -148,7 +148,7 @@ export default {
     generarListaGC () {
       // a implementar
       this.generado = true
-      this.generarGC()
+      this.generarGC(this.recordToSubmit)
         .then(response => {
           this.getRecordsTipo1()
           this.getRecordsTipo2()
