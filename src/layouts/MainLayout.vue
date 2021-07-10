@@ -141,6 +141,14 @@ export default {
           }
         },
         {
+          title: 'Disco Guardia Civil',
+          icon: 'shield',
+          link: {
+            name: 'discoGCMain',
+            label: 'Disco Guardia Civil'
+          }
+        },
+        {
           title: 'Otros',
           icon: 'settings',
           link: {
@@ -172,14 +180,6 @@ export default {
           link: {
             name: 'tarifasMain',
             label: 'Tarifas de Servicios'
-          }
-        },
-        {
-          title: 'Disco Guardia Civil',
-          icon: 'shield',
-          link: {
-            name: 'discoGCMain',
-            label: 'Disco Guardia Civil'
           }
         },
         {

@@ -10,7 +10,7 @@
       <q-card-section>
         <div class="row q-mb-md">
           <q-select
-            class="col-xs-8 col-sm-10"
+            class="col-xs-9 col-sm-10"
             outlined
             clearable
             label="Tipo Servicio"
@@ -37,7 +37,7 @@
           </q-item>
         </template>
           </q-select>
-          <q-input class="col-xs-4 col-sm-2" outlined label="Número" stack-label v-model="recordToSubmit.Numero" />
+          <q-input class="col-xs-3 col-sm-2" outlined label="Número" stack-label v-model="recordToSubmit.Numero" />
         </div>
         <div class="row">
           <q-input label="Fecha Inicio" class="col-xs-12 col-sm-5" clearable outlined stack-label :value="formatDate(recordToSubmit.fechaInicio)" @blur="calcularFechaFin">
@@ -63,15 +63,15 @@
           </template>
           </q-input>
           <q-input class="col-xs-4 col-sm-2" outlined label="Noches" stack-label v-model="recordToSubmit.noches" />
-          <q-input class="col-xs-8 col-sm-3" outlined stack-label v-model="recordToSubmit.cantidad" label="Cantidad" @blur="calcularTotal"/>
-          <q-input class="col-xs-12 col-sm-3" outlined stack-label v-model="recordToSubmit.tarifa" label="Tarifa" @blur="calcularTotal"/>
+          <q-input class="col-xs-4 col-sm-3" outlined stack-label v-model="recordToSubmit.cantidad" label="Cantidad" @blur="calcularTotal"/>
+          <q-input class="col-xs-4 col-sm-3" outlined stack-label v-model="recordToSubmit.tarifa" label="Tarifa" @blur="calcularTotal"/>
           <q-input class="col-xs-6 col-sm-3" outlined stack-label v-model="recordToSubmit.tipoIva" label="%IVA" @blur="calcularTotal"/>
           <q-input class="col-xs-6 col-sm-3" outlined stack-label v-model="recordToSubmit.dto" label="Dto" @blur="calcularTotal"/>
         </div>
         <div class="row q-mt-xl q-mb-md">
-          <q-input class="col-xs-6 col-sm-4" outlined readonly stack-label v-model="totalBruto" label="Total Bruto"/>
-          <q-input class="col-xs-6 col-sm-4" outlined readonly stack-label v-model="totalNeto" label="Total Neto"/>
-          <q-input class="col-xs-12 col-sm-4" outlined readonly stack-label v-model="recordToSubmit.total" label="Total"/>
+          <q-input class="col-xs-4 col-sm-4" outlined readonly stack-label v-model="totalBruto" label="Total Bruto"/>
+          <q-input class="col-xs-4 col-sm-4" outlined readonly stack-label v-model="totalNeto" label="Total Neto"/>
+          <q-input class="col-xs-4 col-sm-4" outlined readonly stack-label v-model="recordToSubmit.total" label="Total"/>
         </div>
         <div class="row">
           <q-select

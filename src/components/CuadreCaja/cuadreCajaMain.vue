@@ -40,6 +40,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import { date } from 'quasar'
 export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
   data () {
@@ -78,6 +79,8 @@ export default {
       this.getRecords(this.value.filterRecord) // refresco la lista por si se han hecho cambios
     } else { // no esta inicializado
       this.registrosSeleccionados = []
+      this.filterRecord.fechaInicial = date.formatDate(new Date(), 'YYYY-01-01')
+      this.getRecords(this.filterRecord)
     }
   },
   destroyed () {
