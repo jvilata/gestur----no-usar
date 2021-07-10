@@ -41,6 +41,7 @@
           :options="listaTipoTarifa"
           option-value="codElemento"
           option-label="valor1"
+          emit-value
           map-options
         />
       </div>
@@ -86,15 +87,15 @@
         <q-input class="col-xs-12 col-sm-6" autogrow outlined label="Observaciones" stack-label v-model="recordToSubmit.observaciones" />
       </div>
       <div class="row q-mt-lg">
-        <q-input class="col-xs-2 col-sm-1" outlined label="Fianza" stack-label v-model="recordToSubmit.Fianza" />
-        <q-input class="col-xs-3 col-sm-2" outlined readonly label="Base" stack-label v-model="recordToSubmit.base" />
-        <q-input class="col-xs-3 col-sm-1" outlined label="%Retención" stack-label v-model="recordToSubmit.porRetencion" @blur="$emit('calculaTotalesEst', recordToSubmit)"/>
+        <q-input class="col-xs-4 col-sm-2" outlined readonly label="Base" stack-label v-model="recordToSubmit.base" />
+        <q-input class="col-xs-4 col-sm-1" outlined label="%Retención" stack-label v-model="recordToSubmit.porRetencion" @blur="$emit('calculaTotalesEst', recordToSubmit)"/>
         <q-input class="col-xs-4 col-sm-1" outlined readonly label="Importe retención" stack-label v-model="recordToSubmit.Retencion"/>
         <q-input class="col-xs-6 col-sm-2" outlined readonly label="Total IVA" stack-label v-model="recordToSubmit.totalIva"/>
         <q-input class="col-xs-6 col-sm-2" outlined readonly label="Total Estancia" stack-label v-model="recordToSubmit.totalEstancia" />
-        <q-input class="col-xs-4 col-sm-1" outlined label="En efectivo" stack-label v-model="recordToSubmit.ACuenta" />
-        <q-input class="col-xs-4 col-sm-1" outlined label="Transferencia" stack-label v-model="recordToSubmit.PorBanco" />
-        <q-input class="col-xs-4 col-sm-1" outlined label="TPV" stack-label v-model="recordToSubmit.PorDatafono" />
+        <q-input class="col-xs-3 col-sm-1" outlined label="Fianza" stack-label v-model="recordToSubmit.Fianza" />
+        <q-input class="col-xs-3 col-sm-1" outlined label="En efectivo" stack-label v-model="recordToSubmit.ACuenta" />
+        <q-input class="col-xs-3 col-sm-1" outlined label="Transferencia" stack-label v-model="recordToSubmit.PorBanco" />
+        <q-input class="col-xs-3 col-sm-1" outlined label="TPV" stack-label v-model="recordToSubmit.PorDatafono" />
       </div>
       <div class="row q-mt-sm">
         <q-btn outline class="col-xs-12 col-sm-2" color="primary" label="Generar Factura" @click="rellenarDatosFact" />

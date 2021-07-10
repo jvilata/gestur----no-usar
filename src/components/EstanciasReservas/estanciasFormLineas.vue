@@ -140,6 +140,7 @@ export default {
   methods: {
     ...mapActions('tabs', ['addTab']),
     ...mapActions('estancias', ['findLinEstancias', 'borrarReserva', 'addReserva']),
+    ...mapActions('servicios', ['loadListaServiciosMut']),
     getRecords () {
       var objFilter = { idEstancia: this.value.id }
       this.findLinEstancias(objFilter)
@@ -230,6 +231,7 @@ export default {
   },
   mounted () {
     this.getRecords()
+    this.loadListaServiciosMut()
   },
   components: {
     estanciasFormLinDetalle: require('components/EstanciasReservas/estanciasFormLinDetalle.vue').default

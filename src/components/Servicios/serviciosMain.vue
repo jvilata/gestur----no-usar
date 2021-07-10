@@ -66,11 +66,9 @@ export default {
       // hago la busqueda de registros segun condiciones del formulario Filter que ha lanzado el evento getRecords
       var objFilter = Object.assign({}, filter)
       this.loadListaServicios(objFilter)
-      // return this.$axios.get('servicios/bd_servicios.php/findServiciosFilter', { params: objFilter })
         .then(response => {
           this.registrosSeleccionados = response.data
           this.expanded = false
-          // this.$emit('contadorAcciones', response.data.length) // lo captura MainTabs y se lo pasa a MainLayout
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
