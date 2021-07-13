@@ -57,13 +57,13 @@
           @blur="cambiaDatos"
         />
           <q-input outlined clearable label="DNI/Pasaporte" v-model="cliente.nroDoc" class="col-xs-7 col-sm-4" @blur="cambiaDatos"/>
-          <q-input label="Fecha Nacimiento" class="col-xs-7 col-sm-3" clearable outlined stack-label v-model="formatDate(cliente.fechaNacimiento)" @blur="cambiaDatos">
+          <q-input label="Fecha Nacimiento" class="col-xs-7 col-sm-3" clearable outlined stack-label :value="formatDate(cliente.fechaNacimiento)" @input="(val) => recordToSubmit.fechaNacimiento=val" @blur="cambiaDatos" mask="##/##/####" hint="Mask: DD/MM/YYYY">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaNac">
                   <wgDate
-                      @input="$refs.fechaNac.hide()"
-                      v-model="cliente.fechaNacimiento" />
+                      @input="v => { $refs.fechaNac.hide(); recordToSubmit.fechaNacimiento=v }"
+                      :value="cliente.fechaNacimiento" />
               </q-popup-proxy>
               </q-icon>
           </template>
@@ -71,7 +71,7 @@
           <q-input outlined clearable label="Nacionalidad" v-model="cliente.nacionalidad" class="col-xs-5 col-sm-3" />
         </div>
         <div class="row q-mb-sm">
-          <q-input label="Fecha Expedición" class="col-xs-6 col-sm-6" clearable outlined stack-label v-model="formatDate(cliente.fechaExpedicion)" @blur="cambiaDatosExpedicion">
+          <q-input label="Fecha Expedición" class="col-xs-6 col-sm-6" clearable outlined stack-label :value="formatDate(cliente.fechaExpedicion)" @input="(val) => recordToSubmit.fechaExpedicion=val" @blur="cambiaDatosExpedicion(cliente.fechaExpedicion)">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaExp">
@@ -82,7 +82,7 @@
               </q-icon>
           </template>
           </q-input>
-           <q-input label="Fecha Validez" class="col-xs-6 col-sm-6" clearable outlined stack-label v-model="formatDate(cliente.fechaValidez)" @blur="cambiaDatos">
+           <q-input label="Fecha Validez" class="col-xs-6 col-sm-6" clearable outlined stack-label :value="formatDate(cliente.fechaValidez)" @input="(val) => recordToSubmit.fechaValidez=val" @blur="cambiaDatos">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaVal">
@@ -108,31 +108,42 @@
               <q-card-section  class="q-pt-none q-pl-xs q-pr-xs">
                 <div class="row q-mb-sm">
                   <q-select
+                    class="col-xs-12 col-sm-5"
                     outlined
+                    stack-label
                     clearable
                     label="Tipo Servicio Periódico"
                     v-model="cliente.tipoServicioPeriodico"
-                    stack-label
-                    :options="listaTipoServ"
-                    map-options
+                    :options="listaTipoServFilter"
                     option-value="codElemento"
                     option-label="valor1"
                     emit-value
-                    class="col-xs-12 col-sm-5"
-                    @blur="cambiaDatos"/>
+                    map-options
+                    @blur="cambiaDatos"
+                    @filter="filterTipoServ"
+                    use-input
+                    hide-selected
+                    fill-input
+                    input-debounce="0"/>
                   <q-select
                     standout="bg-green-3"
                     class="col-xs-7 col-sm-4"
-                    label="Tipo Factura"
                     stack-label
                     outlined
+                    clearable
+                    label="Tipo Factura"
                     v-model="cliente.tipoFacturacion"
-                    :options="listaTipoFact"
-                    map-options
+                    :options="listaTipoFactFilter"
                     option-value="codElemento"
                     option-label="valor1"
                     emit-value
+                    map-options
                     @blur="cambiaDatos"
+                    @filter="filterTipoFact"
+                    use-input
+                    hide-selected
+                    fill-input
+                    input-debounce="0"
                   />
                   <q-input outlined label="Precio" v-model="cliente.precio" class="col-xs-5 col-sm-3" @blur="cambiaDatos"/>
                 </div>
@@ -168,7 +179,9 @@ export default {
       colorBotonSave: 'primary',
       refresh: 0,
       recordToSubmit: {},
-      hasChanges: false
+      hasChanges: false,
+      listaTipoServFilter: this.listaTipoServ,
+      listaTipoFactFilter: this.listaTipoFact
     }
   },
   computed: {
@@ -179,6 +192,18 @@ export default {
     ...mapActions('login', ['desconectarLogin']),
     ...mapActions('clientes', ['loadDetallecliente', 'guardarDatosCliente']),
     ...mapActions('tabs', ['addTab']),
+    filterTipoServ (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.listaTipoServFilter = this.listaTipoServ.filter(v => v.valor1.toLowerCase().indexOf(needle) > -1)
+      })
+    },
+    filterTipoFact (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.listaTipoFactFilter = this.listaTipoFact.filter(v => v.valor1.toLowerCase().indexOf(needle) > -1)
+      })
+    },
     openForm (otrosCambios) {
       this.addTab(['clientesMain', 'clientesMain', {}, 1])
     },
@@ -226,15 +251,15 @@ export default {
         })
       }
     },
-    cambiaDatosExpedicion () {
+    cambiaDatosExpedicion (fechaEx) {
       this.hasChanges = true
       this.colorBotonSave = 'red'
-      const newDate = this.cliente.fechaExpedicion
-      console.log('nDate', newDate)
-      this.cliente.fechaValideZ = newDate
-      console.log('fechaV', this.cliente.fechaValidez)
-      console.log('hola')
-      // this.cliente.fechaValidez = date.formatDate(date.addToDate(newDate, { years: 10 }), 'DD/MM/YYYY')
+      console.log('fechaExp', fechaEx)
+      const fechaVal10 = date.formatDate(date.addToDate(fechaEx, { days: 10 }), 'YYYY-MM-DD')
+      console.log('fechaVal10', fechaVal10)
+      this.cliente.fechaValideZ = fechaVal10
+      // console.log('fechaV', this.cliente.fechaValidez)
+      // this.cliente.fechaValidez = date.formatDate(date.addToDate(fechaEx, { years: 10 }), 'DD/MM/YYYY')
     },
     cambiaDatos () {
       this.hasChanges = true

@@ -23,14 +23,16 @@
           <q-select
             class="col-xs-6 col-sm-3"
             outlined
+            clearable
             label="Tipo Estancia"
             stack-label
             v-model="recordToSubmit.tipoEstancia"
-            :options="listaTipoEstancia"
+            :options="listaTipoEstanciaFilter"
             option-value="codElemento"
             option-label="valor1"
             emit-value
             map-options
+            @filter="filterTipoEst"
             use-input
             hide-selected
             fill-input
@@ -39,6 +41,7 @@
           <q-select
           class="col-xs-6 col-sm-3"
           outlined
+          clearable
           label="Tipo Tarifa"
           stack-label
           v-model="recordToSubmit.tipoTarifa"
@@ -141,6 +144,7 @@ export default {
   data () {
     return {
       listaClientesFilter: this.listaClientes,
+      listaTipoEstanciaFilter: this.listaTipoEstancia,
       recordToSubmit: {}
     }
   },
@@ -158,6 +162,12 @@ export default {
       update(() => {
         const needle = val.toLowerCase()
         this.listaClientesFilter = this.listaClientes.filter(v => v.nombre.toLowerCase().indexOf(needle) > -1)
+      })
+    },
+    filterTipoEst (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.listaTipoEstanciaFilter = this.listaTipoEstancia.filter(v => v.valor1.toLowerCase().indexOf(needle) > -1)
       })
     },
     formatDate (date1) {
