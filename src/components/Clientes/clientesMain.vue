@@ -59,7 +59,7 @@ export default {
           this.expanded = false
         })
         .catch(error => {
-          this.registrosSeleccionados = {}
+          this.registrosSeleccionados = []
           this.$q.dialog({ title: 'Error', message: error })
           this.desconectarLogin()
         })

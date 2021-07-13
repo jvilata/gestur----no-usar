@@ -12,6 +12,7 @@
             outlined
             label="Tipo Estancia"
             stack-label
+            clearable
             v-model="filterR.tipoEstancia"
             :options="listaTipoEstancia"
             option-value="codElemento"
@@ -24,14 +25,14 @@
         clearable
         label="Fecha Entrada"
         stack-label
-        :value="formatDate(filterR.fechaEntrada)"
-        @input="(val) => filterR.fechaEntrada=val"
+        :value="formatDate(filterR.fechaEntradaDesde)"
+        @input="(val) => filterR.fechaEntradaDesde=val"
       >
         <template v-slot:append>
             <q-icon name="event" class="cursos-pointer">
               <q-popup-proxy ref="qProxy1">
                 <wgDate
-                  v-model="filterR.fechaEntrada"
+                  v-model="filterR.fechaEntradaDesde"
                   @input="$refs.qProxy1.hide()"/>
               </q-popup-proxy>
             </q-icon>
@@ -42,14 +43,14 @@
         clearable
         label="Fecha Salida"
         stack-label
-        :value="formatDate(filterR.fechaSalida)"
-        @input="(val) => filterR.fechaSalida=val"
+        :value="formatDate(filterR.fechaEntradaHasta)"
+        @input="(val) => filterR.fechaEntradaHasta=val"
       >
         <template v-slot:append>
             <q-icon name="event" class="cursos-pointer">
               <q-popup-proxy ref="qProxy">
                 <wgDate
-                  v-model="filterR.fechaSalida"
+                  v-model="filterR.fechaEntradaHasta"
                   @input="$refs.qProxy.hide()"/>
               </q-popup-proxy>
             </q-icon>
@@ -134,7 +135,10 @@ export default {
   props: ['value'], // value es el objeto con los campos de filtro que le pasa accionesMain con v-model
   data () {
     return {
-      filterR: {},
+      filterR: {
+        fechaEntradaHasta: '',
+        fechaEntradaDesde: ''
+      },
       val: false,
       noFact: false
     }

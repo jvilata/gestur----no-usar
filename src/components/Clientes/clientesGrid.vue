@@ -101,7 +101,8 @@ export default {
         { name: 'nacionalidad', align: 'left', label: 'Nacionalidad', field: 'nacionalidad' },
         { name: 'matricula', align: 'left', label: 'Matrícula', field: 'matricula' }
       ],
-      pagination: { rowsPerPage: 0 }
+      pagination: { rowsPerPage: 0 },
+      registrosSeleccionados: []
     }
   },
   methods: {
@@ -117,8 +118,8 @@ export default {
       }
       this.guardarDatosCliente(record)
         .then(response => {
-          console.log(response.data.id)
           record.id = response.data.id
+          console.log(response.data)
           this.editRecord(record, record.id)
         })
         .catch(error => {
@@ -140,6 +141,10 @@ export default {
       }).onOk(() => {
         this.borrarCliente(id)
           .then(result => {
+            var index = this.registrosSeleccionados.findIndex(function (record) { // busco elemento del array con este id
+              if (record.id === id) return true
+            })
+            this.registrosSeleccionados.splice(index, 1)
             this.$q.dialog({
               message: 'Se ha borrado el cliente.'
             })

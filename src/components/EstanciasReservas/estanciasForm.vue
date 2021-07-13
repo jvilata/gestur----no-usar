@@ -84,8 +84,6 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-// import { openBlobFile } from 'components/General/cordova.js'
-// import { openURL } from 'quasar'
 
 export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }

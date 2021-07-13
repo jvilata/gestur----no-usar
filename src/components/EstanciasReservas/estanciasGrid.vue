@@ -185,6 +185,10 @@ export default {
       }).onOk(() => {
         this.borrarEstancia(id)
           .then(result => {
+            var index = this.registrosSeleccionados.findIndex(function (record) { // busco elemento del array con este id
+              if (record.id === id) return true
+            })
+            this.registrosSeleccionados.splice(index, 1)
             this.$q.dialog({
               message: 'Se ha borrado la estancia.'
             })

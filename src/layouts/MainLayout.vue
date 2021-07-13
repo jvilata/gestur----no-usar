@@ -121,7 +121,7 @@ export default {
           icon: 'event_available',
           link: {
             name: 'estanciasMain',
-            label: 'Estancias/Reservas'
+            label: 'Estancias/Facturas'
           }
         },
         {

@@ -13,7 +13,7 @@
       </q-item-section>
       <q-item-section side>
           <q-btn
-          @click="$emit('close')"
+          @click="confirmarCierre"
           flat
           round
           dense
@@ -57,7 +57,7 @@
           @blur="cambiaDatos"
         />
           <q-input outlined clearable label="DNI/Pasaporte" v-model="cliente.nroDoc" class="col-xs-7 col-sm-4" @blur="cambiaDatos"/>
-          <q-input label="Fecha Nacimiento" class="col-xs-7 col-sm-3" clearable outlined stack-label :value="formatDate(cliente.fechaNacimiento)" @blur="cambiaDatos">
+          <q-input label="Fecha Nacimiento" class="col-xs-7 col-sm-3" clearable outlined stack-label v-model="formatDate(cliente.fechaNacimiento)" @blur="cambiaDatos">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaNac">
@@ -71,7 +71,7 @@
           <q-input outlined clearable label="Nacionalidad" v-model="cliente.nacionalidad" class="col-xs-5 col-sm-3" />
         </div>
         <div class="row q-mb-sm">
-          <q-input label="Fecha Expedición" class="col-xs-6 col-sm-6" clearable outlined stack-label :value="formatDate(cliente.fechaExpedicion)" @blur="cambiaDatos">
+          <q-input label="Fecha Expedición" class="col-xs-6 col-sm-6" clearable outlined stack-label v-model="formatDate(cliente.fechaExpedicion)" @blur="cambiaDatosExpedicion">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaExp">
@@ -82,7 +82,7 @@
               </q-icon>
           </template>
           </q-input>
-           <q-input label="Fecha Validez" class="col-xs-6 col-sm-6" clearable outlined stack-label :value="formatDate(cliente.fechaValidez)" @blur="cambiaDatos">
+           <q-input label="Fecha Validez" class="col-xs-6 col-sm-6" clearable outlined stack-label v-model="formatDate(cliente.fechaValidez)" @blur="cambiaDatos">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaVal">
@@ -162,7 +162,9 @@ export default {
   props: ['value', 'id', 'keyValue'],
   data () {
     return {
-      cliente: {},
+      cliente: {
+        fechaValidez: ''
+      },
       colorBotonSave: 'primary',
       refresh: 0,
       recordToSubmit: {},
@@ -182,6 +184,22 @@ export default {
     },
     formatDate (date1) {
       return date.formatDate(date1, 'DD/MM/YYYY')
+    },
+    confirmarCierre () {
+      if (this.hasChanges) {
+        this.$q.dialog({
+          title: 'Aviso',
+          message: '¿Desea guardar los cambios?',
+          ok: true,
+          cancel: true,
+          persistent: true
+        }).onOk(() => {
+          this.guardarCliente()
+          this.$emit('close')
+        }).onCancel(() => {
+          this.$emit('close')
+        })
+      } else { this.$emit('close') }
     },
     guardarCliente () {
       if (this.hasChanges) {
@@ -207,6 +225,16 @@ export default {
             })
         })
       }
+    },
+    cambiaDatosExpedicion () {
+      this.hasChanges = true
+      this.colorBotonSave = 'red'
+      const newDate = this.cliente.fechaExpedicion
+      console.log('nDate', newDate)
+      this.cliente.fechaValideZ = newDate
+      console.log('fechaV', this.cliente.fechaValidez)
+      console.log('hola')
+      // this.cliente.fechaValidez = date.formatDate(date.addToDate(newDate, { years: 10 }), 'DD/MM/YYYY')
     },
     cambiaDatos () {
       this.hasChanges = true

@@ -73,7 +73,7 @@ export default {
       this.getRecords(this.value.filterRecord)
     } else { // es la primera vez que entro, cargo valores po defecto
       this.registrosSeleccionados = []
-      this.filterRecord.fechaEntrada = date.formatDate(date.subtractFromDate(new Date(), { days: 30 }), 'YYYY-MM-DD')
+      this.filterRecord.fechaEntradaDesde = date.formatDate(date.subtractFromDate(new Date(), { days: 30 }), 'YYYY-MM-DD')
     }
     this.getRecords(this.filterRecord)
   },
