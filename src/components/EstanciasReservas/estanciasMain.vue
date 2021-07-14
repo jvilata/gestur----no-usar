@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import { date } from 'quasar'
 import { mapState } from 'vuex'
 export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
@@ -73,7 +72,8 @@ export default {
       this.getRecords(this.value.filterRecord)
     } else { // es la primera vez que entro, cargo valores po defecto
       this.registrosSeleccionados = []
-      this.filterRecord.fechaEntradaDesde = date.formatDate(date.subtractFromDate(new Date(), { days: 30 }), 'YYYY-MM-DD')
+      // this.filterRecord.fechaEntradaDesde = date.formatDate(date.subtractFromDate(new Date(), { days: 30 }), 'YYYY-MM-DD')
+      this.filterRecord.tipoEstancia = '1'
     }
     this.getRecords(this.filterRecord)
   },

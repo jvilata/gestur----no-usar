@@ -79,8 +79,8 @@
             :key="col.name"
             :align="col.align"
           >
-            <div v-if="['base'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.base)), 0) }}</div>
-            <div v-if="['total'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.totalEstancia)), 0) }}</div>
+            <div v-if="['base'].includes(col.name)">{{ calcularBase() }}</div>
+            <div v-if="['total'].includes(col.name)">{{ calcularTotal() }}</div>
           </q-th>
         </q-tr>
       </template>
@@ -158,16 +158,18 @@ export default {
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
-    ...mapActions('estancias', ['findEstancia', 'addEstancia', 'borrarEstancia', 'exportarExcel']),
+    ...mapActions('estancias', ['findEstancia', 'addEstancia', 'borrarEstancia']),
     parseaFloat (f) {
       if (f === null) return 0
       else return parseFloat(f)
     },
-    downloadExcel2 () {
-      var objFilter = {}
-      objFilter.nompdf = 'Estancias' + date.formatDate(new Date(), 'YYYYMMDDHHmmss') + '.csv'
-      Object.assign(objFilter, this.value)
-      this.exportarExcel(objFilter)
+    calcularBase () {
+      var v = this.registrosSeleccionados.reduce((a, b) => a + (b.base !== null ? parseFloat(b.base) : 0), 0)
+      return Math.round(100 * v) / 100
+    },
+    calcularTotal () {
+      var v = this.registrosSeleccionados.reduce((a, b) => a + (b.totalEstancia !== null ? parseFloat(b.totalEstancia) : 0), 0)
+      return Math.round(100 * v) / 100
     },
     downloadExcel () {
       var paramRecord = {}
