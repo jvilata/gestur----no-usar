@@ -2,11 +2,18 @@
   <template>
     <div style="height: calc(100vh - 105px)">
       <q-card flat>
-      <q-card-section   class="q-pa-xs">
+      <q-card-section class="q-pa-xs">
             <q-item class="q-pa-xs bg-blue-grey-1 text-grey-8">
               <!-- cabecera de formulario. Botón de busqueda y cierre de tab -->
               <q-item-section avatar>
                 <div class="row">
+                </div>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="text-h6">
+                  {{ title }} / {{ recordToSubmit.nombre }}
+                </q-item-label>
+              </q-item-section>
                   <q-btn icon="save"  class="q-ma-xs" :color="colorBotonSave" dense @click="saveChanges"/>
                   <q-btn icon="more_vert"  class="q-ma-xs" color="primary" dense>
                     <q-menu ref="menu1">
@@ -26,13 +33,6 @@
                       </q-list>
                     </q-menu>
                   </q-btn>
-                </div>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label class="text-h6">
-                  {{ title }} / {{ recordToSubmit.nombre }}
-                </q-item-label>
-              </q-item-section>
               <q-item-section side>
                   <q-btn
                   @click="confirmarCierre"

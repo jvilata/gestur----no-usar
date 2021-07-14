@@ -1,16 +1,12 @@
 <template>
   <div>
     <q-item clickable v-ripple class="q-ma-xs q-pa-xs bg-blue-grey-1 text-grey-8" >
-      <q-item-section avatar>
-        <div class="row">
-          <q-btn icon="save"  class="q-ma-xs" :color="colorBotonSave" dense @click="guardarCliente"/>
-        </div>
-      </q-item-section>
       <q-item-section>
-        <q-item-label class="text-h6">
-            {{ `CLIENTE - ${ keyValue }` }}
+        <q-item-label class="text-h6 q-ml-lg">
+            {{ `Cliente - ${ keyValue }` }}
         </q-item-label>
       </q-item-section>
+      <q-btn icon="save"  class="q-ma-xs" :color="colorBotonSave" dense @click="guardarCliente"/>
       <q-item-section side>
           <q-btn
           @click="confirmarCierre"
@@ -57,13 +53,13 @@
           @blur="cambiaDatos"
         />
           <q-input outlined clearable label="DNI/Pasaporte" v-model="cliente.nroDoc" class="col-xs-7 col-sm-4" @blur="cambiaDatos"/>
-          <q-input label="Fecha Nacimiento" class="col-xs-7 col-sm-3" clearable outlined stack-label :value="formatDate(cliente.fechaNacimiento)" @input="(val) => recordToSubmit.fechaNacimiento=val" @blur="cambiaDatos" mask="##/##/####" hint="Mask: DD/MM/YYYY">
+          <q-input label="Fecha Nacimiento" class="col-xs-7 col-sm-3" clearable outlined stack-label :value="formatDate(cliente.fechaNacimiento)" @blur="cambiaDatos">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaNac">
                   <wgDate
-                      @input="v => { $refs.fechaNac.hide(); recordToSubmit.fechaNacimiento=v }"
-                      :value="cliente.fechaNacimiento" />
+                      @input="$refs.fechaNac.hide()"
+                      v-model="cliente.fechaNacimiento" />
               </q-popup-proxy>
               </q-icon>
           </template>
@@ -71,7 +67,7 @@
           <q-input outlined clearable label="Nacionalidad" v-model="cliente.nacionalidad" class="col-xs-5 col-sm-3" />
         </div>
         <div class="row q-mb-sm">
-          <q-input label="Fecha Expedición" class="col-xs-6 col-sm-6" clearable outlined stack-label :value="formatDate(cliente.fechaExpedicion)" @input="(val) => recordToSubmit.fechaExpedicion=val" @blur="cambiaDatosExpedicion(cliente.fechaExpedicion)">
+          <q-input label="Fecha Expedición" class="col-xs-6 col-sm-6" clearable outlined stack-label :value="formatDate(cliente.fechaExpedicion)" @blur="cambiaDatosExpedicion(cliente.fechaExpedicion)">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaExp">
@@ -82,7 +78,7 @@
               </q-icon>
           </template>
           </q-input>
-           <q-input label="Fecha Validez" class="col-xs-6 col-sm-6" clearable outlined stack-label :value="formatDate(cliente.fechaValidez)" @input="(val) => recordToSubmit.fechaValidez=val" @blur="cambiaDatos">
+           <q-input label="Fecha Validez" class="col-xs-6 col-sm-6" clearable outlined stack-label :value="formatDate(cliente.fechaValidez)" @blur="cambiaDatos">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaVal">
@@ -174,11 +170,11 @@ export default {
   data () {
     return {
       cliente: {
-        fechaValidez: ''
+        fechaValidez: '',
+        fechaNacimiento: ''
       },
       colorBotonSave: 'primary',
       refresh: 0,
-      recordToSubmit: {},
       hasChanges: false,
       listaTipoServFilter: this.listaTipoServ,
       listaTipoFactFilter: this.listaTipoFact
@@ -190,7 +186,7 @@ export default {
   },
   methods: {
     ...mapActions('login', ['desconectarLogin']),
-    ...mapActions('clientes', ['loadDetallecliente', 'guardarDatosCliente']),
+    ...mapActions('clientes', ['loadDetallecliente', 'guardarDatosCliente', 'comboListaClientes']),
     ...mapActions('tabs', ['addTab']),
     filterTipoServ (val, update, abort) {
       update(() => {
@@ -242,6 +238,7 @@ export default {
               this.$q.dialog({
                 title: 'Se han guardado los cambios'
               })
+              this.comboListaClientes() // refrescamos state listaClientes
             })
             .catch(error => {
               this.$q.dialog({
@@ -254,12 +251,8 @@ export default {
     cambiaDatosExpedicion (fechaEx) {
       this.hasChanges = true
       this.colorBotonSave = 'red'
-      console.log('fechaExp', fechaEx)
-      const fechaVal10 = date.formatDate(date.addToDate(fechaEx, { days: 10 }), 'YYYY-MM-DD')
-      console.log('fechaVal10', fechaVal10)
-      this.cliente.fechaValideZ = fechaVal10
-      // console.log('fechaV', this.cliente.fechaValidez)
-      // this.cliente.fechaValidez = date.formatDate(date.addToDate(fechaEx, { years: 10 }), 'DD/MM/YYYY')
+      const year = parseInt(fechaEx.substring(0, 4)) + 10
+      this.cliente.fechaValidez = year + fechaEx.substring(4, 19)
     },
     cambiaDatos () {
       this.hasChanges = true

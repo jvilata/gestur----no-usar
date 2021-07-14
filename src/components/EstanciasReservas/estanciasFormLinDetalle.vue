@@ -133,7 +133,10 @@ export default {
       })
     },
     saveForm () {
-      this.$emit('saveRecord', this.recordToSubmit) // lo captura estanciasFormLineas
+      this.rellenarDatosServicio()
+        .then(
+          this.$emit('saveRecord', this.recordToSubmit)
+        )
     },
     formatDate (date1) {
       return date.formatDate(date1, 'DD/MM/YYYY')
@@ -151,23 +154,25 @@ export default {
       this.calcularTotal()
     },
     rellenarDatosServicio () {
-      const servicio = this.listaServicios.find(serv => serv.id === this.recordToSubmit.idServicio)
-      this.recordToSubmit.tipoIva = servicio.tipoIva
-      this.recordToSubmit.Numero = servicio.Numero
-      var record = {
-        idServicio: servicio.id,
-        tipoServ: servicio.tipoServicio,
-        tipoTarifa: this.cabecera.tipoTarifa
-      }
-      // return this.$axios.get('servicios/bd_servicios.php/calcularTarifaServicio', { params: record })
-      this.calcularTarifa(record)
-        .then(response => {
-          this.recordToSubmit.tarifa = response.data[0].tarifa
-          this.calcularTotal()
-        })
-        .catch(error => {
-          this.$q.dialog({ title: 'Error', message: error })
-        })
+      return new Promise((resolve, reject) => {
+        const servicio = this.listaServicios.find(serv => serv.id === this.recordToSubmit.idServicio)
+        this.recordToSubmit.tipoIva = servicio.tipoIva
+        this.recordToSubmit.Numero = servicio.Numero
+        var record = {
+          idServicio: servicio.id,
+          tipoServ: servicio.tipoServicio,
+          tipoTarifa: this.cabecera.tipoTarifa
+        }
+        this.calcularTarifa(record)
+          .then(response => {
+            this.recordToSubmit.tarifa = response.data[0].tarifa
+            this.calcularTotal()
+          })
+          .catch(error => {
+            this.$q.dialog({ title: 'Error', message: error })
+          })
+        resolve()
+      })
     },
     calcularTotal () {
       const tarifa = (this.recordToSubmit.tarifa) / (1 + (this.recordToSubmit.tipoIva / 100)) // tarifa sin IVA
@@ -196,7 +201,7 @@ export default {
       this.loadListaServiciosMut()
     }
     this.recordToSubmit = Object.assign({}, this.value) // asignamos valor del parametro por si viene de otro tab
-    this.calcularTotal()
+    this.calcularNoches(this.recordToSubmit.fechaFin, this.recordToSubmit.fechaInicio)
     this.listaServiciosFilter = this.listaServicios
   }
 }

@@ -16,7 +16,26 @@
       <template v-slot:header="props">
         <!-- CABECERA DE LA TABLA -->
         <q-tr :props="props">
-          <q-th> </q-th>
+          <q-th>
+            <q-btn icon="more_vert"  class="q-ma-xs" color="primary" dense>
+                    <q-menu ref="menu1">
+                      <q-list dense>
+                        <q-item
+                          v-for="(opcion, index) in listaOpciones"
+                          :key="index"
+                          clickable
+                          v-close-popup
+                          @click.native="ejecutarOpcion(opcion)"
+                          >
+                          <q-item-section avatar>
+                            <q-icon :name="opcion.icon" />
+                          </q-item-section>
+                          <q-item-section>{{opcion.title}}</q-item-section>
+                        </q-item>
+                      </q-list>
+                    </q-menu>
+              </q-btn>
+           </q-th>
           <q-th
             v-for="col in props.cols"
             :key="col.name"
@@ -33,9 +52,9 @@
       <template v-slot:body="props">
         <q-tr :props="props" :key="`m_${props.row.id}`" @mouseover="rowId=`m_${props.row.id}`">
             <q-td>
-              <div style="max-width: 35px" v-if="rowId === `m_${props.row.id}`">
+              <div style="max-width: 45px" v-if="rowId === `m_${props.row.id}`">
                 <q-icon name="edit" class="text-grey q-pr-md" style="font-size: 1.5rem;" @click="editRecord(props.row, props.row.id)"/>
-                <q-icon name="delete" class="text-red" style="font-size: 1.5rem;" @click="deleteRecord(props.row.id)"/>
+                <q-icon name="delete" class="text-red q-pr-md" style="font-size: 1.5rem;" @click="deleteRecord(props.row.id)"/>
               </div>
             </q-td>
           <q-td
@@ -104,6 +123,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { date } from 'quasar'
+import { openBlobFile } from 'components/General/cordova.js'
 export default {
   props: ['value', 'fromEstanciasMain'], // en 'value' tenemos la tabla de datos del grid
   data () {
@@ -111,6 +131,9 @@ export default {
       rowId: '',
       registrosSeleccionados: [],
       visible: false,
+      listaOpciones: [
+        { name: 'exportar', title: 'Exportar Excel', icon: 'print', function: 'downloadExcel' }
+      ],
       columns: [
         { name: 'id', align: 'left', label: 'ID Estancia', field: 'id', sortable: true },
         { name: 'nombre', align: 'left', label: 'Nombre Completo', field: 'nombre', sortable: true },
@@ -135,16 +158,54 @@ export default {
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
-    ...mapActions('estancias', ['findEstancia', 'addEstancia', 'borrarEstancia']),
+    ...mapActions('estancias', ['findEstancia', 'addEstancia', 'borrarEstancia', 'exportarExcel']),
     parseaFloat (f) {
       if (f === null) return 0
       else return parseFloat(f)
+    },
+    downloadExcel2 () {
+      var objFilter = {}
+      objFilter.nompdf = 'Estancias' + date.formatDate(new Date(), 'YYYYMMDDHHmmss') + '.csv'
+      Object.assign(objFilter, this.value)
+      this.exportarExcel(objFilter)
+    },
+    downloadExcel () {
+      var paramRecord = {}
+      paramRecord.nompdf = 'Estancias' + date.formatDate(new Date(), 'YYYYMMDDHHmmss') + '.csv'
+      Object.assign(paramRecord, this.value)
+      var formData = new FormData()
+      for (var key in paramRecord) {
+        formData.append(key, paramRecord[key])
+      }
+      var nomFile = paramRecord.nompdf
+      this.$axios.post('estancias/bd_estancias.php/exportarExcelEstanciasFilter', formData, { responseType: 'blob' })
+        .then(function (response) {
+          if (window.cordova === undefined) { // desktop
+            const url = window.URL.createObjectURL(new Blob([response.data], { type: response.data.type }))
+            const link = document.createElement('a')
+            link.href = url
+            link.download = nomFile
+            // link.target = '_blank'
+            document.body.appendChild(link)
+            // window.open('', 'view') // abre nueva ventana para que no sustituya a la actual
+            link.click()
+            document.body.removeChild(link)
+          } else { // estamos en un disp movil            console.log('hola3')
+            const blobPdf = response.data // new Blob([response.data], { type: response.data.type })
+            openBlobFile(nomFile, blobPdf, response.data.type)
+          }
+        }).catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
+    },
+    ejecutarOpcion (opcion) {
+      this[opcion.function](this.value)
+      this.$refs.menu1.hide()
     },
     getRecords () {
       var objFilter = {}
       if (this.fromEstanciasMain !== undefined) {
         Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
-        // return this.$axios.get('estancias/bd_estancias.php/findEstanciasFilter', { params: objFilter })
         this.findEstancia(objFilter)
           .then(response => {
             this.registrosSeleccionados = response.data
@@ -159,7 +220,8 @@ export default {
       var record = {
         tipoEstancia: 2,
         fechaEntrada: date.formatDate(new Date(), 'YYYY-MM-DD'),
-        fechaSalida: date.addToDate(new Date(), { days: 1 })
+        fechaSalida: date.addToDate(new Date(), { days: 1 }),
+        tipoTarifa: 1
       }
       this.addEstancia(record)
         .then(response => {

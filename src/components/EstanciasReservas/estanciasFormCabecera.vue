@@ -2,24 +2,7 @@
   <template>
   <q-card class="q-pt-none q-pl-xs q-pr-xs">
       <div class="row">
-        <q-input class="col-xs-4 col-sm-1" readonly outlined label="ID Estancia" stack-label v-model="recordToSubmit.id" />
-        <q-select
-          class="col-xs-8 col-sm-5"
-          outlined
-          label="Cliente"
-          stack-label
-          v-model="recordToSubmit.idCliente"
-          :options="listaClientesFilter"
-          option-value="id"
-          option-label="nombre"
-          emit-value
-          map-options
-          @filter="filterClientes"
-          use-input
-          hide-selected
-          fill-input
-          input-debounce="0"
-        />
+        <q-input class="col-xs-6 col-sm-1" readonly outlined label="ID Estancia" stack-label v-model="recordToSubmit.id" />
           <q-select
             class="col-xs-6 col-sm-3"
             outlined
@@ -38,7 +21,24 @@
             fill-input
             input-debounce="0"
           />
-          <q-select
+        <q-select
+          class="col-xs-12 col-sm-8"
+          outlined
+          label="Cliente"
+          stack-label
+          v-model="recordToSubmit.idCliente"
+          :options="listaClientesFilter"
+          option-value="id"
+          option-label="nombre"
+          emit-value
+          map-options
+          @filter="filterClientes"
+          use-input
+          hide-selected
+          fill-input
+          input-debounce="0"
+        />
+          <!-- <q-select
           class="col-xs-6 col-sm-3"
           outlined
           clearable
@@ -54,7 +54,7 @@
           hide-selected
           fill-input
           input-debounce="0"
-        />
+        /> -->
       </div>
       <div class="row">
           <q-input
@@ -175,7 +175,7 @@ export default {
     },
     rellenarDatosFact () {
       // solo hay que generar factura cuando nroFactura sea cero
-      if (this.recordToSubmit.NroFactura === null || this.recordToSubmit.NroFactura === 0) {
+      if (this.recordToSubmit.NroFactura === null || this.recordToSubmit.NroFactura === '0' || this.recordToSubmit.NroFactura === 0 || this.recordToSubmit.NroFactura === '') {
         this.generarFactura(this.recordToSubmit)
           .then(response => {
             // volvemos a leer la factura
@@ -204,6 +204,7 @@ export default {
   },
   mounted () {
     this.listaClientesFilter = this.listaClientes
+    this.listaTipoEstanciaFilter = this.listaTipoEstancia
     this.recordToSubmit = Object.assign({}, this.value)
   },
   watch: {

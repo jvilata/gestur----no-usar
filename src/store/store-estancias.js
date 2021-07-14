@@ -28,6 +28,9 @@ const actions = {
   },
   borrarReserva ({ commit }, id) {
     return axiosInstance.get('estancias/bd_estancias.php/deleteReservasBD', { params: { id: id } }, { withCredentials: true })
+  },
+  exportarExcel ({ commit }, record) {
+    return axiosInstance.get('estancias/bd_estancias.php/exportarExcelEstanciasFilter', { params: record }, { withCredentials: true })
   }
 }
 

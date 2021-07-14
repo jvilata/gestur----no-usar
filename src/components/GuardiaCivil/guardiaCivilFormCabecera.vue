@@ -69,8 +69,7 @@ export default {
       return date.formatDate(date1, 'DD/MM/YYYY HH:mm')
     },
     generarArchivo () {
-      var paramRecord = {
-      }
+      var paramRecord = {}
       var formData = new FormData()
       for (var key in paramRecord) {
         formData.append(key, paramRecord[key])
