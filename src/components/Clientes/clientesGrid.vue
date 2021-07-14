@@ -32,7 +32,7 @@
       <template v-slot:body="props">
         <q-tr :props="props" :key="`m_${props.row.id}`" @mouseover="rowId=`m_${props.row.id}`">
             <q-td>
-              <div style="max-width: 35px" v-if="rowId === `m_${props.row.id}`">
+              <div style="max-width: 45px" v-if="rowId === `m_${props.row.id}`">
                 <q-icon  name="edit" class="text-grey q-pr-md" style="font-size: 1.5rem;" @click="editRecord(props.row, props.row.id)"/>
                 <q-icon name="delete" class="text-red" style="font-size: 1.5rem;" @click="deleteRecord(props.row.id)"/>
               </div>
@@ -101,8 +101,7 @@ export default {
         { name: 'nacionalidad', align: 'left', label: 'Nacionalidad', field: 'nacionalidad' },
         { name: 'matricula', align: 'left', label: 'Matrícula', field: 'matricula' }
       ],
-      pagination: { rowsPerPage: 0 },
-      registrosSeleccionados: []
+      pagination: { rowsPerPage: 0 }
     }
   },
   methods: {
@@ -119,7 +118,6 @@ export default {
       this.guardarDatosCliente(record)
         .then(response => {
           record.id = response.data.id
-          console.log(response.data)
           this.editRecord(record, record.id)
         })
         .catch(error => {
@@ -141,10 +139,10 @@ export default {
       }).onOk(() => {
         this.borrarCliente(id)
           .then(result => {
-            var index = this.registrosSeleccionados.findIndex(function (record) { // busco elemento del array con este id
+            var index = this.value.findIndex(function (record) { // busco elemento del array con este id
               if (record.id === id) return true
             })
-            this.registrosSeleccionados.splice(index, 1)
+            this.value.splice(index, 1)
             this.$q.dialog({
               message: 'Se ha borrado el cliente.'
             })

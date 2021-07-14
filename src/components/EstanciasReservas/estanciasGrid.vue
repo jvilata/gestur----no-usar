@@ -192,7 +192,7 @@ export default {
             // window.open('', 'view') // abre nueva ventana para que no sustituya a la actual
             link.click()
             document.body.removeChild(link)
-          } else { // estamos en un disp movil            console.log('hola3')
+          } else { // estamos en un disp movil
             const blobPdf = response.data // new Blob([response.data], { type: response.data.type })
             openBlobFile(nomFile, blobPdf, response.data.type)
           }

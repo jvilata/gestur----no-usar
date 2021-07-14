@@ -147,10 +147,10 @@
                   Cuenta Bancaria
                 </div>
                 <div class="row">
-                    <q-input label="C.Banco" outlined v-model="cliente.codBanco" class="col-xs-3 col-sm-3 q-pr-sm" @blur="cambiaDatos"/>
+                    <!-- <q-input label="C.Banco" outlined v-model="cliente.codBanco" class="col-xs-3 col-sm-3 q-pr-sm" @blur="cambiaDatos"/>
                     <q-input label="C.Sucursal" outlined v-model="cliente.codSucursal" class="col-xs-3 col-sm-3 q-pr-sm" @blur="cambiaDatos"/>
-                    <q-input label="DC" outlined v-model="cliente.digitosControl" class="col-xs-2 col-sm-2 q-pr-sm" @blur="cambiaDatos"/>
-                    <q-input label="Cuenta" outlined v-model="cliente.cuentaBancaria" class="col-xs-4 col-sm-4 q-pr-sm" @blur="cambiaDatos"/>
+                    <q-input label="DC" outlined v-model="cliente.digitosControl" class="col-xs-2 col-sm-2 q-pr-sm" @blur="cambiaDatos"/> -->
+                    <q-input label="Cuenta / IBAN" outlined v-model="cliente.cuentaBancaria" class="col-xs-4 col-sm-4 q-pr-sm" @blur="cambiaDatos"/>
                 </div>
               </q-card-section>
             </q-card>

@@ -67,9 +67,10 @@
         >
           <estanciasFormLineas :key="refresh" :value="recordToSubmit" @calculaTotalesEst="calculaTotalesEst"/>
         </q-expansion-item>
+        <q-separator />
         <q-expansion-item
           class="q-pt-xs q-pl-xs q-pr-xs"
-          group="somegroup1"
+          group="somegroup2"
           dense
           label="Viajeros"
           default-opened

@@ -34,7 +34,7 @@
       <template v-slot:body="props">
         <q-tr :props="props" :key="`m_${props.row.id}`" @mouseover="rowId=`m_${props.row.id}`">
             <q-td>
-              <div style="max-width: 40px" v-if="rowId === `m_${props.row.id}`">
+              <div style="max-width: 45px" v-if="rowId === `m_${props.row.id}`">
                 <q-icon  name="edit" class="text-grey q-pr-md" style="font-size: 1.5rem;" @click="editRecord(props.row, props.row.id)"/>
                 <q-icon name="delete" class="text-red" style="font-size: 1.5rem;" @click="deleteRecord(props.row.id)"/>
               </div>
