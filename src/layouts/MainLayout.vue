@@ -174,14 +174,14 @@ export default {
             label: 'Lista de Servicios'
           }
         },
-        // {
-        //   title: 'Tarifas de Servicios',
-        //   icon: 'chat',
-        //   link: {
-        //     name: 'tarifasMain',
-        //     label: 'Tarifas de Servicios'
-        //   }
-        // },
+        {
+          title: 'Tarifas de Servicios',
+          icon: 'chat',
+          link: {
+            name: 'tarifasMain',
+            label: 'Tarifas de Servicios'
+          }
+        },
         {
           title: 'Usuarios',
           icon: 'shield',

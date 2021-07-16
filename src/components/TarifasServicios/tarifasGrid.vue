@@ -7,8 +7,8 @@
       :pagination.sync="pagination"
       :rows-per-page-options="[0]"
       :virtual-scroll-sticky-size-start="48"
-      :data="rows"
-       row-key="tipoServicio"
+      :data="value"
+      row-key="tipoServicio"
       :columns="columns"
       table-style="max-height: 70vh; max-width: 93vw"
     >
@@ -49,7 +49,7 @@
               buttons
               @save="updateRecord(props.row)">
               <q-input
-                v-if="['importe', 'comentario'].includes(col.name)"
+                v-if="['Importe', 'comentario'].includes(col.name)"
                 type="text"
                 v-model="props.row[col.name]"
                 dense
@@ -70,18 +70,19 @@
                 outlined
                 :value="col.value"
                 @input="(value) => props.row[col.name]=value"
-                :options="listaTipoServ"
+                :options="listaServicios"
                 stack-label
                 option-value="id"
                 option-label="descripcionCorta"
                 emit-value
+                map-options
               />
               <q-select
                 v-if="['tipoTarifa'].includes(col.name)"
                 outlined
                 :value="col.value"
                 @input="(value) => props.row[col.name]=value"
-                :options="listaTipoServ"
+                :options="listaTipoTarifa"
                 stack-label
                 option-value="codElemento"
                 option-label="valor1"
@@ -91,7 +92,7 @@
           </q-td>
         </q-tr>
       </template>
-   <!-- <template v-slot:no-data>
+   <template v-slot:no-data>
         <div class="absolute-bottom text-center q-mb-sm">
           <q-btn
             @click="expanded = !expanded"
@@ -107,7 +108,7 @@
           Pulse + para añadir
         </div>
       </template> -->
-      <!-- <template v-slot:bottom>
+      <template v-slot:bottom>
         <div class="absolute-bottom text-center q-mb-sm">
           <q-btn
             @click="addRecord()"
@@ -122,7 +123,7 @@
         <div>
           {{ `${value.length ? value.length + ' Filas' : 'No hay registros, pulse + para añadir clientes'}` }}
         </div>
-      </template> -->
+      </template>
     </q-table>
   </q-item>
 </template>
@@ -133,55 +134,13 @@ export default {
   props: ['value', 'idActivo'], // en 'value' tenemos la tabla de datos del grid, en idActivo en caso de que vengamos de ActivosFormMain
   data () {
     return {
-      rows: [
-        {
-          tipoServicio: 'Bungalow',
-          idServicio: 'Adultos',
-          tipoTarifa: 6.0,
-          importe: 24,
-          comentario: 'algunos daños'
-        },
-        {
-          tipoServicio: 'Parcela',
-          idServicio: 'Caravana',
-          tipoTarifa: 6.0,
-          importe: 24,
-          comentario: 'comentario 2'
-        },
-        {
-          tipoServicio: 'Camping',
-          idServicio: 'Tienda',
-          tipoTarifa: 6.0,
-          importe: 24,
-          comentario: 'nada'
-        }
-      ],
       rowId: '',
+      listaTarifas: [],
       columns: [
-        {
-          name: 'tipoServicio',
-          align: 'left',
-          label: 'Tipo Servicio',
-          field: 'tipoServicio',
-          sortable: true,
-          format: val => {
-            var obj = this.listaTipoServ.find(x => x.codElemento === val) // mapea el valor 0 , 1 en la listaSINO a string SI , NO
-            return (obj !== undefined ? obj.valor1 : val)
-          }
-        },
-        {
-          name: 'idServicio',
-          label: 'Servicio',
-          align: 'center',
-          field: 'idServicio',
-          sortable: true
-          // format: val => {
-          //   var res = this.listaServicios.find(row => row.id === val)
-          //   return (res === undefined ? '' : res.descripcionCorta)
-          // }
-        },
-        { name: 'tipoTarifa', align: 'left', label: 'tipoTarifa', field: 'tipoTarifa', sortable: true },
-        { name: 'importe', align: 'left', label: 'Importe', field: 'importe', sortable: true },
+        { name: 'tipoServicio', align: 'left', label: 'Tipo Servicio', field: 'tipoServicio', sortable: true, format: val => { var obj = this.listaTipoServ.find(x => x.codElemento === val); return (obj !== undefined ? obj.valor1 : val) } },
+        { name: 'idServicio', label: 'Servicio', align: 'center', field: 'idServicio', sortable: true, format: val => { var res = this.listaServicios.find(row => row.id === val); return (res === undefined ? '' : res.descripcionCorta) } },
+        { name: 'tipoTarifa', align: 'left', label: 'tipoTarifa', field: 'tipoTarifa', sortable: true, format: val => { var res = this.listaTipoTarifa.find(row => row.codElemento === val); return (res !== undefined ? res.valor1 : val) } },
+        { name: 'Importe', align: 'left', label: 'Importe', field: 'Importe', sortable: true },
         { name: 'comentario', align: 'left', label: 'Comentarios', field: 'comentario', sortable: true }
       ],
       pagination: { rowsPerPage: 0 }
@@ -189,8 +148,8 @@ export default {
   },
   methods: {
     ...mapActions('tabs', ['addTab']),
-    ...mapActions('tarifas', ['addTarifa']),
-    ...mapActions('servicios', ['loadListaServicios']),
+    ...mapActions('tarifas', ['addTarifa', 'deleteTarifa']),
+    ...mapActions('servicios', ['loadListaServicios', 'loadListaServiciosMut']),
     updateRecord (record) { // Volvemos a llamar a addServicios con el contenido de props.row
       this.addTarifa(record) // para actualizar el contenido (actualizamos porque extraemos el id y modificamos)
         .then(response => {
@@ -199,16 +158,53 @@ export default {
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
         })
+    },
+    addRecord () {
+      var record = {
+      }
+      this.addTarifa()
+        .then(response => {
+          record.id = response.data.id
+          this.value.push(record)
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error })
+        })
+    },
+    deleteRecord (id) {
+      this.$q.dialog({
+        title: 'Confirmar',
+        message: '¿ Borrar esta fila ?',
+        ok: true,
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+        this.deleteTarifa(id)
+          .then(result => {
+            this.$q.dialog({
+              message: 'Se ha borrado la Tarifa'
+            })
+            var index = this.value.findIndex(function (record) { // busco elemento del array con este id
+              if (record.id === id) return true
+            })
+            this.value.splice(index, 1) // lo elimino del array
+          })
+          .catch(error => {
+            this.$q.dialog({
+              message: error.message
+            })
+          })
+      })
     }
   },
   computed: {
-    ...mapState('tablasAux', ['listaTipoServ']),
+    ...mapState('tablasAux', ['listaTipoServ', 'listaTipoTarifa']),
     ...mapState('servicios', ['listaServicios'])
   },
   mounted () {
     if (this.listaServicios.length === 0) {
       this.loadListaServicios()
-      console.log(this.listaServicios)
+      this.loadListaServiciosMut()
     }
   }
 }

@@ -47,9 +47,15 @@ export default {
   },
   mounted () {
     // cuando se haga la llamada al back-end en el store-tarifas: se hará la llamada corrspondiente:
-    if (this.listaTarifas.length === 0) {
-      this.loadListaTarifas()
-    }
+    this.loadListaTarifas()
+      .then(result => {
+        this.registrosSeleccionados = result.data
+      })
+      .catch(error => {
+        this.$q.dialog({
+          message: error.message
+        })
+      })
   },
   components: {
     tarifasGrid: tarifasGrid
