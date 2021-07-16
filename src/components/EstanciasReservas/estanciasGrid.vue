@@ -220,7 +220,7 @@ export default {
     },
     addRecord () { // llamada store vuex
       var record = {
-        tipoEstancia: 2,
+        tipoEstancia: 1,
         fechaEntrada: date.formatDate(new Date(), 'YYYY-MM-DD'),
         fechaSalida: date.addToDate(new Date(), { days: 1 }),
         tipoTarifa: 1

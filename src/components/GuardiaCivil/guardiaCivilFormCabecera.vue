@@ -6,7 +6,7 @@
         <q-input class="col-xs-8 col-sm-5" autogrow outlined label="Nom. Establecimiento" stack-label v-model="regTipo1.nombreEstablecimiento" />
         <q-input
             label="Fecha Envío"
-            class="col-xs-6 col-sm-4"
+            class="col-xs-8 col-sm-4"
             clearable
             outlined
             stack-label
@@ -26,10 +26,9 @@
           </q-input>
         <!-- <q-input class="col-xs-6 col-sm-4" autogrow outlined label="Fecha Envío" stack-label v-model="regTipo1.fechaEnvio" /> -->
         <!--q-input class="col-xs-6 col-sm-4" autogrow outlined label="Hora Envío" stack-label v-model="regTipo1.HoraEnvio" /-->
-
-        <q-input class="col-xs-6 col-sm-2" autogrow outlined label="NumReg Tipo 2" stack-label v-model="regTipo1.NumRegistrosTipo2" />
-        <q-input class="col-xs-3 col-sm-2" autogrow outlined label="Nº Archivo" stack-label v-model="regTipo1.numArchivo" />
-        <q-input class="col-xs-9 col-sm-4" autogrow outlined label="Archivo" stack-label v-model="regTipo1.nomArchivo" />
+        <!-- <q-input class="col-xs-6 col-sm-2" autogrow outlined label="NumReg Tipo 2" stack-label v-model="regTipo1.NumRegistrosTipo2" /> -->
+        <q-input class="col-xs-4 col-sm-3" autogrow outlined label="Nº Archivo" stack-label v-model="regTipo1.numArchivo" />
+        <q-input class="col-xs-12 col-sm-5" autogrow outlined label="Archivo" stack-label v-model="regTipo1.nomArchivo" />
         <q-btn outline class="col-xs-12 col-sm-4" color="primary" label="Generar Archivo" @click="generarArchivo"/>
       </div>
   </q-card>
