@@ -1,12 +1,14 @@
 import { axiosInstance } from 'boot/axios.js'
 
 const state = {
-  listaServicios: []
+  listaServicios: [],
+  listaServiciosPeriodicos: []
 }
 
 const mutations = {
   loadListaServicios (state, tiposServ) {
     state.listaServicios = tiposServ
+    state.listaServiciosPeriodicos = tiposServ.filter(row => row.tipoServicio === '8')
   }
 }
 
