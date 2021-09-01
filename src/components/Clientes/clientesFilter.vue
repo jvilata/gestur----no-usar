@@ -12,7 +12,18 @@
         <q-input outlined clearable label="Email" stack-label v-model="filterR.email" />
         <q-input outlined clearable label="DNI/Pasaporte" stack-label v-model="filterR.dni" />
         <q-input outlined clearable label="Matrícula" stack-label v-model="filterR.matricula" />
-        <q-input outlined clearable label="Servicios Periódicos" stack-label v-model="filterR.servPeriodico" />
+        <!--q-input outlined clearable label="Servicios Periódicos" stack-label v-model="filterR.servPeriodico" /-->
+        <q-select outlined clearable label="Tipo Servicio Periódico" stack-label
+          v-model="filterR.servPeriodico"
+          :options="listaServiciosPeriodicos"
+          option-value="id"
+          option-label="descripcionCorta"
+          emit-value
+          map-options
+          use-input
+          hide-selected
+          fill-input
+          input-debounce="0"/>
         <q-input outlined clearable label="ID" stack-label v-model="filterR.id" />
       </q-tab-panel>
     </q-tab-panels>
@@ -25,6 +36,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   props: ['value', 'id', 'keyValue'], // Prop Value pasada por el componente clienteFilter
   data () {
@@ -40,6 +52,9 @@ export default {
         servPeriodico: ''
       }
     }
+  },
+  computed: {
+    ...mapState('servicios', ['listaServiciosPeriodicos'])
   },
   methods: {
     getRecords () {

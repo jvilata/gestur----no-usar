@@ -79,7 +79,8 @@ export default {
         { name: 'persCamAdult', required: true, label: 'persCamAdult', align: 'right', field: 'persCamAdult' },
         { name: 'persCamNinos', required: true, label: 'persCamNinos', align: 'right', field: 'persCamNinos' },
         { name: 'tiendasOcupadas', required: true, label: 'Tiendas', align: 'right', field: 'tiendasOcupadas' },
-        { name: 'caravanassOcupadas', required: true, label: 'Carav/CC', align: 'right', field: 'caravanassOcupadas' }
+        { name: 'caravanasOcupadas', required: true, label: 'Carav/CC', align: 'right', field: 'caravanasOcupadas' },
+        { name: 'guardaCaravana', required: true, label: 'Guarda C', align: 'right', field: 'guardaCaravana' }
         // { name: 'prealComprometidoAnyoSig', required: true, label: '%R+C 1Y', align: 'right', field: 'prealComprometidoAnyoSig', format: val => parseFloat(val).toFixed(2) }
       ],
       pagination: { rowsPerPage: 0 }
@@ -107,7 +108,8 @@ export default {
                   persCamAdult: 0, // contar idserv 6
                   persCamNinos: 0, // contar idserv 7
                   tiendasOcupadas: 0, // idserv: 8,9,10, tiendas, caravanas, coche-cama
-                  caravanassOcupadas: 0, // idserv: 8,9,10, tiendas, caravanas, coche-cama
+                  caravanasOcupadas: 0, // idserv: 8,9,10, tiendas, caravanas, coche-cama
+                  guardaCaravana: 0, // idser: 16,15 guarda parcela, parking
                   bungaOcupados: 0 // tipoServ: 1,4,6,7
                 })
               }
@@ -124,7 +126,8 @@ export default {
               if (row.idServicio === '6') rowResult.persCamAdult += parseFloat(row.cantidad)
               if (row.idServicio === '7') rowResult.persCamNinos += parseFloat(row.cantidad)
               if (row.idServicio === '8') rowResult.tiendasOcupadas += parseFloat(row.cantidad)
-              if (row.idServicio === '9' || row.idServicio === '10') rowResult.caravanassOcupadas += parseFloat(row.cantidad)
+              if (row.idServicio === '9' || row.idServicio === '10') rowResult.caravanasOcupadas += parseFloat(row.cantidad)
+              if (row.idServicio === '15' || row.idServicio === '16') rowResult.guardaCaravana += parseFloat(row.cantidad)
               if (row.tipoServicio === '1' || row.tipoServicio === '2' || row.tipoServicio === '6' || row.tipoServicio === '7') rowResult.bungaOcupados += parseFloat(row.cantidad)
             })
           })

@@ -121,13 +121,12 @@
                     clearable
                     label="Tipo Servicio Periódico"
                     v-model="cliente.tipoServicioPeriodico"
-                    :options="listaTipoServFilter"
-                    option-value="codElemento"
-                    option-label="valor1"
+                    :options="listaServiciosPeriodicos"
+                    option-value="id"
+                    option-label="descripcionCorta"
                     emit-value
                     map-options
                     @blur="cambiaDatos"
-                    @filter="filterTipoServ"
                     use-input
                     hide-selected
                     fill-input
@@ -140,7 +139,7 @@
                     clearable
                     label="Tipo Factura"
                     v-model="cliente.tipoFacturacion"
-                    :options="listaTipoFactFilter"
+                    :options="listaTipoFact"
                     option-value="codElemento"
                     option-label="valor1"
                     emit-value
@@ -193,24 +192,13 @@ export default {
   },
   computed: {
     ...mapState('login', ['user']),
-    ...mapState('tablasAux', ['listaTipoDoc', 'listaTipoFact', 'listaTipoServ'])
+    ...mapState('tablasAux', ['listaTipoDoc', 'listaTipoFact', 'listaTipoServ']),
+    ...mapState('servicios', ['listaServiciosPeriodicos'])
   },
   methods: {
     ...mapActions('login', ['desconectarLogin']),
     ...mapActions('clientes', ['loadDetallecliente', 'guardarDatosCliente', 'comboListaClientes']),
     ...mapActions('tabs', ['addTab']),
-    filterTipoServ (val, update, abort) {
-      update(() => {
-        const needle = val.toLowerCase()
-        this.listaTipoServFilter = this.listaTipoServ.filter(v => v.valor1.toLowerCase().indexOf(needle) > -1)
-      })
-    },
-    filterTipoFact (val, update, abort) {
-      update(() => {
-        const needle = val.toLowerCase()
-        this.listaTipoFactFilter = this.listaTipoFact.filter(v => v.valor1.toLowerCase().indexOf(needle) > -1)
-      })
-    },
     openForm (otrosCambios) {
       this.addTab(['clientesMain', 'clientesMain', {}, 1])
     },

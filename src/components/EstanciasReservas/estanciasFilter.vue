@@ -56,6 +56,17 @@
             </q-icon>
         </template>
       </q-input>
+      <q-select outlined clearable label="Tipo Servicio" stack-label
+          v-model="filterR.tipoServicio"
+          :options="listaServicios"
+          option-value="id"
+          :option-label="row=>row.descripcionCorta + ' ' + (row.Numero!== '0' ? row.Numero : '')"
+          emit-value
+          map-options
+          use-input
+          hide-selected
+          fill-input
+          input-debounce="0"/>
       <q-banner dense class="bg-grey-3">
       <template v-slot:avatar>
         <q-icon name="description" color="primary" />
@@ -144,7 +155,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('tablasAux', ['listaTipoEstancia', 'listaSINO'])
+    ...mapState('tablasAux', ['listaTipoEstancia', 'listaSINO']),
+    ...mapState('servicios', ['listaServicios'])
   },
   methods: {
     rellenarFechas () {

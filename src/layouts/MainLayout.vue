@@ -206,6 +206,7 @@ export default {
     ...mapActions('tabs', ['addTab']),
     ...mapActions('clientes', ['comboListaClientes']),
     ...mapActions('login', ['desconectarLogin']),
+    ...mapActions('servicios', ['loadListaServiciosMut']),
     openForm (link) {
       this.addTab([link.name, link.label, {}, 1])
     },
@@ -219,6 +220,7 @@ export default {
   mounted () {
     this.loadTablasAux()
     this.comboListaClientes()
+    this.loadListaServiciosMut()
   }
 }
 </script>
