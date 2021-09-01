@@ -33,9 +33,10 @@
           <q-btn outline class="col-xs-4 col-sm-2" color="primary" label="Calcular" @click="calcular" :disabled="recordToSubmit.fechaInicial == null || recordToSubmit.fechaCierre == null ? !disabledCalc : disabledCalc" />
         </div>
         <div class="row q-mt-md q-mb-md">
-          <q-input class="col-xs-6 col-sm-4" outlined readonly stack-label v-model="recordToSubmit.facturacionPeriodo" label="Facturación Periodo"/>
-          <q-input class="col-xs-6 col-sm-4" outlined readonly stack-label v-model="recordToSubmit.recaudacionCaja" label="Recaudación Caja"/>
-          <q-input class="col-xs-12 col-sm-4" outlined readonly stack-label v-model="recordToSubmit.gastosCajaPeriodo" label="Gastos Caja"/>
+          <q-input class="col-xs-6 col-sm-3" outlined readonly stack-label v-model="recordToSubmit.facturacionPeriodo" label="Facturación Periodo"/>
+          <q-input class="col-xs-6 col-sm-3" outlined readonly stack-label v-model="recordToSubmit.recaudacionCaja" label="Recaudación Caja"/>
+          <q-input class="col-xs-6 col-sm-3" outlined readonly stack-label v-model="recordToSubmit.gastosCajaPeriodo" label="Gastos Caja"/>
+          <q-input class="col-xs-6 col-sm-3" outlined readonly stack-label :value="recordToSubmit.recaudacionCaja-recordToSubmit.gastosCajaPeriodo" label="Diferencia"/>
         </div>
         <div class="row q-mt-xl q-mb-md">
           <q-input class="col-xs-2 col-sm-4" outlined stack-label v-model="recordToSubmit.cajaPendiente" label="Caja a Ingresar"/>

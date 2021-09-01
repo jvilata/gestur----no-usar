@@ -81,6 +81,9 @@
           >
             <div v-if="['base'].includes(col.name)">{{ calcularBase() }}</div>
             <div v-if="['total'].includes(col.name)">{{ calcularTotal() }}</div>
+            <div v-if="['ACuenta'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (b.ACuenta !== null ? parseFloat(b.ACuenta) : 0), 0) }}</div>
+            <div v-if="['PorDatafono'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (b.PorDatafono !== null ?parseFloat(b.PorDatafono):0), 0) }}</div>
+            <div v-if="['PorBanco'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (b.PorBanco !== null ?parseFloat(b.PorBanco):0), 0) }}</div>
           </q-th>
         </q-tr>
       </template>
@@ -210,13 +213,16 @@ export default {
     getRecords () {
       var objFilter = {}
       if (this.fromEstanciasMain !== undefined) {
+        this.$q.loading.show()
         Object.assign(objFilter, this.value) // en this.value tenemos el valor de filterRecord (viene de facturasMain)
         this.findEstancia(objFilter)
           .then(response => {
             this.registrosSeleccionados = response.data
+            this.$q.loading.hide()
             this.expanded = false
           })
           .catch(error => {
+            this.$q.loading.hide()
             this.$q.dialog({ title: 'Error', message: error })
           })
       }

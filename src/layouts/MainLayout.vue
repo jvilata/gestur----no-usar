@@ -149,6 +149,14 @@ export default {
           }
         },
         {
+          title: 'Dashboard',
+          icon: 'dashboard',
+          link: {
+            name: 'dashboard',
+            label: 'Dashboard'
+          }
+        },
+        {
           title: 'Otros',
           icon: 'settings',
           link: {

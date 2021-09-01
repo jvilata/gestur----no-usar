@@ -37,15 +37,17 @@ const routes = [
             component: () => import('components/EstanciasReservas/estanciasForm.vue'),
             props: true
           },
-          // {
-          //   path: 'estanciasFormMain/:id',
-          //   name: 'estanciasFormMain',
-          //   component: () => import('components/EstanciasReservas/estanciasFormMain.vue'),
-          //   props: true,
-          //   children: [
-          //     { path: 'estanciasForm', name: 'estanciasForm', component: () => import('components/EstanciasReservas/estanciasForm.vue'), props: true }
-          //   ]
-          // },
+          {
+            path: 'dashboard',
+            name: 'dashboard',
+            component: () => import('components/Dashboard/dashboardMain.vue'),
+            props: true,
+            children: [
+              { path: 'gridEstadis', name: 'gridEstadis', component: () => import('components/Dashboard/dashboardGridEstadis.vue'), props: true },
+              { path: 'evolucionFacturacionMes', name: 'evolucionFacturacionMes', component: () => import('components/Dashboard/dashboardEvolucionFacturacionMes.vue'), props: true },
+              { path: 'evolucionFacturacionAnyos', name: 'evolucionFacturacionAnyos', component: () => import('components/Dashboard/dashboardEvolucionFacturacionAnyo.vue'), props: true }
+            ]
+          },
           {
             path: 'gastosCajaMain',
             name: 'gastosCajaMain',

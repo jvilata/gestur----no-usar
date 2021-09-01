@@ -1,0 +1,79 @@
+[15-Sep-2020 13:30:18 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method bd_personal::findFilternombrevilata() in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php:29
+Stack trace:
+#0 /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php(70): bd_personal->analiza_method()
+#1 {main}
+  thrown in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 29
+[23-Sep-2020 16:13:06 UTC] PHP Fatal error:  Class 'BD_API' not found in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 4
+[23-Sep-2020 16:13:37 UTC] PHP Fatal error:  Class 'BD_API' not found in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 4
+[23-Sep-2020 16:13:41 UTC] PHP Fatal error:  Class 'BD_API' not found in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 4
+[23-Sep-2020 16:15:14 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method bd_personal::() in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php:11
+Stack trace:
+#0 /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php(44): bd_personal->analiza_method()
+#1 {main}
+  thrown in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 11
+[23-Sep-2020 16:16:05 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method bd_personal::() in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php:11
+Stack trace:
+#0 /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php(44): bd_personal->analiza_method()
+#1 {main}
+  thrown in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 11
+[23-Sep-2020 16:35:23 UTC] PHP Parse error:  syntax error, unexpected 'ini_set' (T_STRING) in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 15
+[23-Sep-2020 16:35:33 UTC] PHP Parse error:  syntax error, unexpected 'ini_set' (T_STRING) in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 15
+[23-Sep-2020 16:35:36 UTC] PHP Parse error:  syntax error, unexpected 'ini_set' (T_STRING) in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 15
+[23-Sep-2020 16:35:46 UTC] PHP Parse error:  syntax error, unexpected 'ini_set' (T_STRING) in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 15
+[23-Sep-2020 16:41:25 UTC] PHP Notice:  Array to string conversion in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 46
+[23-Sep-2020 16:41:25 UTC] PHP Notice:  Array to string conversion in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 15
+[23-Sep-2020 16:41:27 UTC] PHP Notice:  Array to string conversion in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 46
+[23-Sep-2020 16:41:27 UTC] PHP Notice:  Array to string conversion in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 15
+[23-Sep-2020 16:42:06 UTC] PHP Notice:  Array to string conversion in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 46
+[23-Sep-2020 16:42:06 UTC] PHP Notice:  Array to string conversion in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 15
+[23-Sep-2020 16:54:04 UTC] PHP Notice:  session_start(): A session had already been started - ignoring in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 21
+[23-Sep-2020 17:17:37 UTC] PHP Notice:  Array to string conversion in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 2
+[23-Sep-2020 17:17:44 UTC] PHP Notice:  Array to string conversion in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 2
+[23-Sep-2020 17:19:40 UTC] PHP Notice:  Array to string conversion in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 3
+[06-Oct-2020 15:04:43 UTC] PHP Parse error:  syntax error, unexpected '!=' (T_IS_NOT_EQUAL), expecting '(' in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 35
+[06-Oct-2020 15:04:47 UTC] PHP Parse error:  syntax error, unexpected '!=' (T_IS_NOT_EQUAL), expecting '(' in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 35
+[06-Oct-2020 15:05:14 UTC] PHP Parse error:  syntax error, unexpected '!=' (T_IS_NOT_EQUAL), expecting '(' in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 35
+[06-Oct-2020 15:05:19 UTC] PHP Parse error:  syntax error, unexpected '!=' (T_IS_NOT_EQUAL), expecting '(' in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 35
+[06-Oct-2020 15:05:21 UTC] PHP Parse error:  syntax error, unexpected '!=' (T_IS_NOT_EQUAL), expecting '(' in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 35
+[06-Oct-2020 15:05:46 UTC] PHP Parse error:  syntax error, unexpected '!=' (T_IS_NOT_EQUAL), expecting '(' in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 35
+[06-Oct-2020 15:05:53 UTC] PHP Parse error:  syntax error, unexpected '!=' (T_IS_NOT_EQUAL), expecting '(' in /home2/vidawmco/public_html/vidawm.com/gestur/php/bd_api.php on line 35
+[09-Jul-2021 10:39:28 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method bd_personal::findUsuariosFilter() in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php:10
+Stack trace:
+#0 /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php(48): bd_personal->analiza_method()
+#1 {main}
+  thrown in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 10
+[09-Jul-2021 10:39:28 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method bd_personal::findUsuariosFilter() in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php:10
+Stack trace:
+#0 /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php(48): bd_personal->analiza_method()
+#1 {main}
+  thrown in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 10
+[09-Jul-2021 10:40:05 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method bd_personal::findUsuariosFilter() in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php:10
+Stack trace:
+#0 /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php(48): bd_personal->analiza_method()
+#1 {main}
+  thrown in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 10
+[09-Jul-2021 10:44:58 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method bd_personal::findUsuariosFilter() in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php:10
+Stack trace:
+#0 /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php(48): bd_personal->analiza_method()
+#1 {main}
+  thrown in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 10
+[09-Jul-2021 11:19:53 UTC] PHP Fatal error:  Uncaught Error: Call to undefined method bd_personal::findUsuariosFilter() in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php:10
+Stack trace:
+#0 /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php(48): bd_personal->analiza_method()
+#1 {main}
+  thrown in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 10
+[09-Jul-2021 11:21:55 UTC] PHP Notice:  Undefined index: nombre in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 105
+[09-Jul-2021 11:21:55 UTC] PHP Notice:  Undefined index: login in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 106
+[09-Jul-2021 11:21:55 UTC] PHP Notice:  Undefined index: password in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 107
+[09-Jul-2021 11:45:51 UTC] PHP Notice:  Undefined index: nombre in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 105
+[09-Jul-2021 11:45:51 UTC] PHP Notice:  Undefined index: login in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 106
+[09-Jul-2021 11:45:51 UTC] PHP Notice:  Undefined index: password in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 107
+[10-Jul-2021 16:51:37 UTC] PHP Notice:  Undefined index: nombre in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 105
+[10-Jul-2021 16:51:37 UTC] PHP Notice:  Undefined index: login in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 106
+[10-Jul-2021 16:51:37 UTC] PHP Notice:  Undefined index: password in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 107
+[13-Jul-2021 14:12:39 UTC] PHP Notice:  Undefined index: nombre in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 105
+[13-Jul-2021 14:12:39 UTC] PHP Notice:  Undefined index: login in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 106
+[13-Jul-2021 14:12:39 UTC] PHP Notice:  Undefined index: password in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 107
+[13-Aug-2021 15:33:44 UTC] PHP Notice:  Undefined index: nombre in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 105
+[13-Aug-2021 15:33:44 UTC] PHP Notice:  Undefined index: login in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 106
+[13-Aug-2021 15:33:44 UTC] PHP Notice:  Undefined index: password in /home2/vidawmco/public_html/vidawm.com/gestur/php/personal/bd_personal.php on line 107

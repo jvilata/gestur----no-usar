@@ -63,8 +63,9 @@
             clearable
             outlined
             stack-label
-            :value="formatDate(recordToSubmit.fechaEntrada)"
-            @input="(val) => recordToSubmit.fechaEntrada=val"
+            :value="recordToSubmit.fechaEntrada===null||recordToSubmit.fechaEntrada===undefined?null:recordToSubmit.fechaEntrada.substr(8,2)+'-'+recordToSubmit.fechaEntrada.substr(5,2)+'-'+recordToSubmit.fechaEntrada.substr(0,4)"
+            mask="##-##-####"
+            @input="v=>recordToSubmit.fechaEntrada=(v===null||v===undefined?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')"
             >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
@@ -82,8 +83,9 @@
             clearable
             outlined
             stack-label
-            :value="formatDate(recordToSubmit.fechaSalida)"
-            @input="(val) => recordToSubmit.fechaSalida=val"
+            :value="recordToSubmit.fechaSalida===null||recordToSubmit.fechaSalida===undefined?null:recordToSubmit.fechaSalida.substr(8,2)+'-'+recordToSubmit.fechaSalida.substr(5,2)+'-'+recordToSubmit.fechaSalida.substr(0,4)"
+            mask="##-##-####"
+            @input="v=>recordToSubmit.fechaSalida=(v===null||v===undefined?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')"
             >
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">

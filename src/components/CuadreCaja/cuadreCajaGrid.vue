@@ -45,7 +45,8 @@
             :props="props"
           >
             <div :style="col.style">
-                <div >{{ col.value }}</div>
+                <div v-if="!['descuadre'].includes(col.name)">{{ col.value }}</div>
+                <div v-if="['descuadre'].includes(col.name)">{{ Math.round(((parseFloatN(props.row.gastosCajaPeriodo)+parseFloatN(props.row.cajaPendiente))-parseFloatN(props.row.recaudacionCaja))*100)/100 }}</div>
             </div>
             <q-popup-edit
               v-model="props.row[col.name]"
@@ -77,8 +78,7 @@
             :key="col.name"
             :align="col.align"
           >
-            <div v-if="['base'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.base)), 0) }}</div>
-            <div v-if="['total'].includes(col.name)">{{ registrosSeleccionados.reduce((a, b) => a + (parseFloat(b.totalEstancia)), 0) }}</div>
+            <div v-if="['descuadre'].includes(col.name)">{{ devolverStringCuadre(Math.round(registrosSeleccionados.reduce((a, b) => a + (parseFloatN(b.gastosCajaPeriodo)+parseFloatN(b.cajaPendiente))-parseFloatN(b.recaudacionCaja), 0)*100)/100) }}</div>
           </q-th>
         </q-tr>
       </template>
@@ -123,8 +123,10 @@
     </q-dialog>
   </q-item>
   <div class="row q-ma-sm">
+  <!--
   <q-input class="col-xs-6 col-sm-4" v-model="comprobarC" outlined readonly stack-label/>
   <q-btn outline class="col-xs-4 col-sm-2" color="primary" label="Comprobar Caja" @click="comprobarCaja"/>
+  -->
   </div>
   </div>
 </template>
@@ -169,6 +171,15 @@ export default {
   methods: {
     ...mapActions('tabs', ['addTab']),
     ...mapActions('cuadrecaja', ['findCuadreCaja', 'addGastos', 'borrarGastos', 'comprobarCajaTot']),
+    parseFloatN (v) {
+      if (v === null || v === undefined) return 0
+      else return parseFloat(v)
+    },
+    devolverStringCuadre (v) {
+      if (v < 0) return 'Faltan ' + -1 * v
+      else if (v > 0) return 'Sobran ' + v
+      else return 'Cuadrado'
+    },
     comprobarCaja () {
       this.comprobarCajaTot(this.value)
         .then(response => {

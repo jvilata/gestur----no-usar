@@ -58,7 +58,15 @@
                 v-model="props.row[col.name]"
                 dense
                 autofocus/>
-              <wgDate v-if="['FechaEntrada', 'FechaExp', 'FechaNac'].includes(col.name)"
+              <q-input
+                v-if="['FechaExp', 'FechaNac'].includes(col.name)"
+                type="text"
+                mask="##-##-####"
+                :value="props.row[col.name]===null?null:props.row[col.name].substr(8,2)+'-'+props.row[col.name].substr(5,2)+'-'+props.row[col.name].substr(0,4)"
+                @input="v=>props.row[col.name]=(v===null?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')"
+                dense
+                autofocus/>
+              <wgDate v-if="['FechaEntrada', ].includes(col.name)"
                 v-model="props.row[col.name]"/>
               <q-select
                 v-if="['sexo'].includes(col.name)"

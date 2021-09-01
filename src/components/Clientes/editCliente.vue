@@ -53,7 +53,10 @@
           @blur="cambiaDatos"
         />
           <q-input outlined clearable label="DNI/Pasaporte" v-model="cliente.nroDoc" class="col-xs-7 col-sm-4" @blur="cambiaDatos"/>
-          <q-input label="Fecha Nacimiento" class="col-xs-7 col-sm-3" clearable outlined stack-label :value="formatDate(cliente.fechaNacimiento)" @blur="cambiaDatos">
+          <q-input label="Fecha Nacimiento" class="col-xs-7 col-sm-3" clearable outlined stack-label
+            mask="##-##-####"
+           :value="cliente.fechaNacimiento===null?null:cliente.fechaNacimiento.substr(8,2)+'-'+cliente.fechaNacimiento.substr(5,2)+'-'+cliente.fechaNacimiento.substr(0,4)"
+           @input="v=>{cambiaDatos();cliente.fechaNacimiento=(v===null?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')}">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaNac">
@@ -67,7 +70,11 @@
           <q-input outlined clearable label="Nacionalidad" v-model="cliente.nacionalidad" class="col-xs-5 col-sm-3" />
         </div>
         <div class="row q-mb-sm">
-          <q-input label="Fecha Expedición" class="col-xs-6 col-sm-6" clearable outlined stack-label :value="formatDate(cliente.fechaExpedicion)" @blur="cambiaDatosExpedicion(cliente.fechaExpedicion)">
+          <q-input label="Fecha Expedición" class="col-xs-6 col-sm-6" clearable outlined stack-label
+            :value="cliente.fechaExpedicion===null?null:cliente.fechaExpedicion.substr(8,2)+'-'+cliente.fechaExpedicion.substr(5,2)+'-'+cliente.fechaExpedicion.substr(0,4)"
+            mask="##-##-####"
+            @input="v=>cliente.fechaExpedicion=(v===null?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')"
+            @blur="cambiaDatosExpedicion(cliente.fechaExpedicion)">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaExp">
@@ -78,7 +85,11 @@
               </q-icon>
           </template>
           </q-input>
-           <q-input label="Fecha Validez" class="col-xs-6 col-sm-6" clearable outlined stack-label :value="formatDate(cliente.fechaValidez)" @blur="cambiaDatos">
+           <q-input label="Fecha Validez" class="col-xs-6 col-sm-6" clearable outlined stack-label
+            @blur="cambiaDatos"
+            :value="cliente.fechaValidez===null?null:cliente.fechaValidez.substr(8,2)+'-'+cliente.fechaValidez.substr(5,2)+'-'+cliente.fechaValidez.substr(0,4)"
+            mask="##-##-####"
+            @input="v=>cliente.fechaValidez=(v===null?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')">
             <template v-slot:append>
               <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy ref="fechaVal">
@@ -207,46 +218,44 @@ export default {
       return date.formatDate(date1, 'DD/MM/YYYY')
     },
     confirmarCierre () {
-      if (this.hasChanges) {
+      /* if (this.hasChanges) {
         this.$q.dialog({
           title: 'Aviso',
           message: '¿Desea guardar los cambios?',
           ok: true,
           cancel: true,
           persistent: true
-        }).onOk(() => {
-          this.guardarCliente()
-          this.$emit('close')
-        }).onCancel(() => {
+        }).onOk(() => { */
+      this.guardarCliente()
+      this.$emit('close')
+      /*  }).onCancel(() => {
           this.$emit('close')
         })
-      } else { this.$emit('close') }
+      } else { this.$emit('close') } */
     },
     guardarCliente () {
-      if (this.hasChanges) {
+      /* if (this.hasChanges) {
         this.$q.dialog({
           title: 'Confirmar cambios',
           message: '¿ Desea guardar los cambios ?',
           ok: true,
           cancel: true,
           persistent: true
-        }).onOk(() => {
-          this.guardarDatosCliente(this.cliente)
-            .then(result => {
-              this.hasChanges = false
-              this.colorBotonSave = 'primary'
-              this.$q.dialog({
-                title: 'Se han guardado los cambios'
-              })
-              this.comboListaClientes() // refrescamos state listaClientes
-            })
-            .catch(error => {
-              this.$q.dialog({
-                message: error.message
-              })
-            })
+        }).onOk(() => { */
+      this.guardarDatosCliente(this.cliente)
+        .then(result => {
+          this.hasChanges = false
+          this.colorBotonSave = 'primary'
+          this.$q.notify('Se han guardado los cambios')
+          this.comboListaClientes() // refrescamos state listaClientes
         })
-      }
+        .catch(error => {
+          this.$q.dialog({
+            message: error.message
+          })
+        })
+      /*  })
+      } */
     },
     cambiaDatosExpedicion (fechaEx) {
       this.hasChanges = true
