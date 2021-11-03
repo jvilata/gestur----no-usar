@@ -141,11 +141,11 @@ export default {
           }
         },
         {
-          title: 'Disco Guardia Civil',
+          title: 'Fichero Guardia Civil',
           icon: 'shield',
           link: {
             name: 'discoGCMain',
-            label: 'Disco Guardia Civil'
+            label: 'Fichero Guardia Civil'
           }
         },
         {

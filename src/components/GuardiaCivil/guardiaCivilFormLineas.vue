@@ -62,8 +62,8 @@
                 v-if="['FechaExp', 'FechaNac'].includes(col.name)"
                 type="text"
                 mask="##-##-####"
-                :value="props.row[col.name]===null?null:props.row[col.name].substr(8,2)+'-'+props.row[col.name].substr(5,2)+'-'+props.row[col.name].substr(0,4)"
-                @input="v=>props.row[col.name]=(v===null?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')"
+                :value="props.row[col.name]===null||props.row[col.name]===undefined?null:props.row[col.name].substr(8,2)+'-'+props.row[col.name].substr(5,2)+'-'+props.row[col.name].substr(0,4)"
+                @input="v=>props.row[col.name]=(v===null||v===undefined?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')"
                 dense
                 autofocus/>
               <wgDate v-if="['FechaEntrada'].includes(col.name)"
@@ -128,7 +128,7 @@ import { date } from 'quasar'
 import wgDate from 'components/General/wgDate.vue'
 
 export default {
-  props: ['value'], // en 'value' tenemos la tabla de datos del grid
+  props: ['regTipo1', 'value'], // en 'value' tenemos la tabla de datos del grid
   data () {
     return {
       rowId: '',
@@ -168,9 +168,20 @@ export default {
     ...mapActions('tabs', ['addTab']),
     ...mapActions('guardiaC', ['borrarTipo2', 'addTipo2']),
     addRecord () {
+      console.log('tipo1', this.regTipo1)
       var record = {
+        codEstablecimiento: this.regTipo1.codEstablecimiento,
+        Nombre: '',
+        PrimerApellido: '',
+        SegundoApellido: '',
+        dni: '',
+        pasaporte: '',
+        sexo: 'M',
+        TipoDoc: 'D',
         FechaEntrada: date.formatDate(new Date(), 'YYYY-MM-DD 00:00:00'),
-        PaisNac: 'ESP'
+        PaisNac: 'ESP',
+        FechaExp: '2000-01-01 00:00:00',
+        FechaNac: '2000-01-01 00:00:00'
       }
       this.addTipo2(record)
         .then(response => {

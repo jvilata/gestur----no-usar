@@ -57,47 +57,48 @@
         /> -->
       </div>
       <div class="row">
-          <q-input
-            label="Fecha Entrada"
-            class="col-xs-6 col-sm-3"
-            clearable
-            outlined
-            stack-label
-            :value="recordToSubmit.fechaEntrada===null||recordToSubmit.fechaEntrada===undefined?null:recordToSubmit.fechaEntrada.substr(8,2)+'-'+recordToSubmit.fechaEntrada.substr(5,2)+'-'+recordToSubmit.fechaEntrada.substr(0,4)"
-            mask="##-##-####"
-            @input="v=>recordToSubmit.fechaEntrada=(v===null||v===undefined?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')"
-            >
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy ref="fechaEntrada">
-                  <wgDate
-                      @input="$refs.fechaEntrada.hide()"
-                      v-model="recordToSubmit.fechaEntrada" />
-              </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-          <q-input
-            label="Fecha Salida"
-            class="col-xs-6 col-sm-3"
-            clearable
-            outlined
-            stack-label
-            :value="recordToSubmit.fechaSalida===null||recordToSubmit.fechaSalida===undefined?null:recordToSubmit.fechaSalida.substr(8,2)+'-'+recordToSubmit.fechaSalida.substr(5,2)+'-'+recordToSubmit.fechaSalida.substr(0,4)"
-            mask="##-##-####"
-            @input="v=>recordToSubmit.fechaSalida=(v===null||v===undefined?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')"
-            >
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy ref="fechaSalida">
-                  <wgDate
-                      @input="$refs.fechaSalida.hide()"
-                      v-model="recordToSubmit.fechaSalida" />
-              </q-popup-proxy>
-              </q-icon>
+        <q-input
+          label="Fecha Entrada"
+          class="col-xs-6 col-sm-3"
+          clearable
+          outlined
+          stack-label
+          :value="recordToSubmit.fechaEntrada===null||recordToSubmit.fechaEntrada===undefined?null:recordToSubmit.fechaEntrada.substr(8,2)+'-'+recordToSubmit.fechaEntrada.substr(5,2)+'-'+recordToSubmit.fechaEntrada.substr(0,4)"
+          mask="##-##-####"
+          @input="v=>recordToSubmit.fechaEntrada=(v===null||v===undefined?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')"
+          >
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+            <q-popup-proxy ref="fechaEntrada">
+                <wgDate
+                    @input="$refs.fechaEntrada.hide()"
+                    v-model="recordToSubmit.fechaEntrada" />
+            </q-popup-proxy>
+            </q-icon>
           </template>
-          </q-input>
-        <q-input class="col-xs-12 col-sm-6" autogrow outlined label="Observaciones" stack-label v-model="recordToSubmit.observaciones" />
+        </q-input>
+        <q-input
+          label="Fecha Salida"
+          class="col-xs-6 col-sm-3"
+          clearable
+          outlined
+          stack-label
+          :value="recordToSubmit.fechaSalida===null||recordToSubmit.fechaSalida===undefined?null:recordToSubmit.fechaSalida.substr(8,2)+'-'+recordToSubmit.fechaSalida.substr(5,2)+'-'+recordToSubmit.fechaSalida.substr(0,4)"
+          mask="##-##-####"
+          @input="v=>recordToSubmit.fechaSalida=(v===null||v===undefined?null:v.substr(6,4)+'-'+v.substr(3,2)+'-'+v.substr(0,2)+' 00:00:00')"
+          >
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+            <q-popup-proxy ref="fechaSalida">
+                <wgDate
+                    @input="$refs.fechaSalida.hide()"
+                    v-model="recordToSubmit.fechaSalida" />
+            </q-popup-proxy>
+            </q-icon>
+        </template>
+        </q-input>
+        <q-input class="col-xs-4 col-sm-2"  outlined label="N.Viajeros" stack-label v-model="recordToSubmit.numViajeros" />
+        <q-input class="col-xs-8 col-sm-4"  outlined label="Observaciones" stack-label v-model="recordToSubmit.observaciones" />
       </div>
       <div class="row q-mt-lg">
         <q-input class="col-xs-4 col-sm-2" outlined readonly label="Base" stack-label v-model="recordToSubmit.base" />

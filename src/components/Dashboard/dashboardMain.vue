@@ -71,10 +71,16 @@ export default {
       nomFormulario: 'Dashboard',
       menuItems: [
         {
-          title: 'Panel Datos',
+          title: 'Estad.Semanal',
           // caption: '',
           icon: 'table_chart',
-          link: { name: 'gridEstadis' }
+          link: { name: 'gridEstadisSem' }
+        },
+        {
+          title: 'Estad.Mensual',
+          // caption: '',
+          icon: 'table_chart',
+          link: { name: 'gridEstadisMen' }
         },
         {
           title: 'Evolución Fact. Meses',
@@ -98,7 +104,7 @@ export default {
     getRecords (filter, saltar = false) { // saltar marcara si tenemos que saltar la carga del grid activosInverison
       Object.assign(this.filterRecord, filter) // no haría falta pero así obliga a refrescar el componente para que visulice el filtro
       this.expanded = false
-      this.ltab = 'gridEstadis'
+      this.ltab = 'gridEstadisSem'
       this.refreshRec++ // obliga a refrescar el componente para que cargue los nuevos datos
     }
   },
@@ -112,7 +118,7 @@ export default {
     } else { // es la primera vez que entro, cargo valores po defecto
       Vue.set(this.filterRecord, 'fechaDesde', date.formatDate(new Date(), 'YYYY-MM-DD'))
       Vue.set(this.filterRecord, 'fechaHasta', date.formatDate(new Date(), 'YYYY-MM-DD'))
-      this.$router.push({ name: 'gridEstadis' })
+      this.$router.push({ name: 'gridEstadisSem' })
       this.getRecords(this.filterRecord)
     }
   },

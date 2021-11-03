@@ -43,7 +43,8 @@ const routes = [
             component: () => import('components/Dashboard/dashboardMain.vue'),
             props: true,
             children: [
-              { path: 'gridEstadis', name: 'gridEstadis', component: () => import('components/Dashboard/dashboardGridEstadis.vue'), props: true },
+              { path: 'gridEstadisSem', name: 'gridEstadisSem', component: () => import('components/Dashboard/dashboardGridEstadisSem.vue'), props: true },
+              { path: 'gridEstadisMen', name: 'gridEstadisMen', component: () => import('components/Dashboard/dashboardGridEstadisMensual.vue'), props: true },
               { path: 'evolucionFacturacionMes', name: 'evolucionFacturacionMes', component: () => import('components/Dashboard/dashboardEvolucionFacturacionMes.vue'), props: true },
               { path: 'evolucionFacturacionAnyos', name: 'evolucionFacturacionAnyos', component: () => import('components/Dashboard/dashboardEvolucionFacturacionAnyo.vue'), props: true }
             ]

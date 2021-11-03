@@ -7,9 +7,26 @@
           <q-icon name="shield" />
         </q-item-section>
         <q-item-section>
-          <q-item-label class="text-h6">
-            {{ title }}
-          </q-item-label>
+          <div class="row">
+            <q-item-label class="text-h6">
+              {{ title }}
+            </q-item-label>
+            <q-select class="q-ml-lg col-xs-10 col-sm-5"
+              dense
+              outlined
+              clearable
+              label="Establecimiento"
+              stack-label
+              v-model="recordToSubmit.codEstablecimiento"
+              :options="listaTiposGC"
+              option-value="codEstablecimiento"
+              option-label="nombreEstablecimiento"
+              emit-value
+              map-options
+              use-input
+              @input="getRecordsTipo1(recordToSubmit)"
+            />
+          </div>
         </q-item-section>
         <q-item-section side>
             <q-btn
@@ -82,7 +99,7 @@
           default-opened
           header-class="bg-brown-1 text-grey-8"
         >
-          <guardiaCivilFormLineas :key="refresh" :value="listaRegTipo2"/>
+          <guardiaCivilFormLineas :key="refresh" :regTipo1= "regTipo1" :value="listaRegTipo2"/>
         </q-expansion-item>
       </q-list>
     </q-card>
@@ -98,6 +115,7 @@ export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
   data () {
     return {
+      listaTiposGC: [],
       recordToSubmit: {
         FechaInicialEntrada: '',
         FechaFinalEntrada: ''
@@ -123,12 +141,15 @@ export default {
     formatDate (date1) {
       return date.formatDate(date1, 'DD/MM/YYYY')
     },
-    getRecordsTipo1 () {
+    getRecordsTipo1 (reg) {
       // cabecera
-      this.findTipo1({})
+      this.findTipo1(reg)
         .then(response => {
+          if (this.listaTiposGC.length === 0) this.listaTiposGC = response.data
           Object.assign(this.regTipo1, response.data[0])
+          this.recordToSubmit.codEstablecimiento = this.regTipo1.codEstablecimiento
           this.refresh++
+          this.getRecordsTipo2()
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
@@ -136,7 +157,8 @@ export default {
     },
     getRecordsTipo2 () {
       // lineas
-      this.findTipo2([])
+      this.listaRegTipo2 = []
+      this.findTipo2(this.regTipo1)
         .then(response => {
           Object.assign(this.listaRegTipo2, response.data)
           this.refresh++
@@ -151,7 +173,6 @@ export default {
       this.generarGC(this.recordToSubmit)
         .then(response => {
           this.getRecordsTipo1()
-          this.getRecordsTipo2()
         })
         .catch(error => {
           this.$q.dialog({ title: 'Error', message: error })
@@ -159,8 +180,7 @@ export default {
     }
   },
   mounted () {
-    this.getRecordsTipo1()
-    this.getRecordsTipo2()
+    this.getRecordsTipo1({})
     if (this.recordToSubmit.FechaInicialEntrada === '') {
       this.recordToSubmit.FechaInicialEntrada = date.formatDate(new Date(), 'YYYY-MM-DD 00:00:00')
     }
