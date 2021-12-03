@@ -13,6 +13,7 @@ import cuadrecaja from './store-cuadrecaja'
 import guardiaC from './store-guardiaC'
 import usuarios from './store-usuarios'
 import viajeros from './store-viajeros'
+import prereservas from './store-prereservas'
 // import example from './module-example'
 
 Vue.use(Vuex)
@@ -41,7 +42,8 @@ export default function (/* { ssrContext } */) {
       cuadrecaja,
       guardiaC,
       usuarios,
-      viajeros
+      viajeros,
+      prereservas
     },
 
     // enable strict mode (adds overhead!)

@@ -50,6 +50,12 @@ const routes = [
             ]
           },
           {
+            path: 'calendarioMain',
+            name: 'calendarioMain',
+            component: () => import('components/Calendario/calendarioMain.vue'),
+            props: true
+          },
+          {
             path: 'gastosCajaMain',
             name: 'gastosCajaMain',
             component: () => import('components/GastosCaja/gastosCajaMain.vue'),

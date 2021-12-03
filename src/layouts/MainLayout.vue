@@ -157,6 +157,14 @@ export default {
           }
         },
         {
+          title: 'Calendario',
+          icon: 'today',
+          link: {
+            name: 'calendarioMain',
+            label: 'Calendario'
+          }
+        },
+        {
           title: 'Otros',
           icon: 'settings',
           link: {
