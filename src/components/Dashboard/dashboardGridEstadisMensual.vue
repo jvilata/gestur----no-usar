@@ -131,12 +131,15 @@ export default {
                 if (row.idServicio === '6' || row.idServicio === '7') rowResult.persViajeros += parseFloat(row.cantidad) // 6 adul, 7 niños
                 if (row.tipoServicio === '1' || row.tipoServicio === '2' || row.tipoServicio === '6' || row.tipoServicio === '7') rowResult.persViajeros += (parseFloat(row.persBunga) === 0 ? 1 : parseFloat(row.persBunga))
               }
-              if (row.tipoServicio === '1' || row.tipoServicio === '2' || row.tipoServicio === '6' || row.tipoServicio === '7') rowResult.persBunga += (parseFloat(row.persBunga) === 0 ? 1 : parseFloat(row.persBunga))
+              if (date.formatDate(rowResult.dia, 'YYYY-MM-DD') !== row.fechaFin.substring(0, 10) &&
+                (row.tipoServicio === '1' || row.tipoServicio === '2' || row.tipoServicio === '6' || row.tipoServicio === '7')) {
+                rowResult.persBunga += (parseFloat(row.persBunga) === 0 ? 1 : parseFloat(row.persBunga))
+                rowResult.bungaOcupados += parseFloat(row.cantidad)
+              }
               if (row.idServicio === '6' || row.idServicio === '7') rowResult.persCamAdult += parseFloat(row.cantidad) // 6 adul, 7 niños
               if (row.idServicio === '8') rowResult.tiendasOcupadas += parseFloat(row.cantidad)
               if (row.idServicio === '9' || row.idServicio === '10') rowResult.caravanasOcupadas += parseFloat(row.cantidad)
               if (row.idServicio === '15' || row.idServicio === '16') rowResult.guardaCaravana += parseFloat(row.cantidad)
-              if (row.tipoServicio === '1' || row.tipoServicio === '2' || row.tipoServicio === '6' || row.tipoServicio === '7') rowResult.bungaOcupados += parseFloat(row.cantidad)
             })
           })
           // this.registrosSeleccionados = result

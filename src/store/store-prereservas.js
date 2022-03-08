@@ -13,6 +13,9 @@ const actions = {
   borrarPrereservas ({ commit }, id) {
     return axiosInstance.get('prereservas/bd_prereservas.php/deleteBD', { params: { id: id } }, { withCredentials: true })
   },
+  devolverPrereservas ({ commit }, record) {
+    return axiosInstance.get('prereservas/bd_prereservas.php/devolverPrereserva', { params: record }, { withCredentials: true })
+  },
   loadPrereservas ({ commit }, objFilter) {
     return axiosInstance.get('prereservas/bd_prereservas.php/findPrereservasFilter', { params: objFilter }, { withCredentials: true })
   }

@@ -45,12 +45,12 @@
               {{ col.value }}
             </div>
             <q-popup-edit
-              v-if="!['id','Numero'].includes(col.name)"
+              v-if="!['id'].includes(col.name)"
               v-model="props.row[col.name]"
               buttons
               @save="updateRecord(props.row)">
               <q-input
-                v-if="['tipoIva', 'descripcionCorta', 'descripcionLarga'].includes(col.name)"
+                v-if="['Numero', 'tipoIva', 'descripcionCorta', 'descripcionLarga'].includes(col.name)"
                 type="text"
                 v-model="props.row[col.name]"
                 dense
@@ -119,7 +119,7 @@ export default {
         { name: 'descripcionCorta', align: 'left', label: 'Descripción Corta', field: 'descripcionCorta', sortable: true },
         { name: 'descripcionLarga', align: 'left', label: 'Descripción Larga', field: 'descripcionLarga', sortable: true },
         { name: 'tipoIva', align: 'left', label: '%IVA', field: 'tipoIva', sortable: true },
-        { name: 'numero', align: 'left', label: 'Número', field: 'Numero', sortable: true },
+        { name: 'Numero', align: 'left', label: 'Número', field: 'Numero', sortable: true },
         {
           name: 'tipoServicio',
           align: 'left',

@@ -7,6 +7,7 @@ const state = {
   listaTipoServ: [],
   listaTipoEstancia: [],
   listaTipoTarifa: [],
+  listaTiposGasto: [],
   datosEstablecimiento: []
 }
 
@@ -26,6 +27,9 @@ const mutations = {
   loadTipoTarifa (state, tiposTarifa) {
     state.listaTipoTarifa = tiposTarifa
   },
+  loadTiposGasto (state, tiposGasto) {
+    state.listaTiposGasto = tiposGasto
+  },
   loadDatosEstablecimiento (state, datos) {
     datos.forEach(element => {
       if (element.codElemento === '1') { state.datosEstablecimiento.path = element.valor1 }
@@ -44,6 +48,7 @@ const actions = {
     this.dispatch('tablasAux/loadTablaAux', { codTabla: 4, mutation: 'loadTipoServ' })
     this.dispatch('tablasAux/loadTablaAux', { codTabla: 2, mutation: 'loadTipoEstancia' })
     this.dispatch('tablasAux/loadTablaAux', { codTabla: 3, mutation: 'loadTipoTarifa' })
+    this.dispatch('tablasAux/loadTablaAux', { codTabla: 8, mutation: 'loadTiposGasto' })
     this.dispatch('tablasAux/loadTablaAux', { codTabla: 5, mutation: 'loadDatosEstablecimiento' })
   },
   loadTablaAux ({ commit }, tabAux) { // tabAux: { codTabla: x, mutation: 'mutation' }

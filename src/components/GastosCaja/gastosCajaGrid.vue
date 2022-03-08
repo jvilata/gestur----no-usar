@@ -46,7 +46,7 @@
                 <div >{{ col.value }}</div>
             </div>
             <q-popup-edit
-              v-if="['descripcion', 'cantidad', 'factura', 'fecha'].includes(col.name)"
+              v-if="['devuelto', 'tipoGasto', 'descripcion', 'cantidad', 'factura', 'fecha'].includes(col.name)"
               v-model="props.row[col.name]"
               buttons
               @save="updateRecord(props.row)">
@@ -56,6 +56,33 @@
                 v-model="props.row[col.name]"
                 dense
                 autofocus />
+                <q-select v-if="['tipoGasto'].includes(col.name)"
+                  class="col-xs-6 col-sm-3"
+                  outlined
+                  clearable
+                  label="Tipo Gasto"
+                  stack-label
+                  v-model="props.row[col.name]"
+                  :options="listaTiposGasto"
+                  option-value="codElemento"
+                  option-label="valor1"
+                  emit-value
+                  map-options
+                  use-input
+                />
+                <q-select v-if="['devuelto'].includes(col.name)"
+                  class="col-xs-4 col-sm-3"
+                  label="Devuelto"
+                  stack-label
+                  outlined
+                  clearable
+                  v-model="props.row[col.name]"
+                  :options="listaSINO"
+                  option-value="id"
+                  option-label="desc"
+                  emit-value
+                  map-options
+                />
                 <wgDate v-if="['fecha'].includes(col.name)"
                   v-model="props.row[col.name]" />
             </q-popup-edit>
@@ -114,13 +141,15 @@ export default {
         { name: 'cantidad', align: 'left', label: 'Cantidad', field: 'cantidad', sortable: true },
         { name: 'factura', align: 'left', label: 'Factura', field: 'factura', sortable: true },
         { name: 'id', align: 'left', label: 'id', field: 'id', sortable: true },
-        { name: 'tipoGasto', align: 'left', label: 'Tipo Gasto', field: 'tipoGasto', sortable: true }
+        { name: 'tipoGasto', align: 'left', label: 'Tipo Gasto', field: 'tipoGasto', sortable: true },
+        { name: 'devuelto', align: 'left', label: 'devuelto', field: 'devuelto', sortable: true }
       ],
       pagination: { rowsPerPage: 0 }
     }
   },
   computed: {
-    ...mapState('login', ['user'])
+    ...mapState('login', ['user']),
+    ...mapState('tablasAux', ['listaTiposGasto', 'listaSINO'])
   },
   components: {
     wgDate: wgDate

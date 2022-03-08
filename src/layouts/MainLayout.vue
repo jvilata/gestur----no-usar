@@ -125,7 +125,7 @@ export default {
           }
         },
         {
-          title: 'Gastos de Caja',
+          title: 'Gastos Caja/Devoluciones',
           icon: 'euro',
           link: {
             name: 'gastosCajaMain',
@@ -157,7 +157,7 @@ export default {
           }
         },
         {
-          title: 'Calendario',
+          title: 'Calendario Reservas',
           icon: 'today',
           link: {
             name: 'calendarioMain',

@@ -40,7 +40,7 @@
             :props="props"
           >
             <div :style="col.style">
-                <div @click="editarReserva(props.row, col)">
+                <div @click="editarReserva(props.row, col)" :style="props.row[col.name]!==undefined && props.row[col.name].ingresado?'color: forestgreen':col.name!=='descServicio'?'color: goldenrod':''">
                   {{ col.value ?  col.value : '.' }}
                 </div>
             </div>
@@ -65,6 +65,7 @@
           :value="reservaActual"
           @guardarReserva="(val) => guardarReserva(val)"
           @borrarReserva="(val) => borrarReserva(val)"
+          @devolverReserva="(val) => devolverReserva(val)"
           @hide="expanded = !expanded"
         />
       </q-dialog>
@@ -101,7 +102,7 @@ export default {
   },
   methods: {
     ...mapActions('servicios', ['loadListaServicios']),
-    ...mapActions('prereservas', ['loadPrereservas', 'addPrereservas', 'borrarPrereservas']),
+    ...mapActions('prereservas', ['loadPrereservas', 'addPrereservas', 'borrarPrereservas', 'devolverPrereservas']),
     daysInMonth (month, year) {
       return new Date(year, month, 0).getDate()
     },
@@ -125,7 +126,7 @@ export default {
       }
     },
     getServicios () {
-      this.loadListaServicios({ tipoServicio: '1, 2, 6, 7, 9' })
+      this.loadListaServicios({ tipoServicio: '1, 2, 6, 7, 9, 10, 3' })
         .then(response => {
           this.bunga = response.data
           this.getReservas()
@@ -154,14 +155,14 @@ export default {
         var r = {
           id: i,
           idServicio: rbunga.id,
-          descServicio: rbunga.descripcionCorta + ' ' + rbunga.Numero
+          descServicio: rbunga.descripcionCorta + ' ' + (rbunga.Numero !== '0' ? rbunga.Numero : '')
         }
-        var lres = this.listaReservas.filter(res => (res.idServicio === rbunga.id && (res.fechaEntrada.substr(0, 7) === mesanyo)))
+        var lres = this.listaReservas.filter(res => (res.idServicio === rbunga.id && (res.fechaEntrada.substr(0, 7) === mesanyo || res.fechaSalida.substr(0, 7) === mesanyo)))
         lres.forEach(res => {
           var fi = new Date(res.fechaEntrada)
           var ff = new Date(res.fechaSalida)
           while (fi < ff) {
-            r['d' + fi.getDate()] = res
+            if (fi.getMonth() + 1 === this.filterRecord.mes) r['d' + fi.getDate()] = res
             var d = new Date(fi)
             d.setDate(fi.getDate() + 1)
             fi = d
@@ -198,6 +199,18 @@ export default {
     borrarReserva (reserva) {
       this.expanded = false
       this.borrarPrereservas(reserva.id)
+        .then(result => {
+          this.getServicios()
+        })
+        .catch(error => {
+          this.$q.dialog({ title: 'Error', message: error.message })
+        })
+    },
+    devolverReserva (reserva) {
+      this.expanded = false
+      reserva.fechaEntrada = date.formatDate(new Date(reserva.fechaEntrada), 'DD/MM/YYYY')
+      reserva.fechaSalida = date.formatDate(new Date(reserva.fechaSalida), 'DD/MM/YYYY')
+      this.devolverPrereservas(reserva)
         .then(result => {
           this.getServicios()
         })

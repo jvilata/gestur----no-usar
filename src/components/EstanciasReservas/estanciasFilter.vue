@@ -23,7 +23,7 @@
       <q-input
         outlined
         clearable
-        label="Fecha Entrada"
+        label="Fecha Entrada Desde"
         stack-label
         :value="formatDate(filterR.fechaEntradaDesde)"
         @input="(val) => filterR.fechaEntradaDesde=val"
@@ -41,7 +41,7 @@
       <q-input
         outlined
         clearable
-        label="Fecha Salida"
+        label="Fecha Entrada Hasta"
         stack-label
         :value="formatDate(filterR.fechaEntradaHasta)"
         @input="(val) => filterR.fechaEntradaHasta=val"

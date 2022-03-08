@@ -5,7 +5,7 @@
     </q-card-section>
 
     <q-form @submit="guardarReserva" class="q-gutter-y-xs">
-      <q-input outlined readonly autofocus label="Servicio" stack-label v-model="filterR.descServicio" />
+      <q-input outlined readonly label="Servicio" stack-label v-model="filterR.descServicio" />
       <q-input
         outlined
         :rules="[val => !!val || 'Campo requerido']"
@@ -45,10 +45,13 @@
         </template>
       </q-input>
       <q-input outlined clearable autofocus label="Cliente" stack-label v-model="filterR.cliente"  :rules="[val => !!val || 'Campo requerido']"/>
+      <q-input outlined clearable autofocus label="Teléfono" stack-label v-model="filterR.telefono"/>
+      <q-input outlined clearable autofocus label="Importe Ingresado" stack-label v-model="filterR.ingresado"/>
       <q-input outlined clearable autofocus label="Observaciones" stack-label v-model="filterR.observaciones" />
-      <q-input outlined clearable label="ID Estancia" stack-label v-model="filterR.idEstancia" />
+      <!--q-input outlined clearable label="ID Estancia" stack-label v-model="filterR.idEstancia" /-->
       <q-card-actions align="right">
-        <q-btn v-if="filterR.id !== undefined" flat label="Borrar reserva" color="negative" @click="borrarReserva()"/>
+        <q-btn v-if="filterR.id !== undefined && (filterR.ingresado===null || filterR.ingresado==='0' || filterR.ingresado==='')" flat label="Borrar reserva" color="negative" @click="borrarReserva()"/>
+        <q-btn v-if="filterR.id !== undefined && (filterR.ingresado!==null && filterR.ingresado!=='0')" flat label="Devolver reserva" color="negative" @click="devolverReserva()"/>
         <q-btn class type="submit" label="Guardar" color="primary"/>
         <q-btn flat label="Cancel" color="primary" @click="$emit('hide')"/><!-- lo captura accionesMain -->
       </q-card-actions>
@@ -86,6 +89,17 @@ export default {
         persistent: true
       }).onOk(() => {
         this.$emit('borrarReserva', this.filterR)
+      })
+    },
+    devolverReserva () {
+      this.$q.dialog({
+        title: 'Confirmar',
+        message: 'Recuerda introducir en observaciones el número de cuenta ¿ Devolver esta reserva ?',
+        ok: true,
+        cancel: true,
+        persistent: true
+      }).onOk(() => {
+        this.$emit('devolverReserva', this.filterR)
       })
     },
     formatDate (pdate) {

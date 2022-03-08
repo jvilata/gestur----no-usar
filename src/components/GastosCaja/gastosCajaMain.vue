@@ -53,7 +53,7 @@ export default {
       refreshKey: 0,
       visible: '',
       filterRecord: {},
-      nomFormulario: 'Gastos Caja',
+      nomFormulario: 'Gastos Caja/Devoluciones',
       registrosSeleccionados: []
     }
   },
