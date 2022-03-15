@@ -40,7 +40,7 @@
             :props="props"
           >
             <div :style="col.style">
-                <div @click="editarReserva(props.row, col)" :style="props.row[col.name]!==undefined && props.row[col.name].ingresado?'color: forestgreen':col.name!=='descServicio'?'color: goldenrod':''">
+                <div @click="editarReserva(props.row, col)" :style="(props.row[col.name]!==undefined && col.name!=='descServicio') ? (props.row[col.name].ingresado?'color: forestgreen': (duracionReserva(props.row[col.name])>30? 'color: secondary': 'color: goldenrod')) :''">
                   {{ col.value ?  col.value : '.' }}
                 </div>
             </div>
@@ -103,6 +103,12 @@ export default {
   methods: {
     ...mapActions('servicios', ['loadListaServicios']),
     ...mapActions('prereservas', ['loadPrereservas', 'addPrereservas', 'borrarPrereservas', 'devolverPrereservas']),
+    duracionReserva (r) {
+      var date1 = new Date(r.fechaEntrada)
+      var date2 = new Date(r.fechaSalida)
+      var diff = date.getDateDiff(date2, date1, 'days')
+      return diff
+    },
     daysInMonth (month, year) {
       return new Date(year, month, 0).getDate()
     },

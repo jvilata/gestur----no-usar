@@ -5,7 +5,18 @@
     </q-card-section>
 
     <q-form @submit="guardarReserva" class="q-gutter-y-xs">
-      <q-input outlined readonly label="Servicio" stack-label v-model="filterR.descServicio" />
+      <!-- q-input outlined readonly label="Servicio" stack-label v-model="filterR.descServicio" /-->
+      <q-select outlined clearable label="Tipo Servicio" stack-label
+          v-model="filterR.idServicio"
+          :options="listaServicios"
+          option-value="id"
+          :option-label="row=>row.descripcionCorta + ' ' + (row.Numero!== '0' ? row.Numero : '')"
+          emit-value
+          map-options
+          use-input
+          hide-selected
+          fill-input
+          input-debounce="0"/>
       <q-input
         outlined
         :rules="[val => !!val || 'Campo requerido']"
@@ -61,6 +72,7 @@
 
 <script>
 import { date } from 'quasar'
+import { mapState } from 'vuex'
 import wgDate from 'components/General/wgDate.vue'
 export default {
   props: ['value'], // value es el objeto con los campos de filtro que le pasa accionesMain con v-model
@@ -74,8 +86,15 @@ export default {
       noFact: false
     }
   },
+  computed: {
+    ...mapState('servicios', ['listaServicios'])
+  },
   methods: {
     guardarReserva () {
+      var serv = this.listaServicios.find(row => row.id === this.filterR.idServicio)
+      if (serv) {
+        this.filterR.descServicio = serv.descripcionCorta + ' ' + (serv.Numero !== '0' ? serv.Numero : '')
+      }
       this.filterR.fechaEntrada = this.filterR.fechaEntrada.substr(0, 10)
       this.filterR.fechaSalida = this.filterR.fechaSalida.substr(0, 10)
       this.$emit('guardarReserva', this.filterR)

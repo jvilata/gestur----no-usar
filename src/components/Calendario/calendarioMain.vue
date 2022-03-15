@@ -26,6 +26,10 @@
                 option-label="anyo"
                 emit-value
                 map-options/>
+              <q-select class="q-ml-xs col-xs-5 col-sm-2" outlined dense label="Ver por" stack-label
+                @input="gestionarVerPor()"
+                v-model="filterRecord.verPor"
+                :options="['Por días', 'Por Servicios']"/>
           </div>
         </q-item-section>
         <q-item-section side>
@@ -39,7 +43,11 @@
       </q-item>
 
       <!-- formulario tabla de resultados de busqueda -->
-      <calendarioGrid
+      <calendarioGrid v-if="verPorDias"
+        :filterRecord="filterRecord"
+        :key="refreshKey"
+        />
+      <calendarioPorBungGrid v-if="!verPorDias"
         :filterRecord="filterRecord"
         :key="refreshKey"
         />
@@ -52,6 +60,7 @@ export default {
   props: ['value', 'id', 'keyValue'], // se pasan como parametro desde mainTabs. value = { registrosSeleccionados: [], filterRecord: {} }
   data () {
     return {
+      verPorDias: false,
       expanded: false,
       refreshKey: 0,
       visible: '',
@@ -66,6 +75,10 @@ export default {
     ...mapState('login', ['user']) // importo state.user desde store-login
   },
   methods: {
+    gestionarVerPor () {
+      if (this.filterRecord.verPor === 'Por días') this.verPorDias = true
+      else this.verPorDias = false
+    },
     cargaMesesAnyos () {
       for (let i = 1; i <= 12; i++) {
         var dateObj = new Date('2021-' + i + '-01')
@@ -77,6 +90,7 @@ export default {
       }
     },
     getRecords () {
+      this.filterRecord.verPor = 'Por Servicios'
       this.refreshKey++
       this.expanded = false
     }
@@ -90,7 +104,8 @@ export default {
     this.$emit('changeTab', { idTab: this.value.idTab, filterRecord: Object.assign({}, this.filterRecord), registrosSeleccionados: Object.assign({}, this.registrosSeleccionados) })
   },
   components: {
-    calendarioGrid: require('components/Calendario/calendarioGrid.vue').default
+    calendarioGrid: require('components/Calendario/calendarioGrid.vue').default,
+    calendarioPorBungGrid: require('components/Calendario/calendarioPorBungGrid.vue').default
   }
 }
 </script>
