@@ -163,7 +163,7 @@ export default {
           // idServicio: rbunga.id,
           dia: this.right(('0' + i), 2)
         }
-        var lres = this.listaReservas.filter(res => ((res.fechaEntrada.substr(0, 10) <= mesanyo + '-' + r.dia) && (res.fechaSalida.substr(0, 10) >= mesanyo + '-' + r.dia)))
+        var lres = this.listaReservas.filter(res => ((res.fechaEntrada.substr(0, 10) <= mesanyo + '-' + r.dia) && (res.fechaSalida.substr(0, 10) > mesanyo + '-' + r.dia)))
         lres.forEach(res => {
           r['d' + res.idServicio] = res
         })
